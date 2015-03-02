@@ -265,7 +265,7 @@ imap éé `
 " -- show the column 81
 if (exists('+colorcolumn'))
     set colorcolumn=80
-    highlight ColorColumn ctermbg=9
+    highlight ColorColumn ctermbg=0
 endif
 
 " --- type ° to search the word in all files in the current dir
