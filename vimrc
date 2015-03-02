@@ -99,7 +99,21 @@ nmap <silent> <leader>hl :SyntasticCheck hlint<CR>:lopen<CR>
 autocmd BufWritePost *.hs,*.lhs GhcModCheckAndLintAsync
 
 "  neocomplcache (advanced completion)
-autocmd BufEnter *.hs,*.lhs let g:neocomplcache_enable_at_startup = 1
+let g:acp_enableAtStartup = 0
+let g:neocomplcache_enable_at_startup = 1
+let g:neocomplcache_enable_smart_case = 1
+let g:neocomplcache_dictionary_filetype_lists = {
+    \ 'default' : '',
+    \ 'vimshell' : $HOME.'/.vimshell_hist',
+    \ 'scheme' : $HOME.'.ghosh_completions'
+    \ }
+inoremap <expr><C-g> neocomplcache#undo_completion()
+inoremap <expr><C-l> neocomplcache#complete_common_string()
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+function! s:my_cr_function()
+    return neocomplcache#smart_close_popup() . "\<CR>"
+endfunction
+inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
 function! SetToCabalBuild()
     if glob("*.cabal") != ''
         set makeprg=cabal\ build
@@ -109,6 +123,7 @@ autocmd BufEnter *.hs,*.lhs :call SetToCabalBuild()
 
 " -- neco-ghc
 let $PATH=$PATH.':'.expand("~/.cabal/bin")
+autocmd BufEnter *.hs,*.lhs setlocal omnifunc=necoghc#omnifunc
 
 " -- Frege
 autocmd BufEnter *.fr :filetype haskell
