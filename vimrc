@@ -1,4 +1,4 @@
-" Yann Esposito
+" Original from Yann Esposito
 " http://yannesposito.com
 " @yogsototh
 "
@@ -18,9 +18,10 @@ call plug#begin('~/.vim/plugged')
 " the vundle plugin to install vim plugin
 " Bundle 'gmarik/vundle'
 " completion during typing
+" Pligins section {{{
 Plug 'neocomplcache'
-" solarized colorscheme
-Plug 'altercation/vim-colors-solarized'
+Plug 'altercation/vim-colors-solarized'     "solarized colorscheme
+Plug 'flazz/vim-colorschemes'               "Color Schemes
 " Right way to handle trailing-whitespace
 Plug 'bronson/vim-trailing-whitespace'
 " NERDTree
@@ -33,45 +34,72 @@ Plug 'Shougo/unite.vim'
 " writing pandoc documents
 Plug 'vim-pandoc/vim-pandoc'
 Plug 'vim-pandoc/vim-pandoc-syntax'
-" GIT
+" GIT Plugins
 Plug 'tpope/vim-fugitive'
 " show which line changed using git
 Plug 'airblade/vim-gitgutter'
-" Align code
+" --- Align code ---
 Plug 'junegunn/vim-easy-align'
 Plug 'scrooloose/syntastic'             " syntax checker
-" --- Haskell
-Plug 'yogsototh/haskell-vim'            " syntax indentation / highlight
-Plug 'enomsg/vim-haskellConcealPlus'    " unicode for haskell operators
-Plug 'eagletmt/ghcmod-vim'
-Plug 'eagletmt/neco-ghc'
-Plug 'Twinside/vim-hoogle'
-Plug 'pbrisbin/html-template-syntax'    " Yesod templates
-" --- XML
+" ---  Haskell   ---
+Plug 'yogsototh/haskell-vim', { 'for': 'haskell' }            " syntax indentation / highlight
+Plug 'enomsg/vim-haskellConcealPlus', { 'for': 'haskell' }    " unicode for concealing haskell operators
+Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }
+Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }
+Plug 'Twinside/vim-hoogle', { 'for': 'haskell' }              " Hoogle haskell search
+Plug 'pbrisbin/html-template-syntax', { 'for': 'haskell' }    " Yesod templates
+Plug 'bitc/vim-hdevtools', { 'for': 'haskell' }               " HDevTools for Haskell
+Plug 'nbouscal/vim-stylish-haskell', { 'for': 'haskell' }     " Stylish Haskell
+Plug 'mpickering/hlint-refactor-vim', { 'for': 'haskell' }    " Hlint refactor
+"Plug 'dag/vim2hs'
+" ---  Bars panels ---
+"Plug 'bling/vim-airline'
+Plug 'vim-airline/vim-airline'          " Airline statusbar
+Plug 'vim-airline/vim-airline-themes'   " Airline themes
+Plug 'majutsushi/tagbar'
+" ---  XML ---
 Plug 'othree/xml.vim'
-" " -- Clojure
+" --- Clojure ---
 Plug 'kien/rainbow_parentheses.vim'
 Plug 'guns/vim-clojure-static'
 Plug 'guns/vim-sexp'
 Plug 'tpope/vim-repeat'
-" " Plug 'paredit.vim'
-Plug 'tpope/vim-fireplace'
-" " <<< vim-fireplace dependencie
+" Loaded when clojure file is opened
+Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
+" Multiple file types (loaded when clj or scheme are opened)
+Plug 'kovisoft/paredit', { 'for': ['clojure', 'scheme'] }
+" vim-fireplace dependencies
 " Plug 'tpope/vim-classpath'
-
 " Plug 'jpalardy/vim-slime'
-" -- ag
+" --- ag ---
 Plug 'rking/ag.vim'
-" --- elm-lang
+" --- elm-lang ---
 Plug 'lambdatoast/elm.vim'
-" --- Idris
+" --- Idris ---
 Plug 'idris-hackers/idris-vim'
-
 " -- reload browser on change
 " Plug 'Bogdanp/browser-connect.vim'
-
+" -- for JavaScript ---
 Plug 'maksimr/vim-jsbeautify'
 Plug 'einars/js-beautify'
+" --- for erlang ---
+Plug 'vim-erlang/vim-erlang-runtime'
+Plug 'vim-erlang/vim-erlang-omnicomplete'
+Plug 'vim-erlang/vim-erlang-compiler'
+" Allow pane movement to jump out of vim into tmux
+Plug 'christoomey/vim-tmux-navigator'
+" --- for scala ---
+Plug 'derekwyatt/vim-scala'
+" --- for python ---
+"Plug 'davidhalter/jedi-vim'
+"Plug 'lambdalisue/vim-pyenv'
+" --- for C/C++ ---
+" Plug 'Rip-Rip/clang_complete'
+" Code to execute when the plugin is loaded on demand
+" On-demand loading
+Plug 'Valloric/YouCompleteMe', { 'for': ['cpp'] }
+" }}}
+autocmd! User YouCompleteMe call youcompleteme#Enable()
 
 call plug#end()
 
@@ -97,6 +125,11 @@ nmap <silent> <leader>hl :SyntasticCheck hlint<CR>:lopen<CR>
 
 " Auto-checking on writing
 autocmd BufWritePost *.hs,*.lhs GhcModCheckAndLintAsync
+
+" For hdevtools type info
+au FileType haskell nnoremap <buffer> <F1> :HdevtoolsType<CR>
+au FileType haskell nnoremap <buffer> <silent> <F2> :HdevtoolsClear<CR>
+au FileType haskell nnoremap <buffer> <silent> <F3> :HdevtoolsInfo<CR>
 
 "  neocomplcache (advanced completion)
 let g:acp_enableAtStartup = 0
@@ -124,6 +157,8 @@ autocmd BufEnter *.hs,*.lhs :call SetToCabalBuild()
 " -- neco-ghc
 let $PATH=$PATH.':'.expand("~/.cabal/bin")
 autocmd BufEnter *.hs,*.lhs setlocal omnifunc=necoghc#omnifunc
+" below prvodes detailed info, but if boot time is more disable it
+let g:necoghc_enable_detailed_browse = 1
 
 " -- Frege
 autocmd BufEnter *.fr :filetype haskell
@@ -143,11 +178,11 @@ nmap gN <Plug>GitGutterPrevHunk
 " -----------------
 
 " -- solarized theme
-set background=dark
-try
-    colorscheme solarized
-catch
-endtry
+"set background=dark
+"try
+"    colorscheme solarized
+"catch
+"endtry
 
 " ----------------------------
 "       File Management
@@ -199,25 +234,41 @@ let g:rbpt_colorpairs = [
 	\ ]
 
 
-
 " #####################
 " ### Personal conf ###
 " #####################
 
+" Use powerline fonts for airline
+if !exists('g:airline_symbols')
+   let g:airline_symbols = {}
+endif
+
+" vim powerline symbols
+let g:airline_powerline_fonts = 1
+let g:airline_symbols.space = "\ua0"
+
 " Use Vim settings, rather then Vi settings (much better!).
 " This must be first, because it changes other options as a side effect.
 set nocompatible
-set bs=2		        " allow backspacing over everything in insert mode
-set viminfo='20,\"50    " read/write a .viminfo file, don't store more
-			            " than 50 lines of registers
-set history=10000	    " keep 100000 lines of command line history
-set ruler		        " show the cursor position all the time
+set bs=2		            " allow backspacing over everything in insert mode
+set viminfo='20,\"50        " read/write a .viminfo file, don't store more
+			                " than 50 lines of registers
+set history=10000           " keep 100000 lines of command line history
+set ruler                   " show the cursor position all the time
 
-syntax on " syntax highlighting
-set hlsearch " highlight searches
+syntax on                   " syntax highlighting
+set hlsearch                " highlight searches
 
+set laststatus=2            " always show the status line
 
 set visualbell " no beep
+
+if &term =~ '256color'
+   " disable Background Color Erase (BCE) so that color schemes
+   " render properly when inside 256-color tmux and GNU screen.
+   " see also http://snk.tuxfamily.org/log/vim-256color-bce.html
+    set t_ut=
+endif
 
 " move between splits
 noremap <C-h> <C-w>h
@@ -259,34 +310,41 @@ if has("spell") " if vim support spell checking
     highlight SpellLocal term=underline cterm=underline
 endif
 
+" Alignment Helper
 " Easy align interactive
 vnoremap <silent> <Enter> :EasyAlign<cr>
 
 " .ymd file type
 autocmd BufEnter *.ymd set filetype=markdown
 autocmd BufEnter *.cljs,*.cljs.hl set filetype=clojure
-" -- Reload browser on cljs save
+"  Reload browser on cljs save
 "  don't forget to put <script src="http://localhost:9001/ws"></script>
 "  in your HTML
-" au BufWritePost *.cljs :BCReloadPage
+"  au BufWritePost *.cljs :BCReloadPage
 
-" ========
-" Personal
-" ========
+" ====================================
+" Personal Configurations
+" ====================================
+" Searing red very visible cursor
+hi Cursor guibg=red
+
+" Use same color behind concealed unicode characters
+hi clear Conceal
 
 " Easier anti-quote
 imap éé `
 
 " -- show the column 81
 if (exists('+colorcolumn'))
-    set colorcolumn=80
+    "set colorcolumn=80
+    set colorcolumn=120
     highlight ColorColumn ctermbg=0
 endif
 
 " --- type ° to search the word in all files in the current dir
 nmap ° :Ag <c-r>=expand("<cword>")<cr><cr>
 
-" -- js beautifer
+" -- js beautifer ---
 autocmd FileType javascript noremap <buffer> <c-f> :call JsBeautify()<cr>
 autocmd FileType html noremap <buffer> <c-f> :call JsBeautify()<cr>
 autocmd FileType css noremap <buffer> <c-f> :call JsBeautify()<cr>
@@ -295,3 +353,138 @@ autocmd FileType css noremap <buffer> <c-f> :call JsBeautify()<cr>
 
 " -- vim-pandoc folding
 let g:pandoc#modules#disabled = ["folding"]
+
+" --- Slime ---
+" {{{
+vmap <silent> <Leader>rs <Plug>SendSelectionToTmux
+nmap <silent> <Leader>rs <Plug>NormalModeSendToTmux
+nmap <silent> <Leader>rv <Plug>SetTmuxVars
+" }}}
+
+" --- TMUX ---
+" {{{
+" Manually create key mappings (to avoid rebinding C-\)
+let g:tmux_navigator_no_mappings = 1
+let g:slime_target = "tmux"
+
+nnoremap <silent> <C-h> :TmuxNavigateLeft<cr>
+nnoremap <silent> <C-j> :TmuxNavigateDown<cr>
+nnoremap <silent> <C-k> :TmuxNavigateUp<cr>
+nnoremap <silent> <C-l> :TmuxNavigateRight<cr>
+
+" }}}
+
+" Support pointfree styles
+" In visual mode you can now press gq to convert a expression to it’s
+" pointfree form.Though quite often the resulting form is more
+" obfuscated than the original.
+autocmd BufEnter *.hs set formatprg=pointfree
+
+" {{{
+" --- FANCY abcdefgh ---
+function! AccentDemo()
+  let keys = ['a','b','c','d','e','f','g','h']
+  for k in keys
+    call airline#parts#define_text(k, k)
+  endfor
+  call airline#parts#define_accent('a', 'red')
+  call airline#parts#define_accent('b', 'green')
+  call airline#parts#define_accent('c', 'blue')
+  call airline#parts#define_accent('d', 'violet')
+  call airline#parts#define_accent('e', 'orange')
+  call airline#parts#define_accent('f', 'purple')
+  call airline#parts#define_accent('g', 'bold')
+  call airline#parts#define_accent('h', 'italic')
+  let g:airline_section_a = airline#section#create(keys)
+endfunction
+autocmd VimEnter * call AccentDemo()
+" }}}
+
+
+"git gutter show
+let g:airline#extensions#hunks#enabled=1
+
+" personal appearance options
+"let g:airline_left_sep='['
+"let g:airline_right_sep=']'
+let g:airline_linecolumn_prefix = '§'
+let g:airline_paste_symbol = 'Þ'
+let g:airline_readonly_symbol = 'Ʀ'
+let g:airline_enable_branch=1
+let g:airline_enable_syntastic=0
+
+" for erlang syntaxerl
+let g:syntastic_erlang_checkers=['syntaxerl']
+
+"{{{
+" Python Specific Custmoizations
+let python_highlight_all=1
+
+if has('python')
+  let g:jedi#force_py_version = 2
+  let g:syntastic_python_python_exec = 'python2'
+  let g:pymode_python = 'python2'
+elseif has('python3')
+  "let g:jedi#force_py_version = 3
+  let g:syntastic_python_python_exec = 'python3'
+  "let g:pymode_python = 'python3'
+else
+  let g:loaded_jedi = 1
+endif
+
+"}}}
+
+
+"--------------------------------------
+" personal for Syntastic
+" By default, Syntastic uses arrow symbols to indicate line with error.
+" To spice things up, you can specify any Unicode symbol as the symbol.
+
+" getbg function {{{
+" gets background of a highlighting group with fallback to SignColumn group
+function! s:getbg(group)
+    if has("gui_running")
+        let l:mode = 'gui'
+        let l:validation = '\w\+\|#\x\+'
+    else
+        let l:mode = 'cterm'
+        let l:validation = '\w\+'
+    endif
+
+    if synIDattr(synIDtrans(hlID(a:group)), 'reverse', l:mode)
+        let l:bg = synIDattr(synIDtrans(hlID(a:group)), 'fg', l:mode)
+    else
+        let l:bg = synIDattr(synIDtrans(hlID(a:group)), 'bg', l:mode)
+    endif
+
+    if l:bg == '-1' || l:bg !~ l:validation
+        if synIDattr(synIDtrans(hlID('SignColumn')), 'reverse', l:mode)
+            let l:bg = synIDattr(synIDtrans(hlID('SignColumn')), 'fg', l:mode)
+        else
+            let l:bg = synIDattr(synIDtrans(hlID('SignColumn')), 'bg', l:mode)
+        endif
+    endif
+
+    if l:bg == '-1' || l:bg !~ l:validation
+        return ''
+    endif
+
+    return l:mode . 'bg=' . l:bg
+endfunction
+"}}}
+
+let g:syntastic_error_symbol = "✗"
+let g:syntastic_warning_symbol = "⚠"
+hi! link SyntasticErrorLine Visual
+hi! link SyntasticWarningLine Visual
+au VimEnter,ColorScheme * exec 'hi! SyntasticErrorSign guifg=red ctermfg=red ' . s:getbg('SyntasticErrorLine')
+au VimEnter,ColorScheme * exec 'hi! SyntasticWarningSign guifg=yellow ctermfg=yellow ' . s:getbg('SyntasticWarningLine')
+au VimEnter,ColorScheme * exec 'hi! SyntasticError ' . s:getbg('SyntasticErrorLine')
+au VimEnter,ColorScheme * exec 'hi! SyntasticWarning ' . s:getbg('SyntasticWarningLine')
+
+" unicode support {{{
+"For UNICODE Support "⚠"
+scriptencoding utf-8
+set encoding=utf-8
+"}}}
+"--------------------------------------
