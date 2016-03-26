@@ -31,17 +31,17 @@ Plug 'bronson/vim-trailing-whitespace'
 "   you have to go to .vim/plugin/vimproc.vim and do a ./make
 Plug 'Shougo/vimproc.vim'
 Plug 'Shougo/unite.vim'
-" writing pandoc documents
+" ### writing pandoc documents      ###
 Plug 'vim-pandoc/vim-pandoc'
 Plug 'vim-pandoc/vim-pandoc-syntax'
-" GIT Plugins
+" ### GIT Plugins                   ###
 Plug 'tpope/vim-fugitive'
 " show which line changed using git
 Plug 'airblade/vim-gitgutter'
-" --- Align code ---
+" ### Align code                    ###
 Plug 'junegunn/vim-easy-align'
-Plug 'scrooloose/syntastic'             " syntax checker
-" ---  Haskell   ---
+Plug 'scrooloose/syntastic'                                   " syntax checker
+" ###  Haskell                      ###
 Plug 'yogsototh/haskell-vim', { 'for': 'haskell' }            " syntax indentation / highlight
 Plug 'enomsg/vim-haskellConcealPlus', { 'for': 'haskell' }    " unicode for concealing haskell operators
 Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }
@@ -52,14 +52,14 @@ Plug 'bitc/vim-hdevtools', { 'for': 'haskell' }               " HDevTools for Ha
 Plug 'nbouscal/vim-stylish-haskell', { 'for': 'haskell' }     " Stylish Haskell
 Plug 'mpickering/hlint-refactor-vim', { 'for': 'haskell' }    " Hlint refactor
 "Plug 'dag/vim2hs'
-" ---  Bars panels ---
+" ###  Bars panels                  ###
 "Plug 'bling/vim-airline'
-Plug 'vim-airline/vim-airline'          " Airline statusbar
-Plug 'vim-airline/vim-airline-themes'   " Airline themes
+Plug 'vim-airline/vim-airline'                                " Airline statusbar
+Plug 'vim-airline/vim-airline-themes'                         " Airline themes
 Plug 'majutsushi/tagbar'
-" ---  XML ---
+" ###  XML                          ###
 Plug 'othree/xml.vim'
-" --- Clojure ---
+" ### Clojure                       ###
 Plug 'kien/rainbow_parentheses.vim'
 Plug 'guns/vim-clojure-static'
 Plug 'guns/vim-sexp'
@@ -71,35 +71,37 @@ Plug 'kovisoft/paredit', { 'for': ['clojure', 'scheme'] }
 " vim-fireplace dependencies
 " Plug 'tpope/vim-classpath'
 " Plug 'jpalardy/vim-slime'
-" --- ag ---
+" ### ag                            ###
 Plug 'rking/ag.vim'
-" --- elm-lang ---
+" ### elm-lang                      ###
 Plug 'lambdatoast/elm.vim'
-" --- Idris ---
+" ### Idris                         ###
 Plug 'idris-hackers/idris-vim'
 " -- reload browser on change
 " Plug 'Bogdanp/browser-connect.vim'
-" -- for JavaScript ---
+" ### for JavaScript                ###
 Plug 'maksimr/vim-jsbeautify'
 Plug 'einars/js-beautify'
-" --- for erlang ---
+" ### for erlang                    ###
 Plug 'vim-erlang/vim-erlang-runtime'
 Plug 'vim-erlang/vim-erlang-omnicomplete'
 Plug 'vim-erlang/vim-erlang-compiler'
 " Allow pane movement to jump out of vim into tmux
 Plug 'christoomey/vim-tmux-navigator'
-" --- for scala ---
+" ###  scala                        ###
 Plug 'derekwyatt/vim-scala'
-" --- for python ---
+"Plug 'ensime/ensime-vim'
+"
+" ### python                        ###
 "Plug 'davidhalter/jedi-vim'
 "Plug 'lambdalisue/vim-pyenv'
-" --- for C/C++ ---
+" ### for C/C++                     ###
 " Plug 'Rip-Rip/clang_complete'
 " Code to execute when the plugin is loaded on demand
 " On-demand loading
-Plug 'Valloric/YouCompleteMe', { 'for': ['cpp'] }
+Plug 'Valloric/YouCompleteMe', { 'for': ['cpp','python'] }
 " }}}
-autocmd! User YouCompleteMe call youcompleteme#Enable()
+" autocmd! User YouCompleteMe call youcompleteme#Enable()
 
 call plug#end()
 
@@ -233,6 +235,11 @@ let g:rbpt_colorpairs = [
 	\ ['darkred',     'firebrick3'],
 	\ ]
 
+" Rainbow Always On
+au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
 
 " #####################
 " ### Personal conf ###
@@ -313,6 +320,10 @@ endif
 " Alignment Helper
 " Easy align interactive
 vnoremap <silent> <Enter> :EasyAlign<cr>
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
 
 " .ymd file type
 autocmd BufEnter *.ymd set filetype=markdown
@@ -371,7 +382,6 @@ nnoremap <silent> <C-h> :TmuxNavigateLeft<cr>
 nnoremap <silent> <C-j> :TmuxNavigateDown<cr>
 nnoremap <silent> <C-k> :TmuxNavigateUp<cr>
 nnoremap <silent> <C-l> :TmuxNavigateRight<cr>
-
 " }}}
 
 " Support pointfree styles
@@ -383,18 +393,19 @@ autocmd BufEnter *.hs set formatprg=pointfree
 " {{{
 " --- FANCY abcdefgh ---
 function! AccentDemo()
-  let keys = ['a','b','c','d','e','f','g','h']
+  let keys = ['a','b','c','d','e','f','g','h','i']
   for k in keys
     call airline#parts#define_text(k, k)
-  endfor
+endfor
   call airline#parts#define_accent('a', 'red')
   call airline#parts#define_accent('b', 'green')
   call airline#parts#define_accent('c', 'blue')
   call airline#parts#define_accent('d', 'violet')
   call airline#parts#define_accent('e', 'orange')
   call airline#parts#define_accent('f', 'purple')
-  call airline#parts#define_accent('g', 'bold')
-  call airline#parts#define_accent('h', 'italic')
+  call airline#parts#define_accent('g', 'pink')
+  call airline#parts#define_accent('h', 'bold')
+  call airline#parts#define_accent('i', 'italic')
   let g:airline_section_a = airline#section#create(keys)
 endfunction
 autocmd VimEnter * call AccentDemo()
@@ -481,6 +492,15 @@ au VimEnter,ColorScheme * exec 'hi! SyntasticErrorSign guifg=red ctermfg=red ' .
 au VimEnter,ColorScheme * exec 'hi! SyntasticWarningSign guifg=yellow ctermfg=yellow ' . s:getbg('SyntasticWarningLine')
 au VimEnter,ColorScheme * exec 'hi! SyntasticError ' . s:getbg('SyntasticErrorLine')
 au VimEnter,ColorScheme * exec 'hi! SyntasticWarning ' . s:getbg('SyntasticWarningLine')
+
+let g:syntastic_enable_highlighting = 1
+" syntactic integration
+let g:airline#extensions#syntastic#enabled = 1
+let g:syntastic_python_python_exec = '/usr/local/bin/python3'
+let g:syntastic_python_checkers = ['pylint']
+
+" syntastic for cpp
+let g:syntastic_cpp_compiler = "g++"
 
 " unicode support {{{
 "For UNICODE Support "⚠"
