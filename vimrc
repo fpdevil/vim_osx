@@ -1,3 +1,11 @@
+"
+"   ██╗   ██╗ ██╗ ███╗   ███╗ ██████╗   ██████╗
+"   ██║   ██║ ██║ ████╗ ████║ ██╔══██╗ ██╔════╝
+"   ██║   ██║ ██║ ██╔████╔██║ ██████╔╝ ██║
+"   ╚██╗ ██╔╝ ██║ ██║╚██╔╝██║ ██╔══██╗ ██║
+" ██╗╚████╔╝  ██║ ██║ ╚═╝ ██║ ██║  ██║ ╚██████╗
+" ╚═╝ ╚═══╝   ╚═╝ ╚═╝     ╚═╝ ╚═╝  ╚═╝  ╚═════╝
+"
 " Original from Yann Esposito
 " http://yannesposito.com
 " @yogsototh
@@ -8,6 +16,13 @@
 " cd ~/.vim/bundle/vimproc.vim && make
 " cabal install ghc-mod
 " -------------------------------------
+
+" #### unicode support ####
+"For UNICODE Support "⚠"
+set encoding=utf-8
+scriptencoding utf-8
+" note: set encoding BEFORE scriptencoding
+" #########################
 
 
 call plug#begin('~/.vim/plugged')
@@ -22,6 +37,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'neocomplcache'
 Plug 'altercation/vim-colors-solarized'     "solarized colorscheme
 Plug 'flazz/vim-colorschemes'               "Color Schemes
+Plug 'morhetz/gruvbox'                      "Retro groove color scheme
 " Right way to handle trailing-whitespace
 Plug 'bronson/vim-trailing-whitespace'
 " NERDTree
@@ -81,7 +97,15 @@ Plug 'idris-hackers/idris-vim'
 " Plug 'Bogdanp/browser-connect.vim'
 " ### for JavaScript                ###
 Plug 'maksimr/vim-jsbeautify'
+" Yet Another JavaScript Syntax for Vim
+Plug 'othree/yajs.vim', { 'for': 'javascript' }
 Plug 'einars/js-beautify'
+" ### extends syntax for with jQuery,backbone,etc.
+Plug 'othree/javascript-libraries-syntax.vim'
+Plug 'mxw/vim-jsx'
+Plug 'elzr/vim-json'
+" ### Syntax file for JavaScript libraries.
+Plug 'othree/javascript-libraries-syntax.vim'
 " ### for erlang                    ###
 Plug 'vim-erlang/vim-erlang-runtime'
 Plug 'vim-erlang/vim-erlang-omnicomplete'
@@ -91,15 +115,20 @@ Plug 'christoomey/vim-tmux-navigator'
 " ###  scala                        ###
 Plug 'derekwyatt/vim-scala'
 "Plug 'ensime/ensime-vim'
-"
+" ###  get current function name
+Plug 'tyru/current-func-info.vim'
+" ### Autopair                      ###
+Plug 'jiangmiao/auto-pairs'
+" ### Language: HTML, XML ...       ###
+Plug 'othree/html5.vim'
 " ### python                        ###
-"Plug 'davidhalter/jedi-vim'
+Plug 'davidhalter/jedi-vim'
 "Plug 'lambdalisue/vim-pyenv'
 " ### for C/C++                     ###
 " Plug 'Rip-Rip/clang_complete'
 " Code to execute when the plugin is loaded on demand
 " On-demand loading
-Plug 'Valloric/YouCompleteMe', { 'for': ['cpp','python'] }
+" Plug 'Valloric/YouCompleteMe', { 'for': ['cpp','python'] }
 " }}}
 " autocmd! User YouCompleteMe call youcompleteme#Enable()
 
@@ -431,6 +460,9 @@ let g:syntastic_erlang_checkers=['syntaxerl']
 " Python Specific Custmoizations
 let python_highlight_all=1
 
+" let g:ycm_python_binary_path = '/usr/local/bin/python3'
+" let g:ycm_server_python_interpreter = '/usr/local/bin/python3'
+
 if has('python')
   let g:jedi#force_py_version = 2
   let g:syntastic_python_python_exec = 'python2'
@@ -502,9 +534,4 @@ let g:syntastic_python_checkers = ['pylint']
 " syntastic for cpp
 let g:syntastic_cpp_compiler = "g++"
 
-" unicode support {{{
-"For UNICODE Support "⚠"
-scriptencoding utf-8
-set encoding=utf-8
-"}}}
 "--------------------------------------
