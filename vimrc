@@ -1,4 +1,5 @@
 "
+"
 "   ██╗   ██╗ ██╗ ███╗   ███╗ ██████╗   ██████╗
 "   ██║   ██║ ██║ ████╗ ████║ ██╔══██╗ ██╔════╝
 "   ██║   ██║ ██║ ██╔████╔██║ ██████╔╝ ██║
@@ -6,9 +7,20 @@
 " ██╗╚████╔╝  ██║ ██║ ╚═╝ ██║ ██║  ██║ ╚██████╗
 " ╚═╝ ╚═══╝   ╚═╝ ╚═╝     ╚═╝ ╚═╝  ╚═╝  ╚═════╝
 "
-" Original from Yann Esposito
+"
+"
+" Customized .vim configuration file
+" It supports some of the major languages which I use
+" Haskell
+" Erlang
+" JavaScript ... flavours
+" Python
+" Scala
+" Clojure (I don't use, but interested in learning)
+"
+" Original template used from Yann Esposito
 " http://yannesposito.com
-" @yogsototh
+" THANKS TO @yogsototh
 "
 " ---------- VERY IMPORTANT -----------
 " To install plugin the first time:
@@ -16,7 +28,7 @@
 " cd ~/.vim/bundle/vimproc.vim && make
 " cabal install ghc-mod
 " -------------------------------------
-
+"
 " #### unicode support ####
 "For UNICODE Support "⚠"
 set encoding=utf-8
@@ -26,7 +38,7 @@ scriptencoding utf-8
 
 
 call plug#begin('~/.vim/plugged')
-
+"
 " #### set rtp+=~/.vim/vundle/Vundle.vim/
 " set rtp+=~/.vim/bundle/vundle/
 " ### call vundle#rc()
@@ -35,7 +47,7 @@ call plug#begin('~/.vim/plugged')
 " completion during typing
 " Pligins section {{{
 Plug 'neocomplcache'
-Plug 'altercation/vim-colors-solarized'     "solarized colorscheme
+" Plug 'altercation/vim-colors-solarized'     "solarized colorscheme
 Plug 'flazz/vim-colorschemes'               "Color Schemes
 Plug 'morhetz/gruvbox'                      "Retro groove color scheme
 " Right way to handle trailing-whitespace
@@ -97,6 +109,7 @@ Plug 'idris-hackers/idris-vim'
 " Plug 'Bogdanp/browser-connect.vim'
 " ### for JavaScript                ###
 Plug 'maksimr/vim-jsbeautify'
+Plug 'pangloss/vim-javascript'
 " Yet Another JavaScript Syntax for Vim
 Plug 'othree/yajs.vim', { 'for': 'javascript' }
 Plug 'einars/js-beautify'
@@ -147,8 +160,9 @@ let mapleader="-"
 let g:mapleader="-"
 set tm=2000
 nmap <silent> <leader>ht :GhcModType<CR>
-nmap <silent> <leader>hh :GhcModTypeClear<CR>
-nmap <silent> <leader>hT :GhcModTypeInsert<CR>
+nmap <silent> <leader>he :GhcModTypeClear<CR>
+nmap <silent> <leader>hi :GhcModTypeInsert<CR>
+nmap <silent> <leader>hs :GhcModSplitFunCase<CR>
 nmap <silent> <leader>hc :SyntasticCheck ghc_mod<CR>:lopen<CR>
 let g:syntastic_mode_map={'mode': 'active', 'passive_filetypes': ['haskell']}
 let g:syntastic_always_populate_loc_list = 1
@@ -197,7 +211,6 @@ autocmd BufEnter *.fr :filetype haskell
 " ----------------
 "       GIT
 " ----------------
-
 " -- vim-gitgutter
 highlight clear SignColumn
 highlight SignColumn ctermbg=0
@@ -205,7 +218,7 @@ nmap gn <Plug>GitGutterNextHunk
 nmap gN <Plug>GitGutterPrevHunk
 
 " -----------------
-"       THEME
+"      THEMES
 " -----------------
 
 " -- solarized theme
@@ -235,15 +248,15 @@ nnoremap <space>y :split<cr>:<C-u>Unite history/yank<cr>
 " reset not it is <C-l> normally
 :nnoremap <space>r <Plug>(unite_restart)
 
-" ------------------
-"       Clojure
-" ------------------
+" Clojure {{{
 autocmd BufEnter *.cljs,*.clj,*.cljs.hl RainbowParenthesesActivate
 autocmd BufEnter *.cljs,*.clj,*.cljs.hl RainbowParenthesesLoadRound
 autocmd BufEnter *.cljs,*.clj,*.cljs.hl RainbowParenthesesLoadSquare
 autocmd BufEnter *.cljs,*.clj,*.cljs.hl RainbowParenthesesLoadBraces
 " Fix I don't know why
 autocmd BufEnter *.cljs,*.clj,*.cljs.hl setlocal iskeyword+=?,-,*,!,+,/,=,<,>,.,:
+" }}}
+
 " -- Rainbow parenthesis options
 let g:rbpt_colorpairs = [
 	\ ['darkyellow',  'RoyalBlue3'],
@@ -279,7 +292,7 @@ if !exists('g:airline_symbols')
    let g:airline_symbols = {}
 endif
 
-" vim powerline symbols
+" vim powerline symbols in statusbar
 let g:airline_powerline_fonts = 1
 let g:airline_symbols.space = "\ua0"
 
@@ -291,13 +304,10 @@ set viminfo='20,\"50        " read/write a .viminfo file, don't store more
 			                " than 50 lines of registers
 set history=10000           " keep 100000 lines of command line history
 set ruler                   " show the cursor position all the time
-
 syntax on                   " syntax highlighting
 set hlsearch                " highlight searches
-
 set laststatus=2            " always show the status line
-
-set visualbell " no beep
+set visualbell              " no beep
 
 if &term =~ '256color'
    " disable Background Color Erase (BCE) so that color schemes
@@ -384,13 +394,7 @@ endif
 " --- type ° to search the word in all files in the current dir
 nmap ° :Ag <c-r>=expand("<cword>")<cr><cr>
 
-" -- js beautifer ---
-autocmd FileType javascript noremap <buffer> <c-f> :call JsBeautify()<cr>
-autocmd FileType html noremap <buffer> <c-f> :call JsBeautify()<cr>
-autocmd FileType css noremap <buffer> <c-f> :call JsBeautify()<cr>
-
 " set noswapfile
-
 " -- vim-pandoc folding
 let g:pandoc#modules#disabled = ["folding"]
 
@@ -420,7 +424,7 @@ nnoremap <silent> <C-l> :TmuxNavigateRight<cr>
 autocmd BufEnter *.hs set formatprg=pointfree
 
 " {{{
-" --- FANCY abcdefgh ---
+" --- FANCY abcdefgh in status bar ---
 function! AccentDemo()
   let keys = ['a','b','c','d','e','f','g','h','i']
   for k in keys
@@ -440,10 +444,9 @@ endfunction
 autocmd VimEnter * call AccentDemo()
 " }}}
 
-
+" Airline Eye Candies {{{
 "git gutter show
 let g:airline#extensions#hunks#enabled=1
-
 " personal appearance options
 "let g:airline_left_sep='['
 "let g:airline_right_sep=']'
@@ -452,8 +455,9 @@ let g:airline_paste_symbol = 'Þ'
 let g:airline_readonly_symbol = 'Ʀ'
 let g:airline_enable_branch=1
 let g:airline_enable_syntastic=0
+"}}}
 
-" for erlang syntaxerl
+" for erlang development support - syntaxerl
 let g:syntastic_erlang_checkers=['syntaxerl']
 
 "{{{
@@ -474,12 +478,11 @@ elseif has('python3')
 else
   let g:loaded_jedi = 1
 endif
-
 "}}}
 
 
 "--------------------------------------
-" personal for Syntastic
+" personal settings for Syntastic
 " By default, Syntastic uses arrow symbols to indicate line with error.
 " To spice things up, you can specify any Unicode symbol as the symbol.
 
@@ -525,13 +528,31 @@ au VimEnter,ColorScheme * exec 'hi! SyntasticWarningSign guifg=yellow ctermfg=ye
 au VimEnter,ColorScheme * exec 'hi! SyntasticError ' . s:getbg('SyntasticErrorLine')
 au VimEnter,ColorScheme * exec 'hi! SyntasticWarning ' . s:getbg('SyntasticWarningLine')
 
-let g:syntastic_enable_highlighting = 1
 " syntactic integration
+let g:syntastic_enable_highlighting        = 1
 let g:airline#extensions#syntastic#enabled = 1
-let g:syntastic_python_python_exec = '/usr/local/bin/python3'
-let g:syntastic_python_checkers = ['pylint']
+let g:syntastic_python_python_exec         = '/usr/local/bin/python3'
+let g:syntastic_python_checkers            = ['pylint']
 
 " syntastic for cpp
 let g:syntastic_cpp_compiler = "g++"
 
+" JavaScript {{{
+" -- js beautifer ---
+autocmd FileType javascript noremap <buffer> <c-f> :call JsBeautify()<cr>
+autocmd FileType html noremap <buffer> <c-f> :call JsBeautify()<cr>
+autocmd FileType css noremap <buffer> <c-f> :call JsBeautify()<cr>
+" Character Conceling
+" https://github.com/pangloss/vim-javascript
+let g:javascript_conceal_function       = "ƒ"
+let g:javascript_conceal_null           = "ø"
+let g:javascript_conceal_this           = "@"
+let g:javascript_conceal_return         = "⇚"
+let g:javascript_conceal_undefined      = "¿"
+let g:javascript_conceal_NaN            = "ℕ"
+let g:javascript_conceal_prototype      = "¶"
+let g:javascript_conceal_static         = "•"
+let g:javascript_conceal_super          = "Ω"
+let g:javascript_conceal_arrow_function = "⇒"
+" }}}
 "--------------------------------------
