@@ -142,6 +142,8 @@ Plug 'davidhalter/jedi-vim'
 " Code to execute when the plugin is loaded on demand
 " On-demand loading
 " Plug 'Valloric/YouCompleteMe', { 'for': ['cpp','python'] }
+" ### vim icons                     ###
+" Plug 'ryanoasis/vim-devicons'
 " }}}
 " autocmd! User YouCompleteMe call youcompleteme#Enable()
 
@@ -295,6 +297,8 @@ endif
 " vim powerline symbols in statusbar
 let g:airline_powerline_fonts = 1
 let g:airline_symbols.space = "\ua0"
+set guifont=Meslo\ LG\ S\ DZ\ for\ Powerline:h15
+let g:Powerline_symbols = 'fancy'
 
 " Use Vim settings, rather then Vi settings (much better!).
 " This must be first, because it changes other options as a side effect.
