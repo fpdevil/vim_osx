@@ -46,6 +46,8 @@ call plug#begin('~/.vim/plugged')
 " Bundle 'gmarik/vundle'
 " completion during typing
 " Pligins section {{{
+"
+Plug 'Shougo/neocomplete.vim'               " neocompletion with cache (need lua support)
 Plug 'neocomplcache'
 " Plug 'altercation/vim-colors-solarized'     "solarized colorscheme
 Plug 'flazz/vim-colorschemes'               "Color Schemes
@@ -113,6 +115,8 @@ Plug 'pangloss/vim-javascript'
 " Yet Another JavaScript Syntax for Vim
 Plug 'othree/yajs.vim', { 'for': 'javascript' }
 Plug 'einars/js-beautify'
+" JavaScript Context Coloring in Vim
+Plug 'bigfish/vim-js-context-coloring'
 " ### extends syntax for with jQuery,backbone,etc.
 Plug 'othree/javascript-libraries-syntax.vim'
 Plug 'mxw/vim-jsx'
@@ -180,6 +184,7 @@ au FileType haskell nnoremap <buffer> <silent> <F3> :HdevtoolsInfo<CR>
 
 "  neocomplcache (advanced completion)
 let g:acp_enableAtStartup = 0
+let g:neocomplete#enable_at_startup = 1
 let g:neocomplcache_enable_at_startup = 1
 let g:neocomplcache_enable_smart_case = 1
 let g:neocomplcache_dictionary_filetype_lists = {
@@ -202,7 +207,8 @@ endfunction
 autocmd BufEnter *.hs,*.lhs :call SetToCabalBuild()
 
 " -- neco-ghc
-let $PATH=$PATH.':'.expand("~/.cabal/bin")
+" let $PATH=$PATH.':'.expand("~/.cabal/bin")
+let $PATH=$PATH.':'.expand("~/Library/Haskell/bin/")
 autocmd BufEnter *.hs,*.lhs setlocal omnifunc=necoghc#omnifunc
 " below prvodes detailed info, but if boot time is more disable it
 let g:necoghc_enable_detailed_browse = 1
@@ -466,6 +472,7 @@ let g:syntastic_erlang_checkers=['syntaxerl']
 
 "{{{
 " Python Specific Custmoizations
+" enable all Python syntax highlighting features
 let python_highlight_all=1
 
 " let g:ycm_python_binary_path = '/usr/local/bin/python3'
@@ -536,7 +543,13 @@ au VimEnter,ColorScheme * exec 'hi! SyntasticWarning ' . s:getbg('SyntasticWarni
 let g:syntastic_enable_highlighting        = 1
 let g:airline#extensions#syntastic#enabled = 1
 let g:syntastic_python_python_exec         = '/usr/local/bin/python3'
-let g:syntastic_python_checkers            = ['pylint']
+" Using pylint
+"let g:syntastic_python_checkers            = ['pylint']
+"let g:syntastic_python_pylint_args         = '--disable=C0103'
+" Using flake8
+let g:syntastic_python_checkers            = ['flake8']
+let g:syntastic_python_flake8_args         = '--ignore="D400"'
+"let g:syntastic_python_flake8_args         = '--ignore="E501,E302,E261,E701,E241,E126,E127,E128,W801"'
 
 " syntastic for cpp
 let g:syntastic_cpp_compiler = "g++"
@@ -558,5 +571,20 @@ let g:javascript_conceal_prototype      = "¶"
 let g:javascript_conceal_static         = "•"
 let g:javascript_conceal_super          = "Ω"
 let g:javascript_conceal_arrow_function = "⇒"
+
+" javascript-libraries-syntax customization
+let g:used_javascript_libs = 'underscore,angularjs,jasmine,chai'
+
+" real time syntax checking for javascript
+" use jshint
+let g:syntastic_javascript_checkers = ['jshint']
+" show any linting errors immediately
+let g:syntastic_check_on_open = 1
+" neocompletion for js
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 " }}}
+
+" for macvim
+" override macvim color scheme
+let macvim_skip_colorscheme=1
 "--------------------------------------
