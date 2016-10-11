@@ -29,13 +29,18 @@
 " cabal install ghc-mod
 " -------------------------------------
 "
+"
+" #########################
 " #### unicode support ####
-"For UNICODE Support "⚠"
+" #########################
+" For UNICODE Support "⚠"
+" note: set encoding BEFORE scriptencoding
 set encoding=utf-8
 scriptencoding utf-8
-" note: set encoding BEFORE scriptencoding
-" #########################
 
+" ######################################################################
+" #######################    Plugin conf start   #######################
+" ######################################################################
 
 call plug#begin('~/.vim/plugged')
 "
@@ -47,121 +52,125 @@ call plug#begin('~/.vim/plugged')
 " completion during typing
 " Pligins section {{{
 "
-Plug 'Shougo/neocomplete.vim'               " neocompletion with cache (need lua support)
-Plug 'neocomplcache'
-" Plug 'altercation/vim-colors-solarized'     "solarized colorscheme
-Plug 'flazz/vim-colorschemes'               "Color Schemes
-Plug 'morhetz/gruvbox'                      "Retro groove color scheme
-" Right way to handle trailing-whitespace
-Plug 'bronson/vim-trailing-whitespace'
-" NERDTree
-" Plug 'scrooloose/nerdtree'
-" Unite
-"   depend on vimproc
-"   you have to go to .vim/plugin/vimproc.vim and do a ./make
-Plug 'Shougo/vimproc.vim'
-Plug 'Shougo/unite.vim'
-" ### writing pandoc documents      ###
-Plug 'vim-pandoc/vim-pandoc'
-Plug 'vim-pandoc/vim-pandoc-syntax'
-" ### GIT Plugins                   ###
-Plug 'tpope/vim-fugitive'
+Plug 'Shougo/neocomplete.vim'                                 " neocompletion with cache (need lua support)
+Plug 'neocomplcache'                                          " neo compile caching
+" Plug 'altercation/vim-colors-solarized'                     " solarized colorscheme
+Plug 'flazz/vim-colorschemes'                                 " Color Schemes
+Plug 'morhetz/gruvbox'                                        " Retro groove color scheme
+" the right way to handle trailing-whitespace
+Plug 'bronson/vim-trailing-whitespace'                        " remove trailing whitespaces
+" Plug 'scrooloose/nerdtree'                                  " NERDTree
+" depending on vimproc
+" you have to go to .vim/plugin/vimproc.vim and do a ./make
+Plug 'Shougo/vimproc.vim'                                     " vimproc
+Plug 'Shougo/unite.vim'                                       " unite
+" for writing pandoc documents
+Plug 'vim-pandoc/vim-pandoc'                                  " pandoc text
+Plug 'vim-pandoc/vim-pandoc-syntax'                           " pandoc text
+" GIT Supporting
+Plug 'tpope/vim-fugitive'                                     " git support
 " show which line changed using git
-Plug 'airblade/vim-gitgutter'
-" ### Align code                    ###
-Plug 'junegunn/vim-easy-align'
-Plug 'scrooloose/syntastic'                                   " syntax checker
-" ###  Haskell                      ###
+Plug 'airblade/vim-gitgutter'                                 " git gutter
+" for aligning the code or text
+Plug 'junegunn/vim-easy-align'                                " text and code alignment
+Plug 'scrooloose/syntastic'                                   " raltime syntax checker
+" for haskell
 Plug 'yogsototh/haskell-vim', { 'for': 'haskell' }            " syntax indentation / highlight
 Plug 'enomsg/vim-haskellConcealPlus', { 'for': 'haskell' }    " unicode for concealing haskell operators
-Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }
-Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }
+Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }              " ghcmod for haskell in vim
+Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }                " ghc haskell
 Plug 'Twinside/vim-hoogle', { 'for': 'haskell' }              " Hoogle haskell search
 Plug 'pbrisbin/html-template-syntax', { 'for': 'haskell' }    " Yesod templates
 Plug 'bitc/vim-hdevtools', { 'for': 'haskell' }               " HDevTools for Haskell
 Plug 'nbouscal/vim-stylish-haskell', { 'for': 'haskell' }     " Stylish Haskell
 Plug 'mpickering/hlint-refactor-vim', { 'for': 'haskell' }    " Hlint refactor
-"Plug 'dag/vim2hs'
-" ###  Bars panels                  ###
+"Plug 'dag/vim2hs'                                            " vim haskell
+" for eye candies like bars and status colors
 "Plug 'bling/vim-airline'
 Plug 'vim-airline/vim-airline'                                " Airline statusbar
 Plug 'vim-airline/vim-airline-themes'                         " Airline themes
-Plug 'majutsushi/tagbar'
-" ###  XML                          ###
-Plug 'othree/xml.vim'
+Plug 'majutsushi/tagbar'                                      " tagbar support
+" for XML
+Plug 'othree/xml.vim'                                         " xml support
+" for Rainbow colors
+Plug 'kien/rainbow_parentheses.vim'                           " rainbow parenthesis
 " ### Clojure                       ###
-Plug 'kien/rainbow_parentheses.vim'
-Plug 'guns/vim-clojure-static'
-Plug 'guns/vim-sexp'
-Plug 'tpope/vim-repeat'
+Plug 'guns/vim-clojure-static'                                " clojure support
+Plug 'guns/vim-sexp'                                          " vim expression support
+Plug 'tpope/vim-repeat'                                       " vim repetition
 " Loaded when clojure file is opened
-Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
+Plug 'tpope/vim-fireplace', { 'for': 'clojure' }              " clojure support
 " Multiple file types (loaded when clj or scheme are opened)
-Plug 'kovisoft/paredit', { 'for': ['clojure', 'scheme'] }
+Plug 'kovisoft/paredit', { 'for': ['clojure', 'scheme'] }     " clojure and scheme support
 " vim-fireplace dependencies
-" Plug 'tpope/vim-classpath'
-" Plug 'jpalardy/vim-slime'
-" ### ag                            ###
-Plug 'rking/ag.vim'
-" ### elm-lang                      ###
-Plug 'lambdatoast/elm.vim'
-" ### Idris                         ###
-Plug 'idris-hackers/idris-vim'
+" Plug 'tpope/vim-classpath'                                  " vim classpath
+" Plug 'jpalardy/vim-slime'                                   " slime for vim
+" for agda
+Plug 'rking/ag.vim'                                           " AGDA language
+" for elm-lang
+Plug 'lambdatoast/elm.vim'                                    " ELM language
+" for Idris
+Plug 'idris-hackers/idris-vim'                                " idris language support
 " -- reload browser on change
-" Plug 'Bogdanp/browser-connect.vim'
-" ### for JavaScript                ###
-Plug 'maksimr/vim-jsbeautify'
-Plug 'pangloss/vim-javascript'
+" Plug 'Bogdanp/browser-connect.vim'                          " browser integration
+" for JavaScript
+Plug 'maksimr/vim-jsbeautify'                                 " beautify javascript
+Plug 'pangloss/vim-javascript'                                " javascript for vim
 " Yet Another JavaScript Syntax for Vim
-Plug 'othree/yajs.vim', { 'for': 'javascript' }
-Plug 'einars/js-beautify'
+Plug 'othree/yajs.vim', { 'for': 'javascript' }               " javascript support - lazy loading
+Plug 'einars/js-beautify'                                     " javscript beautify
 " JavaScript Context Coloring in Vim
-Plug 'bigfish/vim-js-context-coloring'
-" ### extends syntax for with jQuery,backbone,etc.
-Plug 'othree/javascript-libraries-syntax.vim'
-Plug 'mxw/vim-jsx'
-Plug 'elzr/vim-json'
-" ### Syntax file for JavaScript libraries.
-Plug 'othree/javascript-libraries-syntax.vim'
-" ### for erlang                    ###
-Plug 'vim-erlang/vim-erlang-runtime'
-Plug 'vim-erlang/vim-erlang-omnicomplete'
-Plug 'vim-erlang/vim-erlang-compiler'
+Plug 'bigfish/vim-js-context-coloring'                        " javascript highlighting
+" extends syntax for with jQuery,backbone,etc.
+Plug 'othree/javascript-libraries-syntax.vim'                 " javascript library support
+Plug 'mxw/vim-jsx'                                            " json/js support
+Plug 'elzr/vim-json'                                          " json highlighting
+" Syntax file for JavaScript libraries.
+Plug 'othree/javascript-libraries-syntax.vim'                 " javascript library support
+" for erlang
+Plug 'vim-erlang/vim-erlang-runtime'                          " erlang runtime check
+Plug 'vim-erlang/vim-erlang-omnicomplete'                     " erlang autocomplete
+Plug 'vim-erlang/vim-erlang-compiler'                         " erlang support
 " Allow pane movement to jump out of vim into tmux
-Plug 'christoomey/vim-tmux-navigator'
-" ###  scala                        ###
-Plug 'derekwyatt/vim-scala'
-"Plug 'ensime/ensime-vim'
-" ###  get current function name
-Plug 'tyru/current-func-info.vim'
-" ### Autopair                      ###
-Plug 'jiangmiao/auto-pairs'
-" ### Language: HTML, XML ...       ###
-Plug 'othree/html5.vim'
-" ### python                        ###
-Plug 'davidhalter/jedi-vim'
-"Plug 'lambdalisue/vim-pyenv'
-" ### for C/C++                     ###
-" Plug 'Rip-Rip/clang_complete'
+Plug 'christoomey/vim-tmux-navigator'                         " TMUX support
+" for scala
+Plug 'derekwyatt/vim-scala'                                   " scala support
+"Plug 'ensime/ensime-vim'                                     " ensime for scala autocomplete
+Plug 'tyru/current-func-info.vim'                             " get current function name
+Plug 'jiangmiao/auto-pairs'                                   " parenthesis autopairing
+" for html, xml ...
+Plug 'othree/html5.vim'                                       " html5
+" for python3
+Plug 'davidhalter/jedi-vim'                                   " python jedi autocompletion
+"Plug 'lambdalisue/vim-pyenv'                                 " python virtual env
+" for c/c++
+" Plug 'Rip-Rip/clang_complete'                               " clang completion
 " Code to execute when the plugin is loaded on demand
 " On-demand loading
-" Plug 'Valloric/YouCompleteMe', { 'for': ['cpp','python'] }
-" ### vim icons                     ###
-" Plug 'ryanoasis/vim-devicons'
+" Plug 'Valloric/YouCompleteMe', { 'for': ['cpp','python'] }  " ycm
+" Plug 'ryanoasis/vim-devicons'                               " vim icons
+Plug 'edkolev/promptline.vim'                                 " promptline
+Plug 'vim-ctrlspace/vim-ctrlspace'                            " ctrlspace
 " }}}
 " autocmd! User YouCompleteMe call youcompleteme#Enable()
 
 call plug#end()
 
+" ######################################################################
+" #######################     Plugin conf end    #######################
+" ######################################################################
+
 set nocompatible
+set hidden
 
-" ###################
-" ### Plugin conf ###
-" ###################
+" ######################################################################
+" #######################  Plugin customizations #######################
+" ######################################################################
 
-" -------------------
-"       Haskell
-" -------------------
+
+" =======================================
+"                 Haskell
+" =======================================
 let mapleader="-"
 let g:mapleader="-"
 set tm=2000
@@ -182,7 +191,9 @@ au FileType haskell nnoremap <buffer> <F1> :HdevtoolsType<CR>
 au FileType haskell nnoremap <buffer> <silent> <F2> :HdevtoolsClear<CR>
 au FileType haskell nnoremap <buffer> <silent> <F3> :HdevtoolsInfo<CR>
 
+" =======================================
 "  neocomplcache (advanced completion)
+" =======================================
 let g:acp_enableAtStartup = 0
 let g:neocomplete#enable_at_startup = 1
 let g:neocomplcache_enable_at_startup = 1
@@ -206,7 +217,9 @@ function! SetToCabalBuild()
 endfunction
 autocmd BufEnter *.hs,*.lhs :call SetToCabalBuild()
 
-" -- neco-ghc
+" =======================================
+"            -- neco-ghc
+" =======================================
 " let $PATH=$PATH.':'.expand("~/.cabal/bin")
 let $PATH=$PATH.':'.expand("~/Library/Haskell/bin/")
 autocmd BufEnter *.hs,*.lhs setlocal omnifunc=necoghc#omnifunc
@@ -216,18 +229,29 @@ let g:necoghc_enable_detailed_browse = 1
 " -- Frege
 autocmd BufEnter *.fr :filetype haskell
 
-" ----------------
-"       GIT
-" ----------------
+" =======================================
+"         ctrlspace customization
+" getting help with the below options
+" :help g:CtrlSpaceSymbols
+" =======================================
+if has("gui_running")
+    " Settings for vim and monaco powerline font
+    let g:CtrlSpaceSymbols = { "File": "◯", "CTab": "▣", "Tabs": "▢" }
+endif
+
+" =======================================
+"                GIT Gutter
+" =======================================
 " -- vim-gitgutter
 highlight clear SignColumn
 highlight SignColumn ctermbg=0
 nmap gn <Plug>GitGutterNextHunk
 nmap gN <Plug>GitGutterPrevHunk
+let g:gitgutter_realtime = 0
 
-" -----------------
-"      THEMES
-" -----------------
+" =======================================
+"                 Themes
+" =======================================
 
 " -- solarized theme
 "set background=dark
@@ -236,9 +260,9 @@ nmap gN <Plug>GitGutterPrevHunk
 "catch
 "endtry
 
-" ----------------------------
-"       File Management
-" ----------------------------
+" =======================================
+"            File Management
+" =======================================
 let g:unite_source_history_yank_enable = 1
 try
   let g:unite_source_rec_async_command='ag --nocolor --nogroup -g ""'
@@ -256,6 +280,9 @@ nnoremap <space>y :split<cr>:<C-u>Unite history/yank<cr>
 " reset not it is <C-l> normally
 :nnoremap <space>r <Plug>(unite_restart)
 
+" =======================================
+"                Clojure
+" =======================================
 " Clojure {{{
 autocmd BufEnter *.cljs,*.clj,*.cljs.hl RainbowParenthesesActivate
 autocmd BufEnter *.cljs,*.clj,*.cljs.hl RainbowParenthesesLoadRound
@@ -265,7 +292,9 @@ autocmd BufEnter *.cljs,*.clj,*.cljs.hl RainbowParenthesesLoadBraces
 autocmd BufEnter *.cljs,*.clj,*.cljs.hl setlocal iskeyword+=?,-,*,!,+,/,=,<,>,.,:
 " }}}
 
-" -- Rainbow parenthesis options
+" =======================================
+" --   Rainbow parenthesis options
+" =======================================
 let g:rbpt_colorpairs = [
 	\ ['darkyellow',  'RoyalBlue3'],
 	\ ['darkgreen',   'SeaGreen3'],
@@ -295,6 +324,10 @@ au Syntax * RainbowParenthesesLoadBraces
 " ### Personal conf ###
 " #####################
 
+" ######################################################################
+" ####################### Personal Configuration #######################
+" ######################################################################
+
 " Use powerline fonts for airline
 if !exists('g:airline_symbols')
    let g:airline_symbols = {}
@@ -309,9 +342,9 @@ let g:Powerline_symbols = 'fancy'
 " Use Vim settings, rather then Vi settings (much better!).
 " This must be first, because it changes other options as a side effect.
 set nocompatible
-set bs=2		            " allow backspacing over everything in insert mode
+set bs=2		                " allow backspacing over everything in insert mode
 set viminfo='20,\"50        " read/write a .viminfo file, don't store more
-			                " than 50 lines of registers
+			                      " than 50 lines of registers
 set history=10000           " keep 100000 lines of command line history
 set ruler                   " show the cursor position all the time
 syntax on                   " syntax highlighting
@@ -382,19 +415,18 @@ autocmd BufEnter *.cljs,*.cljs.hl set filetype=clojure
 "  in your HTML
 "  au BufWritePost *.cljs :BCReloadPage
 
-" ====================================
-" Personal Configurations
-" ====================================
+
 " Searing red very visible cursor
+" red back ground
 hi Cursor guibg=red
 
-" Use same color behind concealed unicode characters
+" Use same color behind the concealed unicode characters
 hi clear Conceal
 
 " Easier anti-quote
 imap éé `
 
-" -- show the column 81
+" -- show the column number 81
 if (exists('+colorcolumn'))
     "set colorcolumn=80
     set colorcolumn=120
@@ -408,14 +440,18 @@ nmap ° :Ag <c-r>=expand("<cword>")<cr><cr>
 " -- vim-pandoc folding
 let g:pandoc#modules#disabled = ["folding"]
 
+" =======================================
 " --- Slime ---
+" =======================================
 " {{{
 vmap <silent> <Leader>rs <Plug>SendSelectionToTmux
 nmap <silent> <Leader>rs <Plug>NormalModeSendToTmux
 nmap <silent> <Leader>rv <Plug>SetTmuxVars
 " }}}
 
+" =======================================
 " --- TMUX ---
+" =======================================
 " {{{
 " Manually create key mappings (to avoid rebinding C-\)
 let g:tmux_navigator_no_mappings = 1
@@ -436,19 +472,18 @@ autocmd BufEnter *.hs set formatprg=pointfree
 " {{{
 " --- FANCY abcdefgh in status bar ---
 function! AccentDemo()
-  let keys = ['a','b','c','d','e','f','g','h','i']
+  let keys = ['a','b','c','d','e','f','g','h']
   for k in keys
     call airline#parts#define_text(k, k)
 endfor
   call airline#parts#define_accent('a', 'red')
   call airline#parts#define_accent('b', 'green')
   call airline#parts#define_accent('c', 'blue')
-  call airline#parts#define_accent('d', 'violet')
+  call airline#parts#define_accent('d', 'yellow')
   call airline#parts#define_accent('e', 'orange')
   call airline#parts#define_accent('f', 'purple')
-  call airline#parts#define_accent('g', 'pink')
-  call airline#parts#define_accent('h', 'bold')
-  call airline#parts#define_accent('i', 'italic')
+  call airline#parts#define_accent('g', 'bold')
+  call airline#parts#define_accent('h', 'italic')
   let g:airline_section_a = airline#section#create(keys)
 endfunction
 autocmd VimEnter * call AccentDemo()
@@ -492,7 +527,7 @@ endif
 "}}}
 
 
-"--------------------------------------
+" =======================================
 " personal settings for Syntastic
 " By default, Syntastic uses arrow symbols to indicate line with error.
 " To spice things up, you can specify any Unicode symbol as the symbol.
@@ -587,4 +622,4 @@ autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 " for macvim
 " override macvim color scheme
 let macvim_skip_colorscheme=1
-"--------------------------------------
+" =======================================
