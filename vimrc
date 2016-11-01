@@ -18,29 +18,29 @@
 " Scala
 " Clojure (I don't use, but interested in learning)
 "
-" Original template used from Yann Esposito
+" Original configuration template used from Yann Esposito
 " http://yannesposito.com
 " THANKS TO @yogsototh
 "
-" ---------- VERY IMPORTANT -----------
-" To install plugin the first time:
-" > vim +BundleInstall +qall
-" cd ~/.vim/bundle/vimproc.vim && make
-" cabal install ghc-mod
-" -------------------------------------
+" ---------------------------- VERY IMPORTANT ----------------------------
+" ----        To install plugin the first time:                       ----
+" ----        > vim +BundleInstall +qall                              ----
+" ----        cd ~/.vim/bundle/vimproc.vim && make                    ----
+" ----        cabal install ghc-mod                                   ----
+" ------------------------------------------------------------------------
 "
 "
-" #########################
-" #### unicode support ####
-" #########################
+" ########################################################################
+" ########         for unicode support character and font         ########
+" ########################################################################
 " For UNICODE Support "⚠"
 " note: set encoding BEFORE scriptencoding
 set encoding=utf-8
 scriptencoding utf-8
 
-" ######################################################################
-" #######################    Plugin conf start   #######################
-" ######################################################################
+" ########################################################################
+" ########################    Plugin conf start   ########################
+" ########################################################################
 
 call plug#begin('~/.vim/plugged')
 "
@@ -64,6 +64,7 @@ Plug 'bronson/vim-trailing-whitespace'                        " remove trailing 
 " you have to go to .vim/plugin/vimproc.vim and do a ./make
 Plug 'Shougo/vimproc.vim'                                     " vimproc
 Plug 'Shougo/unite.vim'                                       " unite
+Plug 'mhinz/vim-startify'                                     " fancy start screen for vim
 " for writing pandoc documents
 Plug 'vim-pandoc/vim-pandoc'                                  " pandoc text
 Plug 'vim-pandoc/vim-pandoc-syntax'                           " pandoc text
@@ -84,9 +85,11 @@ Plug 'pbrisbin/html-template-syntax', { 'for': 'haskell' }    " Yesod templates
 Plug 'bitc/vim-hdevtools', { 'for': 'haskell' }               " HDevTools for Haskell
 Plug 'nbouscal/vim-stylish-haskell', { 'for': 'haskell' }     " Stylish Haskell
 Plug 'mpickering/hlint-refactor-vim', { 'for': 'haskell' }    " Hlint refactor
+Plug 'itchyny/vim-haskell-indent'                             " haskell indent plugin
 "Plug 'dag/vim2hs'                                            " vim haskell
 " for eye candies like bars and status colors
-"Plug 'bling/vim-airline'
+"Plug 'bling/vim-airline'                                     " using vim-airline repo
+"Plug 'bling/vim-bufferline'                                  " show number of buffers
 Plug 'vim-airline/vim-airline'                                " Airline statusbar
 Plug 'vim-airline/vim-airline-themes'                         " Airline themes
 Plug 'majutsushi/tagbar'                                      " tagbar support
@@ -105,7 +108,7 @@ Plug 'kovisoft/paredit', { 'for': ['clojure', 'scheme'] }     " clojure and sche
 " vim-fireplace dependencies
 " Plug 'tpope/vim-classpath'                                  " vim classpath
 " Plug 'jpalardy/vim-slime'                                   " slime for vim
-" for agda
+" for Agda support
 Plug 'rking/ag.vim'                                           " AGDA language
 " for elm-lang
 Plug 'lambdatoast/elm.vim'                                    " ELM language
@@ -156,21 +159,21 @@ Plug 'vim-ctrlspace/vim-ctrlspace'                            " ctrlspace
 
 call plug#end()
 
-" ######################################################################
-" #######################     Plugin conf end    #######################
-" ######################################################################
+" ########################################################################
+" ########################     Plugin conf end    ########################
+" ########################################################################
 
 set nocompatible
 set hidden
 
-" ######################################################################
-" #######################  Plugin customizations #######################
-" ######################################################################
+" ########################################################################
+" ########################  Plugin customizations ########################
+" ########################################################################
 
 
-" =======================================
-"                 Haskell
-" =======================================
+" ========================================================================
+" ---                            Haskell                               ---
+" ========================================================================
 let mapleader="-"
 let g:mapleader="-"
 set tm=2000
@@ -191,9 +194,9 @@ au FileType haskell nnoremap <buffer> <F1> :HdevtoolsType<CR>
 au FileType haskell nnoremap <buffer> <silent> <F2> :HdevtoolsClear<CR>
 au FileType haskell nnoremap <buffer> <silent> <F3> :HdevtoolsInfo<CR>
 
-" =======================================
-"  neocomplcache (advanced completion)
-" =======================================
+" ========================================================================
+" ---             neocomplcache (advanced completion)                  ---
+" ========================================================================
 let g:acp_enableAtStartup = 0
 let g:neocomplete#enable_at_startup = 1
 let g:neocomplcache_enable_at_startup = 1
@@ -217,11 +220,13 @@ function! SetToCabalBuild()
 endfunction
 autocmd BufEnter *.hs,*.lhs :call SetToCabalBuild()
 
-" =======================================
-"            -- neco-ghc
-" =======================================
+" ========================================================================
+" ---                            neco-ghc                              ---
+" ========================================================================
 " let $PATH=$PATH.':'.expand("~/.cabal/bin")
 let $PATH=$PATH.':'.expand("~/Library/Haskell/bin/")
+" Disable haskell-vim omnifunc
+let g:haskellmode_completion_ghc = 0
 autocmd BufEnter *.hs,*.lhs setlocal omnifunc=necoghc#omnifunc
 " below prvodes detailed info, but if boot time is more disable it
 let g:necoghc_enable_detailed_browse = 1
@@ -229,19 +234,19 @@ let g:necoghc_enable_detailed_browse = 1
 " -- Frege
 autocmd BufEnter *.fr :filetype haskell
 
-" =======================================
-"         ctrlspace customization
-" getting help with the below options
-" :help g:CtrlSpaceSymbols
-" =======================================
+" ========================================================================
+" ---                    ctrlspace customization                       ---
+" --- getting help with the below options                              ---
+" --- :help g:CtrlSpaceSymbols                                         ---
+" ========================================================================
 if has("gui_running")
     " Settings for vim and monaco powerline font
     let g:CtrlSpaceSymbols = { "File": "◯", "CTab": "▣", "Tabs": "▢" }
 endif
 
-" =======================================
-"                GIT Gutter
-" =======================================
+" ========================================================================
+" ---                             GIT Gutter                           ---
+" ========================================================================
 " -- vim-gitgutter
 highlight clear SignColumn
 highlight SignColumn ctermbg=0
@@ -249,9 +254,9 @@ nmap gn <Plug>GitGutterNextHunk
 nmap gN <Plug>GitGutterPrevHunk
 let g:gitgutter_realtime = 0
 
-" =======================================
-"                 Themes
-" =======================================
+" ========================================================================
+" ---                              Themes                              ---
+" ========================================================================
 
 " -- solarized theme
 "set background=dark
@@ -260,9 +265,9 @@ let g:gitgutter_realtime = 0
 "catch
 "endtry
 
-" =======================================
-"            File Management
-" =======================================
+" ========================================================================
+" ---                         File Management                          ---
+" ========================================================================
 let g:unite_source_history_yank_enable = 1
 try
   let g:unite_source_rec_async_command='ag --nocolor --nogroup -g ""'
@@ -280,9 +285,9 @@ nnoremap <space>y :split<cr>:<C-u>Unite history/yank<cr>
 " reset not it is <C-l> normally
 :nnoremap <space>r <Plug>(unite_restart)
 
-" =======================================
-"                Clojure
-" =======================================
+" ========================================================================
+" ---                             Clojure                              ---
+" ========================================================================
 " Clojure {{{
 autocmd BufEnter *.cljs,*.clj,*.cljs.hl RainbowParenthesesActivate
 autocmd BufEnter *.cljs,*.clj,*.cljs.hl RainbowParenthesesLoadRound
@@ -292,9 +297,9 @@ autocmd BufEnter *.cljs,*.clj,*.cljs.hl RainbowParenthesesLoadBraces
 autocmd BufEnter *.cljs,*.clj,*.cljs.hl setlocal iskeyword+=?,-,*,!,+,/,=,<,>,.,:
 " }}}
 
-" =======================================
-" --   Rainbow parenthesis options
-" =======================================
+" ========================================================================
+" --                 Rainbow parenthesis customization                  --
+" ========================================================================
 let g:rbpt_colorpairs = [
 	\ ['darkyellow',  'RoyalBlue3'],
 	\ ['darkgreen',   'SeaGreen3'],
@@ -320,9 +325,6 @@ au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
 
-" #####################
-" ### Personal conf ###
-" #####################
 
 " ######################################################################
 " ####################### Personal Configuration #######################
@@ -365,10 +367,10 @@ noremap <C-j> <C-w>j
 noremap <C-k> <C-w>k
 noremap <C-l> <C-w>l
 
-" -- sudo save
+" sudo save
 cmap w!! w !sudo tee >/dev/null %
 
-" Tabulation management
+" Tab and indentation management
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
@@ -440,18 +442,18 @@ nmap ° :Ag <c-r>=expand("<cword>")<cr><cr>
 " -- vim-pandoc folding
 let g:pandoc#modules#disabled = ["folding"]
 
-" =======================================
-" --- Slime ---
-" =======================================
+" ========================================================================
+" ---                              Slime                               ---
+" ========================================================================
 " {{{
 vmap <silent> <Leader>rs <Plug>SendSelectionToTmux
 nmap <silent> <Leader>rs <Plug>NormalModeSendToTmux
 nmap <silent> <Leader>rv <Plug>SetTmuxVars
 " }}}
 
-" =======================================
-" --- TMUX ---
-" =======================================
+" ========================================================================
+" ---                         TMUX configuration                       ---
+" ========================================================================
 " {{{
 " Manually create key mappings (to avoid rebinding C-\)
 let g:tmux_navigator_no_mappings = 1
@@ -470,7 +472,9 @@ nnoremap <silent> <C-l> :TmuxNavigateRight<cr>
 autocmd BufEnter *.hs set formatprg=pointfree
 
 " {{{
-" --- FANCY abcdefgh in status bar ---
+" -------------------------------------------------------------------------
+" ---                    FANCY abcdefgh in status bar                   ---
+" -------------------------------------------------------------------------
 function! AccentDemo()
   let keys = ['a','b','c','d','e','f','g','h']
   for k in keys
@@ -510,6 +514,7 @@ let g:syntastic_erlang_checkers=['syntaxerl']
 " enable all Python syntax highlighting features
 let python_highlight_all=1
 
+" ycm - youcompleteme disabled
 " let g:ycm_python_binary_path = '/usr/local/bin/python3'
 " let g:ycm_server_python_interpreter = '/usr/local/bin/python3'
 
@@ -527,10 +532,11 @@ endif
 "}}}
 
 
-" =======================================
-" personal settings for Syntastic
-" By default, Syntastic uses arrow symbols to indicate line with error.
-" To spice things up, you can specify any Unicode symbol as the symbol.
+" -------------------------------------------------------------------------
+" ---                  personal settings for Syntastic                  ---
+" - By default, Syntastic uses arrow symbols to indicate line with error. -
+" - To spice things up, you can specify any Unicode symbol as the symbol. -
+" -------------------------------------------------------------------------
 
 " getbg function {{{
 " gets background of a highlighting group with fallback to SignColumn group
@@ -589,8 +595,10 @@ let g:syntastic_python_flake8_args         = '--ignore="D400"'
 " syntastic for cpp
 let g:syntastic_cpp_compiler = "g++"
 
+" -------------------------------------------------------------------------
+" ---                    javascript  beautifying                        ---
+" -------------------------------------------------------------------------
 " JavaScript {{{
-" -- js beautifer ---
 autocmd FileType javascript noremap <buffer> <c-f> :call JsBeautify()<cr>
 autocmd FileType html noremap <buffer> <c-f> :call JsBeautify()<cr>
 autocmd FileType css noremap <buffer> <c-f> :call JsBeautify()<cr>
@@ -619,7 +627,32 @@ let g:syntastic_check_on_open = 1
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 " }}}
 
+" colors and alerts
+highlight Cursor guifg=pink guibg=black
+highlight Search guifg=black guibg=gray
+
+highlight CommaAndNonSpace      ctermbg=red guifg=white guibg=red
+highlight EOLSpace              ctermbg=red guifg=white guibg=red
+highlight HashRocketAndNonSpace ctermbg=red guifg=white guibg=red
+highlight NonSpaceAndHashRocket ctermbg=red guifg=white guibg=red
+highlight SpaceAndComma         ctermbg=red guifg=white guibg=red
+highlight Tab                   ctermbg=red guifg=white guibg=red
+highlight WideEisuu             ctermbg=red guifg=white guibg=red
+highlight WideSpace             ctermbg=red guifg=white guibg=red
+
+function! s:highlight_general_checkstyles()
+    "let w:m1=matchadd('Tab', '    ', -1)
+    let w:m1=matchadd('WideSpace', '　', -1)
+    let w:m2=matchadd('EOLSpace', '\s\+$', -1)
+    let w:m3=matchadd('WideEisuu', '[Ａ-Ｚａ-ｚ０-９]', -1)
+    " let w:m4=matchadd('SpaceAndComma', ' ,', -1)
+    " let w:m5=matchadd('CommaAndNonSpace', ',[^(\\n| )]', -1)
+    "let w:m6=matchadd('Tab', '\t', -1)
+endf
+
+call s:highlight_general_checkstyles()
+
 " for macvim
 " override macvim color scheme
 let macvim_skip_colorscheme=1
-" =======================================
+" =========================================================================
