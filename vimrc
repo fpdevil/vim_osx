@@ -8,12 +8,14 @@
 " ╚═╝ ╚═══╝   ╚═╝ ╚═╝     ╚═╝ ╚═╝  ╚═╝  ╚═════╝
 "
 "
+" Sampath Singamsetty (Singamsetty.Sampath@gmail.com)
+" Last Updated Date: 12 Nov 2016
 "
 " Customized .vim configuration file
 " It supports some of the major languages which I use
 " Haskell
 " Erlang
-" JavaScript ... flavours
+" JavaScript ... flavors
 " Python
 " Scala
 " Clojure (I don't use, but interested in learning)
@@ -54,12 +56,13 @@ call plug#begin('~/.vim/plugged')
 "
 Plug 'Shougo/neocomplete.vim'                                 " neocompletion with cache (need lua support)
 Plug 'neocomplcache'                                          " neo compile caching
-" Plug 'altercation/vim-colors-solarized'                     " solarized colorscheme
+"Plug 'benekastah/neomake'                                    " make and linting framework for nvim/vim
+Plug 'altercation/vim-colors-solarized'                       " solarized colorscheme
 Plug 'flazz/vim-colorschemes'                                 " Color Schemes
 Plug 'morhetz/gruvbox'                                        " Retro groove color scheme
 " the right way to handle trailing-whitespace
 Plug 'bronson/vim-trailing-whitespace'                        " remove trailing whitespaces
-" Plug 'scrooloose/nerdtree'                                  " NERDTree
+Plug 'scrooloose/nerdtree'                                    " NERDTree
 " depending on vimproc
 " you have to go to .vim/plugin/vimproc.vim and do a ./make
 Plug 'Shougo/vimproc.vim'                                     " vimproc
@@ -72,11 +75,14 @@ Plug 'vim-pandoc/vim-pandoc-syntax'                           " pandoc text
 Plug 'tpope/vim-fugitive'                                     " git support
 " show which line changed using git
 Plug 'airblade/vim-gitgutter'                                 " git gutter
-" for aligning the code or text
+" for aligning the code or text manipulation
 Plug 'junegunn/vim-easy-align'                                " text and code alignment
 Plug 'scrooloose/syntastic'                                   " raltime syntax checker
-" for haskell
-Plug 'yogsototh/haskell-vim', { 'for': 'haskell' }            " syntax indentation / highlight
+Plug 'godlygeek/tabular'                                      " text filtering and alignment
+Plug 'nathanaelkane/vim-indent-guides'                        " vim indentation display
+" for haskell (load only for haskell)
+"Plug 'yogsototh/haskell-vim', { 'for': 'haskell' }           " syntax indentation / highlight
+Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }        " syntax indentation / highlight
 Plug 'enomsg/vim-haskellConcealPlus', { 'for': 'haskell' }    " unicode for concealing haskell operators
 Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }              " ghcmod for haskell in vim
 Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }                " ghc haskell
@@ -86,7 +92,7 @@ Plug 'bitc/vim-hdevtools', { 'for': 'haskell' }               " HDevTools for Ha
 Plug 'nbouscal/vim-stylish-haskell', { 'for': 'haskell' }     " Stylish Haskell
 Plug 'mpickering/hlint-refactor-vim', { 'for': 'haskell' }    " Hlint refactor
 Plug 'itchyny/vim-haskell-indent'                             " haskell indent plugin
-"Plug 'dag/vim2hs'                                            " vim haskell
+"Plug 'dag/vim2hs'                                            " vimscripts for haskell development
 " for eye candies like bars and status colors
 "Plug 'bling/vim-airline'                                     " using vim-airline repo
 "Plug 'bling/vim-bufferline'                                  " show number of buffers
@@ -154,7 +160,13 @@ Plug 'davidhalter/jedi-vim'                                   " python jedi auto
 " Plug 'ryanoasis/vim-devicons'                               " vim icons
 Plug 'edkolev/promptline.vim'                                 " promptline
 Plug 'vim-ctrlspace/vim-ctrlspace'                            " ctrlspace
-" }}}
+" Plugins for vim textual snippets
+Plug 'tomtom/tlib_vim'                                        " for snippets
+Plug 'MarcWeber/vim-addon-mw-utils'                           " for snippets
+Plug 'garbas/vim-snipmate'                                    " for snippets
+Plug 'honza/vim-snippets'                                     " for snippets
+Plug 'hecal3/vim-leader-guide'                                " vim keymap-display
+"}}}
 " autocmd! User YouCompleteMe call youcompleteme#Enable()
 
 call plug#end()
@@ -172,19 +184,27 @@ set hidden
 
 
 " ========================================================================
-" ---                            Haskell                               ---
+" ---                    Haskell customization                         ---
 " ========================================================================
 let mapleader="-"
 let g:mapleader="-"
 set tm=2000
+
+" normal mode key mappings (ex: press -ht)
 nmap <silent> <leader>ht :GhcModType<CR>
 nmap <silent> <leader>he :GhcModTypeClear<CR>
 nmap <silent> <leader>hi :GhcModTypeInsert<CR>
 nmap <silent> <leader>hs :GhcModSplitFunCase<CR>
 nmap <silent> <leader>hc :SyntasticCheck ghc_mod<CR>:lopen<CR>
-let g:syntastic_mode_map={'mode': 'active', 'passive_filetypes': ['haskell']}
-let g:syntastic_always_populate_loc_list = 1
 nmap <silent> <leader>hl :SyntasticCheck hlint<CR>:lopen<CR>
+
+"let g:syntastic_mode_map={'mode': 'active', 'passive_filetypes': ['haskell']}
+let g:syntastic_mode_map={'mode': 'active', 'active_filetypes': ['haskell'],'passive_filetypes': []}
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 0
+" skip syntax checking while exiting using :wq
+let g:syntastic_check_on_wq = 0
+
 
 " Auto-checking on writing
 autocmd BufWritePost *.hs,*.lhs GhcModCheckAndLintAsync
@@ -193,6 +213,30 @@ autocmd BufWritePost *.hs,*.lhs GhcModCheckAndLintAsync
 au FileType haskell nnoremap <buffer> <F1> :HdevtoolsType<CR>
 au FileType haskell nnoremap <buffer> <silent> <F2> :HdevtoolsClear<CR>
 au FileType haskell nnoremap <buffer> <silent> <F3> :HdevtoolsInfo<CR>
+
+" ========================================================================
+" ---                for haskell-vim customization                     ---
+" ========================================================================
+let g:haskell_enable_quantification = 1   " to enable highlighting of `forall`
+let g:haskell_enable_recursivedo = 1      " to enable highlighting of `mdo` and `rec`
+let g:haskell_enable_arrowsyntax = 1      " to enable highlighting of `proc`
+let g:haskell_enable_pattern_synonyms = 1 " to enable highlighting of `pattern`
+let g:haskell_enable_typeroles = 1        " to enable highlighting of type roles
+let g:haskell_enable_static_pointers = 1  " to enable highlighting of `static`
+
+
+" ========================================================================
+" ---                for nerdtree configuration                        ---
+" ========================================================================
+nmap <leader>nt :NERDTreeToggle<CR>
+
+" ========================================================================
+" ---                for tab alignment configuration                   ---
+" ========================================================================
+let g:haskell_tabular = 1
+vmap a= :Tabularize /=<CR>
+vmap a; :Tabularize /::<CR>
+vmap a- :Tabularize /-><CR>
 
 " ========================================================================
 " ---             neocomplcache (advanced completion)                  ---
@@ -228,8 +272,9 @@ let $PATH=$PATH.':'.expand("~/Library/Haskell/bin/")
 " Disable haskell-vim omnifunc
 let g:haskellmode_completion_ghc = 0
 autocmd BufEnter *.hs,*.lhs setlocal omnifunc=necoghc#omnifunc
-" below prvodes detailed info, but if boot time is more disable it
-let g:necoghc_enable_detailed_browse = 1
+" if necoghc_enable_detailed_browse = 1, it provides detailed info,
+" but if boot time is more disable it necoghc_enable_detailed_browse = 0
+let g:necoghc_enable_detailed_browse = 0
 
 " -- Frege
 autocmd BufEnter *.fr :filetype haskell
@@ -255,9 +300,17 @@ nmap gN <Plug>GitGutterPrevHunk
 let g:gitgutter_realtime = 0
 
 " ========================================================================
+" ---                              neomake                             ---
+" ========================================================================
+" let g:neomake_javascript_jshint_maker = {
+"     \ 'args': ['--verbose'],
+"     \ 'errorformat': '%A%f: line %l\, col %v\, %m \(%t%*\d\)',
+"     \ }
+" let g:neomake_javascript_enable_makers = ['jshint']
+
+" ========================================================================
 " ---                              Themes                              ---
 " ========================================================================
-
 " -- solarized theme
 "set background=dark
 "try
