@@ -15,7 +15,12 @@ for Haskell install the ghc-mod package
         cabal install ghc-mod
 ```
 
-Fire up vim and check the Plugins as below
-:PlugStatus
+- Fire up vim and check the Plugins as below
+`:PlugStatus`
 This should show the status of each plugin
 ![alt text](screenshots/vimshot.png "A plugin status screenshot")
+
+- Haskell syntax highlighting and real-time checking will be shown as below
+
+![alt text](screenshots/haskell.png "A haskell syntax highlighting screenshot")
+
