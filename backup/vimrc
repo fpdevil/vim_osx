@@ -36,7 +36,7 @@
 " #########################################################################
 " #########         for unicode support character and font        #########
 " #########################################################################
-" For UNICODE support of symbols like "⚠"
+" For UNICODE Support like "⚠"
 " note: set encoding BEFORE scriptencoding
 set encoding=utf-8
 scriptencoding utf-8
@@ -53,181 +53,142 @@ call plug#begin('~/.vim/plugged')
 " the vundle plugin to install vim plugin
 " Bundle 'gmarik/vundle'
 " completion during typing
-" Plugins section {{{
+" Pligins section {{{
 "
-" --- syntax checking and code formatting
+" -- syntax checking and code formatting
 Plug 'scrooloose/syntastic'                                   " realtime syntax checker
 Plug 'Chiel92/vim-autoformat'                                 " easy code formatting in vim
 Plug 'Shougo/neocomplete.vim'                                 " neocompletion with cache (need lua support)
-"Plug 'neocomplcache'                                         " neo compile caching (using neocomplete for completion)
-
-" --- 3rd party color themes
+"Plug 'neocomplcache'                                          " neo compile caching (using neocomplete)
+" -- 3rd party color themes
 Plug 'flazz/vim-colorschemes'                                 " Color Schemes
 Plug 'morhetz/gruvbox'                                        " Retro groove color scheme
 Plug 'trusktr/seti.vim'                                       " seti colorscheme
-Plug 'altercation/vim-colors-solarized'                       " solarized color schemes
-
-" --- the right way to handle trailing-whitespace
+Plug 'altercation/vim-colors-solarized'                       " solarized colorschemes
+" -- the right way to handle trailing-whitespace
 Plug 'bronson/vim-trailing-whitespace'                        " remove trailing whitespaces
-
-" --- A Tree file browser
-Plug 'scrooloose/nerdtree'                                    " NERDTree file browser
-
-" --- depending on your vimproc location
-" --- you have to go to .vim/plugin/vimproc.vim and do a ./make
+" -- A Tree file browser
+Plug 'scrooloose/nerdtree'                                    " NERDTree
+" -- depending on the vimproc
+" -- you have to go to .vim/plugin/vimproc.vim and do a ./make
 Plug 'Shougo/vimproc.vim'                                     " vimproc
 Plug 'Shougo/unite.vim'                                       " unite
 Plug 'mhinz/vim-startify'                                     " fancy start screen for vim
-
-" --- for commenting the code
+" -- for writing pandoc documents
+Plug 'vim-pandoc/vim-pandoc'                                  " pandoc text
+Plug 'vim-pandoc/vim-pandoc-syntax'                           " pandoc text
+" -- for commenting the code
 Plug 'scrooloose/nerdcommenter'                               " intensely orgasmic commenting
-
-" --- git integration
-Plug 'tpope/vim-fugitive'                                       " git integration
-Plug 'airblade/vim-gitgutter'                                   " show which line changed using git
-Plug 'mhinz/vim-signify'                                        " show diff via vim sign column
-
-" --- for aligning the code and or text manipulation
-Plug 'junegunn/vim-easy-align'                                  " text and code alignment
-Plug 'godlygeek/tabular'                                        " text filtering and alignment
-Plug 'nathanaelkane/vim-indent-guides'                          " vim indentation display
-Plug 'ervandew/supertab'                                        " use TAB for all insertions
-
-" --- for haskell language auto-complete, syntax and code check(load only for haskell)
-Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }          " syntax indentation / highlight
-Plug 'enomsg/vim-haskellConcealPlus', { 'for': 'haskell' }      " unicode for concealing haskell operators
-Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }                " ghcmod for haskell in vim
-Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }                  " ghc haskell
-Plug 'Twinside/vim-hoogle', { 'for': 'haskell' }                " Hoogle haskell search
-Plug 'pbrisbin/html-template-syntax', { 'for': 'haskell' }      " Yesod templates
-Plug 'bitc/vim-hdevtools', { 'for': 'haskell' }                 " HDevTools for Haskell
-Plug 'nbouscal/vim-stylish-haskell', { 'for': 'haskell' }       " Stylish Haskell
-Plug 'mpickering/hlint-refactor-vim', { 'for': 'haskell' }      " Hlint refactor
-Plug 'itchyny/vim-haskell-indent', { 'for': 'haskell'}          " haskell indent plugin
-Plug 'dan-t/vim-hsimport', {'for': 'haskell'}                   " plugin for hsimport
-"Plug 'dag/vim2hs'                                              " vimscripts for haskell development
-
-" --- for idris language syntax
-Plug 'idris-hackers/idris-vim'                                  " idris language support
-
-" --- for agda language support
-Plug 'rking/ag.vim'                                             " AGDA language
-
-" --- for elm-lang scripting support
-Plug 'lambdatoast/elm.vim'                                      " elm scripting language
-
-" --- for some eye candies like status bars and colors
-"Plug 'bling/vim-airline'                                       " using vim-airline repo
-"Plug 'bling/vim-bufferline'                                    " show number of buffers
-Plug 'vim-airline/vim-airline'                                  " Airline statusbar
-Plug 'vim-airline/vim-airline-themes'                           " Airline themes
-Plug 'majutsushi/tagbar'                                        " tagbar support
-
-" --- for rainbow parenthesis colorful brackets
-Plug 'kien/rainbow_parentheses.vim'                             " rainbow parenthesis
-
-" --- for clojure language auto-completion, syntax and formatting
-Plug 'guns/vim-clojure-static', { 'for': 'clojure' }            " clojure support
-Plug 'venantius/vim-cljfmt', { 'for': 'clojure' }               " clojure formatting tool
-Plug 'venantius/vim-eastwood', { 'for': 'clojure'}              " clojure lint tool
-Plug 'tpope/vim-fireplace', { 'for': 'clojure' }                " clojure support
-Plug 'kovisoft/paredit', { 'for': ['clojure', 'scheme'] }       " clojure and scheme support
-
-" --- some utilities
-Plug 'guns/vim-sexp'                                             " vim expression support
-Plug 'tpope/vim-repeat'                                          " vim repeat the last command on
-" --- vim-fireplace dependencies
-"Plug 'tpope/vim-classpath'                                      " vim classpath
-"Plug 'jpalardy/vim-slime'                                       " slime for vim
-" Plug 'Bogdanp/browser-connect.vim'                             " browser integration (reload browser on change)
-
-" --- for java script syntax check and auto-completions
-Plug 'maksimr/vim-jsbeautify', { 'for': 'javascript' }           " beautify javascript
-Plug 'pangloss/vim-javascript', { 'for': 'javascript' }          " javascript for vim
-Plug 'othree/yajs.vim', { 'for': 'javascript' }                  " yet another javascript - lazy loading
-Plug 'einars/js-beautify', { 'for': 'javascript' }               " javscript beautify
-Plug 'bigfish/vim-js-context-coloring', { 'for': 'javascript' }  " javascript highlighting, context coloring in vim
-" --- extends syntax for with jQuery,backbone,etc
-Plug 'othree/javascript-libraries-syntax.vim'                    " javascript library support
-Plug 'mxw/vim-jsx'                                               " json/js support
-Plug 'elzr/vim-json'                                             " json highlighting
-Plug 'othree/javascript-libraries-syntax.vim'                    " javascript syntax check and library support
-
-" for erlang language auto-completions, syntax check and support
-Plug 'vim-erlang/vim-erlang-runtime', { 'for': 'erlang' }        " erlang runtime check
-Plug 'vim-erlang/vim-erlang-omnicomplete', { 'for': 'erlang' }   " erlang code auto completion
-Plug 'vim-erlang/vim-erlang-compiler', { 'for': 'erlang' }       " erlang support
-
-" --- allow pane movement to jump out of vim into tmux navigator
-Plug 'christoomey/vim-tmux-navigator'                            " terminal multiplex
-
-" --- for scala language auto-complete, syntax and support
-Plug 'derekwyatt/vim-scala', { 'for': 'scala'}                   " scala support
-"Plug 'ensime/ensime-vim'                                        " ensime for scala auto-complete (uses python2 | commented)
-
-" --- for html, xml ... syntax, validation etc.
-Plug 'othree/html5.vim'                                          " html5 support
-Plug 'othree/xml.vim', { 'for': 'xml' }                          " xml support
-
-" --- for c/c++ language support (load on demand only)
-Plug 'justmao945/vim-clang', { 'for': ['cpp','c'] }           " clang completion plugin for vim
-Plug 'octol/vim-cpp-enhanced-highlight', { 'for': 'cpp' }     " additional vim syntax highlighting
-Plug 'vim-scripts/DoxygenToolkit.vim', { 'for': 'cpp' }       " doxygen documentation
+" -- GIT Integration
+Plug 'tpope/vim-fugitive'                                     " git integration
+" -- show which line changed using git
+Plug 'airblade/vim-gitgutter'                                 " git gutter
+Plug 'mhinz/vim-signify'                                      " show diff via vim sign column
+" -- for aligning the code or text manipulation
+Plug 'junegunn/vim-easy-align'                                " text and code alignment
+Plug 'godlygeek/tabular'                                      " text filtering and alignment
+Plug 'nathanaelkane/vim-indent-guides'                        " vim indentation display
+Plug 'ervandew/supertab'                                      " use TAB for all insertions
+" -- for haskell syntax and code check(load only for haskell)
+Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }        " syntax indentation / highlight
+Plug 'enomsg/vim-haskellConcealPlus', { 'for': 'haskell' }    " unicode for concealing haskell operators
+Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }              " ghcmod for haskell in vim
+Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }                " ghc haskell
+Plug 'Twinside/vim-hoogle', { 'for': 'haskell' }              " Hoogle haskell search
+Plug 'pbrisbin/html-template-syntax', { 'for': 'haskell' }    " Yesod templates
+Plug 'bitc/vim-hdevtools', { 'for': 'haskell' }               " HDevTools for Haskell
+Plug 'nbouscal/vim-stylish-haskell', { 'for': 'haskell' }     " Stylish Haskell
+Plug 'mpickering/hlint-refactor-vim', { 'for': 'haskell' }    " Hlint refactor
+Plug 'itchyny/vim-haskell-indent', {'for': 'haskell'}         " haskell indent plugin
+Plug 'dan-t/vim-hsimport', {'for': 'haskell'}                 " plugin for hsimport
+"Plug 'dag/vim2hs'                                            " vimscripts for haskell development
+" -- for Idris
+Plug 'idris-hackers/idris-vim'                                " idris language support
+" -- for Agda support
+Plug 'rking/ag.vim'                                           " AGDA language
+" -- for elm-lang support
+Plug 'lambdatoast/elm.vim'                                    " ELM language
+" -- for eye candies like bars and status colors
+"Plug 'bling/vim-airline'                                     " using vim-airline repo
+"Plug 'bling/vim-bufferline'                                  " show number of buffers
+Plug 'vim-airline/vim-airline'                                " Airline statusbar
+Plug 'vim-airline/vim-airline-themes'                         " Airline themes
+Plug 'majutsushi/tagbar'                                      " tagbar support
+" -- for XML support
+Plug 'othree/xml.vim'                                         " xml support
+" -- for Rainbow paranetheses colors
+Plug 'kien/rainbow_parentheses.vim'                           " rainbow parenthesis
+" -- for Clojure language support and formatting
+Plug 'guns/vim-clojure-static', { 'for': 'clojure' }          " clojure support
+Plug 'venantius/vim-cljfmt', { 'for': 'clojure' }             " clojure formatting tool
+Plug 'venantius/vim-eastwood', { 'for': 'clojure'}            " clojure lint tool
+Plug 'tpope/vim-fireplace', { 'for': 'clojure' }              " clojure support
+" Multiple file types (loaded when clj or scheme are opened)
+Plug 'kovisoft/paredit', { 'for': ['clojure', 'scheme'] }     " clojure and scheme support
+" -- utilities
+Plug 'guns/vim-sexp'                                          " vim expression support
+Plug 'tpope/vim-repeat'                                       " vim repete last command on .
+" vim-fireplace dependencies
+" Plug 'tpope/vim-classpath'                                  " vim classpath
+" Plug 'jpalardy/vim-slime'                                   " slime for vim
+" -- reload browser on change
+" Plug 'Bogdanp/browser-connect.vim'                          " browser integration
+" -- for JavaScript
+Plug 'maksimr/vim-jsbeautify'                                 " beautify javascript
+Plug 'pangloss/vim-javascript'                                " javascript for vim
+" -- Yet Another JavaScript Syntax for Vim
+Plug 'othree/yajs.vim', { 'for': 'javascript' }               " javascript support - lazy loading
+Plug 'einars/js-beautify'                                     " javscript beautify
+" -- JavaScript Context Coloring in Vim
+Plug 'bigfish/vim-js-context-coloring'                        " javascript highlighting
+" -- extends syntax for with jQuery,backbone,etc.
+Plug 'othree/javascript-libraries-syntax.vim'                 " javascript library support
+Plug 'mxw/vim-jsx'                                            " json/js support
+Plug 'elzr/vim-json'                                          " json highlighting
+" -- Syntax file for JavaScript libraries.
+Plug 'othree/javascript-libraries-syntax.vim'                 " javascript library support
+" for erlang language support
+Plug 'vim-erlang/vim-erlang-runtime'                          " erlang runtime check
+Plug 'vim-erlang/vim-erlang-omnicomplete'                     " erlang autocomplete
+Plug 'vim-erlang/vim-erlang-compiler'                         " erlang support
+" -- Allow pane movement to jump out of vim into tmux
+Plug 'christoomey/vim-tmux-navigator'                         " TMUX support
+" -- for scala language support
+Plug 'derekwyatt/vim-scala'                                   " scala support
+" ensime uses python2 so commented
+" Plug 'ensime/ensime-vim'                                    " ensime for scala autocomplete
+" -- utilities
+Plug 'tyru/current-func-info.vim'                             " get current function name
+Plug 'jiangmiao/auto-pairs'                                   " parenthesis autopairing
+" -- for html, xml ...
+Plug 'othree/html5.vim'                                       " html5
+" -- for python3 language support
+Plug 'davidhalter/jedi-vim'                                   " python jedi autocompletion
+"Plug 'lambdalisue/vim-pyenv'                                 " python virtual env
+" -- for c/c++ language support (load on demand only)
+Plug 'justmao945/vim-clang'                                   " clang completion plugin for vim
+Plug 'octol/vim-cpp-enhanced-highlight'                       " additional vim syntax highlighting
 "Plug 'Rip-Rip/clang_complete'                                " clang completion
-Plug 'myint/clang-complete', { 'for': ['cpp','c']}            " using fork for python3 support
 "Plug 'Valloric/YouCompleteMe', { 'for': ['cpp','python'] }   " ycm
-
-" --- miscellaneous utilities
+" -- utilities
 Plug 'edkolev/promptline.vim'                                 " promptline
 Plug 'kien/ctrlp.vim'                                         " fuzzy file, buffer, mru, tag etc
 Plug 'vim-ctrlspace/vim-ctrlspace'                            " ctrlspace
-Plug 'tyru/current-func-info.vim'                             " get current function name
-Plug 'jiangmiao/auto-pairs'                                   " parenthesis auto parentheses pairing
-
-" --- plugins for vim textual snippets supporting code auto completion
+" Plugins for vim textual snippets
 Plug 'SirVer/ultisnips'                                       " ultimate snippet solution for Vim
 Plug 'tomtom/tlib_vim'                                        " for snippets
 Plug 'MarcWeber/vim-addon-mw-utils'                           " for snippets
 Plug 'garbas/vim-snipmate'                                    " for snippets
 Plug 'honza/vim-snippets'                                     " for snippets
-"Plug 'hecal3/vim-leader-guide'                               " vim keymap-display
-
-" --- Plugins for multiple text selection
+" Plug 'hecal3/vim-leader-guide'                              " vim keymap-display
+" -- Plugins for multiple text selection
 Plug 'terryma/vim-multiple-cursors'                           " vim multiple cursors
-
-" --- for elixir auto-complete syntax checking and development
+" -- Plugins for Elixir development
 Plug 'elixir-lang/vim-elixir'                                 " vim for elixir
 Plug 'slashmili/alchemist.vim'                                " elixir integration for vim
-
-" --- for documentation purposes and writing
+" -- Plugins for documentation
 Plug 'vim-pandoc/vim-pandoc'                                  " pandoc integration and utilities
 Plug 'vim-pandoc/vim-pandoc-syntax'                           " pandoc markdown syntax
-
-" --- for python/python3 language auto-completion, syntax checking, highlighting and more
-Plug 'davidhalter/jedi-vim'                                   " python jedi auto-completion (the best)
-"Plug 'lambdalisue/vim-pyenv'                                 " python virtual env (if required)
-"Plug 'Valloric/YouCompleteMe', { 'for': ['cpp','python'] }   " ycm (not used in normal vim mode)
-
-"########################################################################################################
-" YCM Installation notes (OS X)
-" install ycm only for macvim in gui; some additional steps has to be followed
-" for innstalling the ycm plugin. once the plugin is downloaded to the
-" appropriate location go to .vim/plugged/youcompleteme, and set environment
-" variable as follows
-" export
-" EXTRA_CMAKE_ARGS="-DEXTERNAL_LIBCLANG_PATH=/Library/Developer/CommandLineTools/usr/lib/libclang.dylib"
-" using the installation script execute below,
-" python3 ./install.sh --clang-completer --system-libclang
-"
-"if has("python") || has("gui_running")
-"    Plug 'valloric/youcompleteme', { 'do': '/usr/local/bin/python3 install.py
-"                                           --clang-completer --system-clang
-"                                           --gocode-completer --tern-completer' }
-"endif
-"########################################################################################################
-if has("gui_running")
-    Plug 'valloric/youcompleteme', { 'for': ['cpp','python'] }
-endif
 "}}}
 
 call plug#end()
@@ -242,33 +203,29 @@ set hidden
 filetype plugin on
 filetype indent on
 
-" Italics for comments
-highlight Comment cterm=italic
-highlight htmlArg cterm=italic
-
 " ########################################################################
 " ########################  Plugin customizations ########################
 " ########################################################################
 
-" ************************************************************************************
-" ************                     Leader key mapping                     ************
-" ************************************************************************************
+" -------------------------------------------------------------------------
+" ---                      Leader key mapping                           ---
+" -------------------------------------------------------------------------
 " use the option "-" + <keymap> for all shortcuts
 let mapleader   = "-"
 let g:mapleader = "-"
 set tm=2000
 
-" ************************************************************************************
-" ************             Auto formatting options                      **************
-" ************************************************************************************
+" -------------------------------------------------------------------------
+" ---                      Auto formatting options                      ---
+" -------------------------------------------------------------------------
 nnoremap <silent> <Leader>f :Autoformat<CR>
 let g:formatters_python = ['yapf']
 let g:formatdef_yapf = '"yapf --style=''{based_on_style:pep8,indent_width:".&shiftwidth."}'' -l ".a:firstline."-".a:lastline'
 
-" ************************************************************************************
-" **********                  nerdcommenter customizations                  **********
-" ************************************************************************************
-" allow commenting and inverting empty lines (useful when commenting a region)
+" -------------------------------------------------------------------------
+" ---                    nerdcommenter customizations                   ---
+" -------------------------------------------------------------------------
+" Allow commenting and inverting empty lines (useful when commenting a region)
 let g:NERDCommentEmptyLines = 1
 " Enable trimming of trailing whitespace when uncommenting
 let g:NERDTrimTrailingWhitespace = 1
@@ -277,11 +234,11 @@ let g:NERDSpaceDelims = 1
 " Use compact syntax for prettified multi-line comments
 let g:NERDCompactSexyComs = 1
 
-" ************************************************************************************
-" **************               Supertab TAB Completions                  *************
-" ************************************************************************************
+" -------------------------------------------------------------------------
+" ---                    Supertab TAB Completions                       ---
+" -------------------------------------------------------------------------
 let g:SuperTabDefaultCompletionType = '<c-x><c-o>'
-" set the colorscheme to solarized light if running macvim
+
 if has("gui_running")
     colorscheme solarized
     let g:airline_theme = 'cool'
@@ -292,9 +249,9 @@ else " no gui
     endif
 endif
 
-" ************************************************************************************
-" ************                 Haskell ghc customization                   ***********
-" ************************************************************************************
+" -------------------------------------------------------------------------
+" ---                    Haskell ghc customization                      ---
+" -------------------------------------------------------------------------
 " normal mode key mappings (ex: press -ht)
 nmap <silent> <leader>ht :GhcModType<CR>
 nmap <silent> <leader>he :GhcModTypeClear<CR>
@@ -305,49 +262,49 @@ nmap <silent> <leader>hl :SyntasticCheck hlint<CR>:lopen<CR>
 
 "let g:syntastic_mode_map={'mode': 'active', 'passive_filetypes': ['haskell']}
 let g:syntastic_mode_map={'mode': 'active',
-                        \ 'active_filetypes': ['haskell', 'python', 'cpp'],
+                        \ 'active_filetypes': ['haskell', 'python'],
                         \ 'passive_filetypes': []}
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 0
-" for skipping syntax the checking while exiting vim using :wq
+" for skipping syntax checking while exiting using :wq
 let g:syntastic_check_on_wq = 0
 
-" auto-checking on writing
+" Auto-checking on writing
 autocmd BufWritePost *.hs,*.lhs GhcModCheckAndLintAsync
 
-" key-bindings for the haskell hdevtools type info
+" key-bindings for hdevtools type info
 au FileType haskell nnoremap <buffer> <F1> :HdevtoolsType<CR>
 au FileType haskell nnoremap <buffer> <silent> <F2> :HdevtoolsClear<CR>
 au FileType haskell nnoremap <buffer> <silent> <F3> :HdevtoolsInfo<CR>
 
-" ************************************************************************************
-" **********                 for haskell-vim customization                  **********
-" ************************************************************************************
-let g:haskell_enable_quantification   = 1   " to enable highlighting of `forall`
-let g:haskell_enable_recursivedo      = 1   " to enable highlighting of `mdo` and `rec`
-let g:haskell_enable_arrowsyntax      = 1   " to enable highlighting of `proc`
-let g:haskell_enable_pattern_synonyms = 1   " to enable highlighting of `pattern`
-let g:haskell_enable_typeroles        = 1   " to enable highlighting of type roles
-let g:haskell_enable_static_pointers  = 1   " to enable highlighting of `static`
+" -------------------------------------------------------------------------
+" ---                 for haskell-vim customization                     ---
+" -------------------------------------------------------------------------
+let g:haskell_enable_quantification = 1   " to enable highlighting of `forall`
+let g:haskell_enable_recursivedo = 1      " to enable highlighting of `mdo` and `rec`
+let g:haskell_enable_arrowsyntax = 1      " to enable highlighting of `proc`
+let g:haskell_enable_pattern_synonyms = 1 " to enable highlighting of `pattern`
+let g:haskell_enable_typeroles = 1        " to enable highlighting of type roles
+let g:haskell_enable_static_pointers = 1  " to enable highlighting of `static`
 
-" ************************************************************************************
-" *****                       for nerdtree configuration                         *****
-" ***** invoke by using the leader key map as - + nt                             *****
-" ************************************************************************************
+" -------------------------------------------------------------------------
+" ---                 for nerdtree configuration                        ---
+" -------------------------------------------------------------------------
+" invoke by using - + nt
 nmap <leader>nt :NERDTreeToggle<CR>
 
-" ************************************************************************************
-" *****                      for tab alignment configuration                     *****
-" ************************************************************************************
+" -------------------------------------------------------------------------
+" ---                 for tab alignment configuration                   ---
+" -------------------------------------------------------------------------
 let g:haskell_tabular = 1
 vmap a= :Tabularize /=<CR>
 vmap a; :Tabularize /::<CR>
 vmap a- :Tabularize /-><CR>
 vmap a, :Tabularize /<-<CR>
 
-" ************************************************************************************
-" *****                     neco-ghc (haskell autocompleion)                     *****
-" ************************************************************************************
+" -------------------------------------------------------------------------
+" ---                neco-ghc (haskell autocompleion)                   ---
+" -------------------------------------------------------------------------
 let $PATH=$PATH.':'.expand("~/Library/Haskell/bin/")
 " Disable haskell-vim omnifunc
 " let g:haskellmode_completion_ghc = 0
@@ -362,18 +319,21 @@ let g:necoghc_enable_detailed_browse = 1
 " -- Frege
 autocmd BufEnter *.fr :filetype haskell
 
-" ************************************************************************************
-" ********   Next generation completion framework after neocomplcache         ********
-" ********               neocomplcache (advanced completion)                  ********
-" ********    using neocomplete instead of the neocomplete cache              ********
-" ************************************************************************************
+" -------------------------------------------------------------------------
+" ---  Next generation completion framework after neocomplcache         ---
+" ---              neocomplcache (advanced completion)                  ---
+" ---   using neocomplete instead of the neocomplete cache              ---
+" -------------------------------------------------------------------------
 " to disable AutoComplPop.
 "let g:acp_enableAtStartup = 0
-let g:neocomplete#enable_at_startup = 1                    " use neocomplete at startup
-let g:neocomplete#enable_smart_case = 1                    " use smart-case
-let g:neocomplete#sources#syntax#min_keyword_length = 2    " set minimum syntax keyword length
-let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'      " regex for buffer name
-" define a dictionar
+" use neocomplete
+let g:neocomplete#enable_at_startup = 1
+" use smartcase
+let g:neocomplete#enable_smart_case = 1
+" set minimum syntax keyword length.
+let g:neocomplete#sources#syntax#min_keyword_length = 2
+let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
+" define dictionary.
 let g:neocomplete#sources#dictionary#dictionaries = {
     \ 'default'     : '',
     \ 'vimshell'    : $HOME . '/.vim/dict/.vimshell_hist',
@@ -404,19 +364,14 @@ let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 inoremap <expr><C-g>     neocomplete#undo_completion()
 inoremap <expr><C-l>     neocomplete#complete_common_string()
 
-" settings for enabling the omni completion.
+" Enable omni completion.
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-"autocmd FileType python setlocal omnifunc=python3complete#Complete
+autocmd FileType python setlocal omnifunc=python3complete#Complete
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-if has('python3')
-    autocmd FileType python setlocal omnifunc=python3complete#Complete
-else
-    autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-endif
-" ************************************************************************************
-" ------------------- below section commented in favour of neocomplete ---------------
+
+" ------ below section commented in favour of neocomplete -----
 "let g:neocomplcache_enable_at_startup = 1
 "let g:neocomplcache_enable_smart_case = 1
 "let g:neocomplcache_dictionary_filetype_lists = {
@@ -437,36 +392,39 @@ endif
 "    endif
 "endfunction
 "autocmd BufEnter *.hs,*.lhs :call SetToCabalBuild()
-" ************************************************************************************
 
-" ************************************************************************************
-" *********              ctrlspace customization settings                   **********
-" *********  getting help with the below options                            **********
-" *********  :help g:CtrlSpaceSymbols                                       **********
-" ************************************************************************************
+
+
+" -------------------------------------------------------------------------
+" ---                     ctrlspace customization                       ---
+" ---  getting help with the below options                              ---
+" ---  :help g:CtrlSpaceSymbols                                         ---
+" -------------------------------------------------------------------------
 if has("gui_running")
     " Settings for vim and monaco powerline font
     let g:CtrlSpaceSymbols = { "File": "◯", "CTab": "▣", "Tabs": "▢" }
 endif
 
-" ************************************************************************************
-" ***********                    CtrlP customized bindings                  **********
-" ************************************************************************************
+
+" -------------------------------------------------------------------------
+" ---                    CtrlP customized bindings                      ---
+" -------------------------------------------------------------------------
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
 
-" ************************************************************************************
-" **************       customizing the vim git gutter                     ************
-" ************************************************************************************
+
+" -------------------------------------------------------------------------
+" ---                           Vim Git Gutter                          ---
+" -------------------------------------------------------------------------
 highlight clear SignColumn
 highlight SignColumn ctermbg=0
 nmap gn <Plug>GitGutterNextHunk
 nmap gN <Plug>GitGutterPrevHunk
 let g:gitgutter_realtime = 0
 
-" ************************************************************************************
-" ************                        File Management                      ***********
-" ************************************************************************************
+" -------------------------------------------------------------------------
+" ---                          File Management                          ---
+" -------------------------------------------------------------------------
 let g:unite_source_history_yank_enable = 1
 try
   let g:unite_source_rec_async_command='ag --nocolor --nogroup -g ""'
@@ -484,20 +442,22 @@ nnoremap <space>y :split<cr>:<C-u>Unite history/yank<cr>
 " reset not it is <C-l> normally
 :nnoremap <space>r <Plug>(unite_restart)
 
-" ************************************************************************************
-" ******** Clojure language customization with rainbow paranetheses          *********
-" ************************************************************************************
-" Clojure
+
+" -------------------------------------------------------------------------
+" ---                              Clojure                              ---
+" -------------------------------------------------------------------------
+" Clojure {{{
 autocmd BufEnter *.cljs,*.clj,*.cljs.hl RainbowParenthesesActivate
 autocmd BufEnter *.cljs,*.clj,*.cljs.hl RainbowParenthesesLoadRound
 autocmd BufEnter *.cljs,*.clj,*.cljs.hl RainbowParenthesesLoadSquare
 autocmd BufEnter *.cljs,*.clj,*.cljs.hl RainbowParenthesesLoadBraces
 " Fix I don't know why
 autocmd BufEnter *.cljs,*.clj,*.cljs.hl setlocal iskeyword+=?,-,*,!,+,/,=,<,>,.,:
+" }}}
 
-" ************************************************************************************
-" ****** customizing the rainbow parenthesis with choice of colors depth 9     *******
-" ************************************************************************************
+" -------------------------------------------------------------------------
+" ---                Rainbow parenthesis customization                  ---
+" -------------------------------------------------------------------------
 let g:rbpt_colorpairs = [
 	\ ['darkyellow',  'RoyalBlue3'],
 	\ ['darkgreen',   'SeaGreen3'],
@@ -534,12 +494,10 @@ if !exists('g:airline_symbols')
 endif
 
 " vim powerline symbols in statusbar
-set guifont =Monaco\ for\ Powerline:h12
-let g:airline_powerline_fonts             = 1
-let g:airline_symbols.space               = "\ua0"
-let g:Powerline_symbols                   = 'fancy'
-let g:airline#extensions#tabline#enabled  = 1
-let g:airline#extensions#tabline#fnamemod = ':t'
+let g:airline_powerline_fonts = 1
+let g:airline_symbols.space = "\ua0"
+set guifont=Monaco\ for\ Powerline:h12
+let g:Powerline_symbols = 'fancy'
 
 " Use Vim settings, rather then Vi settings (much better!).
 " This must be first, because it changes other options as a side effect.
@@ -560,16 +518,6 @@ if &term =~ '256color'
    " see also http://snk.tuxfamily.org/log/vim-256color-bce.html
     set t_ut=
 endif
-
-
-" Undo
-if has('persistent_undo')
-    set undofile                " Persistent undo
-    set undodir=~/.vim/undop    " Location to store undo history
-    set undolevels=1000         " Max number of changes
-    set undoreload=10000        " Max lines to save for undo on a buffer reload
-endif
-
 
 " move between splits
 noremap <C-h> <C-w>h
@@ -653,16 +601,19 @@ nmap ° :Ag <c-r>=expand("<cword>")<cr><cr>
 " ---------- vim-pandoc folding -----------
 let g:pandoc#modules#disabled = ["folding"]
 
-" ************************************************************************************
-" --------                      Slime configuration                          ---------
-" ************************************************************************************
+" -------------------------------------------------------------------------
+" ---                      Slime configuration                          ---
+" -------------------------------------------------------------------------
+" {{{
 vmap <silent> <Leader>rs <Plug>SendSelectionToTmux
 nmap <silent> <Leader>rs <Plug>NormalModeSendToTmux
 nmap <silent> <Leader>rv <Plug>SetTmuxVars
+" }}}
 
-" ***********************************************************************************
-" -----                  terminal multiplex (TMUX) configuration                  ---
-" ***********************************************************************************
+" -------------------------------------------------------------------------
+" ---                         TMUX configuration                        ---
+" -------------------------------------------------------------------------
+" {{{
 " Manually create key mappings (to avoid rebinding C-\)
 let g:tmux_navigator_no_mappings = 1
 let g:slime_target = "tmux"
@@ -670,6 +621,7 @@ nnoremap <silent> <C-h> :TmuxNavigateLeft<cr>
 nnoremap <silent> <C-j> :TmuxNavigateDown<cr>
 nnoremap <silent> <C-k> :TmuxNavigateUp<cr>
 nnoremap <silent> <C-l> :TmuxNavigateRight<cr>
+" }}}
 
 " Support for pointfree styles
 " In visual mode you can now press gq to convert a expression to it’s
@@ -677,9 +629,10 @@ nnoremap <silent> <C-l> :TmuxNavigateRight<cr>
 " obfuscated than the original.
 autocmd BufEnter *.hs set formatprg=pointfree
 
-" **********************************************************************************
-" /////////////  FANCY abcdefgh in status bar (copied from airline blog) ///////////
-" **********************************************************************************
+" {{{
+" -------------------------------------------------------------------------
+" ---      FANCY abcdefgh in status bar (copied from airline blog)      ---
+" -------------------------------------------------------------------------
 function! AccentDemo()
   let keys = ['a','b','c','d','e','f','g','h']
   for k in keys
@@ -696,8 +649,10 @@ endfor
   let g:airline_section_a = airline#section#create(keys)
 endfunction
 autocmd VimEnter * call AccentDemo()
+" }}}
 
-" Airline Modeline display Info and Eye Candy (custom symbols)
+" Airline Modeline display Info and Eye Candy
+" {{{
 " git gutter show
 " personal appearance options
 " let g:airline_left_sep                        = '['
@@ -712,18 +667,45 @@ let g:airline#extensions#syntastic#enabled      = 1
 let g:airline#extensions#tabline#buffer_nr_show = 1
 let g:airline#extensions#tabline#enabled        = 1
 let g:airline_section_y                         = 'BN: %{bufnr("%")}'
+" }}}
 
 " for erlang development support - syntaxerl
 let g:syntastic_erlang_checkers=['syntaxerl']
 " man pages
 let g:erlangManPath='/usr/local/Cellar/erlang/19.1/man'
 
-" **********************************************************************************
-" ********                  personal settings for Syntastic                *********
-" ***** By default, Syntastic uses arrow symbols to indicate line with error. ******
-" ***** To spice things up, you can specify any Unicode symbol as the symbol. ******
-" **********************************************************************************
+" {{{
+" Python Specific Custmoizations
+" enable all Python syntax highlighting features
+let python_highlight_all=1
+
+" ycm - youcompleteme disabled
+" let g:ycm_python_binary_path        = '/usr/local/bin/python3'
+" let g:ycm_server_python_interpreter = '/usr/local/bin/python3'
+
+" jedi autocompletion for python3
+if has('python')
+  let g:jedi#force_py_version        = 2
+  let g:syntastic_python_python_exec = 'python2'
+  let g:pymode_python                = 'python2'
+elseif has('python3')
+  "let g:jedi#force_py_version       = 3
+  let g:syntastic_python_python_exec = 'python3'
+  let g:pymode_python                = 'python3'
+else
+  let g:loaded_jedi = 1
+endif
+" }}}
+
+
+" -------------------------------------------------------------------------
+" ---                  personal settings for Syntastic                  ---
+" - By default, Syntastic uses arrow symbols to indicate line with error. -
+" - To spice things up, you can specify any Unicode symbol as the symbol. -
+" -------------------------------------------------------------------------
+
 " getbg function
+" {{{
 " gets background of a highlighting group with fallback to SignColumn group
 function! s:getbg(group)
     if has("gui_running")
@@ -754,8 +736,9 @@ function! s:getbg(group)
 
     return l:mode . 'bg=' . l:bg
 endfunction
+" }}}
 
-" syntastic display error and warning symbols
+" error and warning symbols
 let g:syntastic_error_symbol         = "✗"
 let g:syntastic_warning_symbol       = "⚠"
 let g:syntastic_style_error_symbol   = '✍'
@@ -767,25 +750,8 @@ au VimEnter,ColorScheme * exec 'hi! SyntasticWarningSign guifg=yellow ctermfg=ye
 au VimEnter,ColorScheme * exec 'hi! SyntasticError ' . s:getbg('SyntasticErrorLine')
 au VimEnter,ColorScheme * exec 'hi! SyntasticWarning ' . s:getbg('SyntasticWarningLine')
 
-
-" **********************************************************************************
-" ********   python/python3 and JEDI syntastic integration for checking    *********
-" **********************************************************************************
-" jedi auto-completion and syntax check for python3
-" the below section first does a check on which python to choose
-if has('python')
-  let g:jedi#force_py_version        = 2
-  let g:syntastic_python_python_exec = 'python2'
-  let g:pymode_python                = 'python2'
-elseif has('python3')
-  "let g:jedi#force_py_version       = 3
-  let g:syntastic_python_python_exec = 'python3'
-  let g:pymode_python                = 'python3'
-else
-  let g:loaded_jedi = 1
-endif
-
-" custom settings for python through syntastic
+"
+" python3 specific syntastic integration for checking
 let g:syntastic_enable_highlighting        = 1
 let g:airline#extensions#syntastic#enabled = 1
 let g:syntastic_python_python_exec         = '/usr/local/bin/python3'
@@ -797,65 +763,22 @@ let g:syntastic_python_checkers            = ['flake8']
 "let g:syntastic_python_flake8_args        = '--ignore="D400"'
 let g:syntastic_python_flake8_args         = '--ignore="D400,E501,E302,E261,E701,E241,E126,E127,E128,W801"'
 
-" syntastic settings for cpp
+" syntastic for cpp
 let g:syntastic_cpp_compiler              = "g++"
+let g:syntastic_cpp_include_dirs          = ['/usr/include']
 let g:syntastic_cpp_check_header          = 1
 let g:syntastic_cpp_remove_include_errors = 1
-let g:syntastic_cpp_include_dirs          = ['/usr/include',
-                                           \ '/usr/local/include',
-                                           \ '/usr/local/Cellar/opencv3/HEAD-6328076_4/include'
-                                           \ ]
 
 " show ballon with mouse hovering over error
 let g:syntastic_enable_balloons = 1
 
-" Python Specific Custmoizations
-" enable all Python syntax highlighting features
-let python_highlight_all=1
-
-" choose the python binary for ycm
-if has('python')
-    let g:ycm_python_binary_path        = '/usr/local/bin/python'
-    let g:ycm_server_python_interpreter = '/usr/local/bin/python'
-else
-    let g:ycm_python_binary_path        = '/usr/local/bin/python3'
-    let g:ycm_server_python_interpreter = '/usr/local/bin/python3'
-endif
-" additional ycm settings including the configuration file location
-let g:ycm_global_ycm_extra_conf='~/.vim/.ycm_extra_conf.py'
-let g:ycm_extra_conf_globlist=['~/.vim/*']
-let g:ycm_always_populate_location_list = 0
-let g:ycm_auto_trigger=1
-let g:ycm_enable_diagnostic_highlighting=1
-let g:ycm_enable_diagnostic_signs=1
-let g:ycm_max_diagnostics_to_display=10000
-let g:ycm_min_num_identifier_candidate_chars=0
-let g:ycm_min_num_of_chars_for_completion=2
-let g:ycm_open_loclist_on_ycm_diags=1
-let g:ycm_show_diagnostics_ui=1
-let g:ycm_collect_identifiers_from_tags_files = 1
-let g:ycm_filetype_blacklist={
-            \ 'vim' : 1,
-            \ 'tagbar' : 1,
-            \ 'qf' : 1,
-            \ 'notes' : 1,
-            \ 'markdown' : 1,
-            \ 'md' : 1,
-            \ 'unite' : 1,
-            \ 'text' : 1,
-            \ 'vimwiki' : 1,
-            \ 'pandoc' : 1,
-            \ 'infolog' : 1,
-            \ 'mail' : 1
-            \}
-
 
 " -------------------------------------------------------------------------
-" ---                         vim-clang and cpp                         ---
+" ---                            vim-clang                              ---
 " -------------------------------------------------------------------------
 let g:clang_c_options = '-std=gnu11'
 let g:clang_cpp_options = '-std=c++11 -stdlib=libc++'
-" Clang-Format Setup
+" Clang-Format Setup {{{
 let g:clang_format#style_options = {
     \ "Standard": "Cpp11",
     \ "SortIncludes": "false",
@@ -875,38 +798,18 @@ let g:clang_format#style_options = {
     \ "TabWidth": 4
     \ }
 au FileType c,cpp,objc,objcpp noremap  <silent> <buffer> <leader>= :ClangFormat<cr>
-
-let s:clang_library_path='/Library/Developer/CommandLineTools/usr/lib'
-if isdirectory(s:clang_library_path)
-    let g:clang_library_path=s:clang_library_path
-endif
-
-" Doxygen
-autocmd Filetype c,cpp set comments^=:///
-let g:DoxygenToolkit_commentType = "C++"
+" }}}
 
 
-" Switch between source and header files using ctags
-" only supports .cpp and .h
-function! Switch()
-    let baseName=expand('%:t:r')
-    let extension=expand('%:e')
-    if extension =~ 'c'
-        execute "tag " . baseName . '.h'
-    else
-        execute "tag " . baseName . '.cpp'
-    endif
-endfunction
-nmap <silent> <Leader>fs :call Switch()<CR>
-
-
-" **********************************************************************************
-" ************                  javascript code beautifying             ************
-" **********************************************************************************
+" -------------------------------------------------------------------------
+" ---                    javascript  beautifying                        ---
+" -------------------------------------------------------------------------
+" JavaScript
+" {{{
 autocmd FileType javascript noremap <buffer> <c-f> :call JsBeautify()<cr>
 autocmd FileType html noremap <buffer> <c-f> :call JsBeautify()<cr>
 autocmd FileType css noremap <buffer> <c-f> :call JsBeautify()<cr>
-" Character Concealing in the editor mode
+" Character Conceling
 " https://github.com/pangloss/vim-javascript
 let g:javascript_conceal_function       = "ƒ"
 let g:javascript_conceal_null           = "ø"
@@ -922,14 +825,17 @@ let g:javascript_conceal_arrow_function = "⇒"
 " javascript-libraries-syntax customization
 let g:used_javascript_libs = 'underscore,angularjs,jasmine,chai'
 
-" real time syntax checking with jshint lint for javascript
+" real time syntax checking for javascript
+" use jshint
 let g:syntastic_javascript_checkers = ['jshint']
 " show any linting errors immediately
 let g:syntastic_check_on_open = 1
-" auto-complete using neocompletion for javascript
+" neocompletion for js
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+" }}}
 
-" custom colors and alerts in common
+" colors and alerts
+" {{{
 highlight Cursor guifg=pink guibg=black
 highlight Search guifg=black guibg=gray
 
@@ -953,8 +859,9 @@ function! s:highlight_general_checkstyles()
 endf
 
 call s:highlight_general_checkstyles()
+" }}}
 
 " for MacVim specific settings
 " override macvim color scheme
 let macvim_skip_colorscheme=1
-" =====================================================================================
+" =========================================================================
