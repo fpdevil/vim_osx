@@ -1,0 +1,7 @@
+-I/usr/include
+-I/usr/local/include
+-I/usr/include/c++/4.2.1/
+-I/usr/local/opt/opencv3/include
+-F/System/Library/Frameworks/Python.framework/Headers
+-F/System/Library/Frameworks
+-F/Library/Frameworks

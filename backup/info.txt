@@ -1,0 +1,33 @@
+
+" #######################################################################################################
+" YouCompleteMe Installation notes on OS X
+" Install  the ycm  plugin only  for macvim  when running  in the  gui mode;  some
+" additional steps  have to be followed  for innstalling the ycm  plugin. once the
+" plugin    is    downloaded    to     the    appropriate    location,    go    to
+" .vim/plugged/youcompleteme (which is the plugin  download location), and set the
+" environment variable as follows
+"
+" export
+" EXTRA_CMAKE_ARGS=-DEXTERNAL_LIBCLANG_PATH=/Library/Developer/CommandLineTools/usr/lib/libclang.dylib
+" using the provided python installation script execute the below with python3,
+" python3 ./install.sh --clang-completer --system-libclang
+"
+" Update the plugin section conditionally taking advantage of the vim plugin options
+" if has('python') || has('gui_running')
+"    Plug 'valloric/youcompleteme', { 'do': '/usr/local/bin/python3 install.py
+"                                           --clang-completer --system-clang
+"                                           --gocode-completer --tern-completer' }
+" endif
+"
+" if lazy loading is needed for YCM we can specify that using the below sections
+" languages to load clang-based plugins for (YCM, color_coded)
+" let g:clang_languages = ['c', 'cpp', 'python', 'haskell']
+"
+" Plug 'Valloric/YouCompleteMe', {
+"                 \ 'do'  :  'python3 install.py --clang-completer --system-libclang',
+"                 \ 'for' : g:clang_languages,
+"                 \ }
+" #######################################################################################################
+if has("gui_running")
+    Plug 'valloric/youcompleteme', { 'for': ['cpp','python'] }
+endif

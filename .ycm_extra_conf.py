@@ -5,6 +5,10 @@ import logging
 import ycm_core
 import re
 
+
+# `gcc -print-prog-name=cpp` -v
+# -isystem tag precedes all the system library paths
+# while -I precedes all the local include directories
 BASE_FLAGS = [
         '-Wall',
         '-Wextra',
@@ -15,10 +19,32 @@ BASE_FLAGS = [
         '-ferror-limit=10000',
         '-DNDEBUG',
         '-std=c++11',
+        '-stdlib=libc++',
         '-xc++',
+        '-isystem',
+        '../BoostParts',
+        '-isystem', '/usr/include/c++/v1',
+        '-isystem', '/usr/local/include',
+        '-isystem', '/usr/include',
+        '-isystem', '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/8.0.0/include',
+        '-isystem', '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include',
+        '-isystem', '/usr/local/opt/opencv3/include',
+        '-isystem', '/usr/local/Cellar/opencv3/HEAD-7dd3723_4/include',
+        '-isystem', '/System/Library/Frameworks',
+        '-isystem', '/Library/Frameworks',
+        '-isystem', '/System/Library/Frameworks/Python.framework/Headers',
+        '-I',
+        '.',
         '-I/usr/lib/',
-        '-I/usr/include/'
-            ]
+        '-I/usr/include/',
+        '-I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1',
+        '-I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/8.0.0/include',
+        '-I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include',
+        '-I/usr/local/Cellar/opencv3/HEAD-7dd3723_4/include/opencv',
+        '-I/usr/local/Cellar/opencv3/HEAD-7dd3723_4/include',
+        '-I/usr/local/opt/opencv3/lib',
+        '-I/usr/local/opt/opencv3/include'
+]
 
 SOURCE_EXTENSIONS = [
         '.cpp',
@@ -27,14 +53,14 @@ SOURCE_EXTENSIONS = [
         '.c',
         '.m',
         '.mm'
-                    ]
+]
 
 HEADER_EXTENSIONS = [
         '.h',
         '.hxx',
         '.hpp',
         '.hh'
-                    ]
+]
 
 def IsHeaderFile(filename):
     extension = os.path.splitext(filename)[1]
