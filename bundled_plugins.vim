@@ -9,9 +9,8 @@
 " set rtp+=~/.vim/bundle/vundle/
 " ################################# call vundle#rc() #################################
 " the vundle plugin is used only for initial installation of the vim plugin
-" Bundle 'gmarik/vundle'
-" completion during typing
-"
+" Bundle 'gmarik/vundle'                                    " completion during typing
+
 " Plugins section start {{{
 "
 " --- syntax checking and code formatting with syntastic vim plugin
@@ -37,6 +36,7 @@ Plug 'morhetz/gruvbox'                                                          
 Plug 'trusktr/seti.vim'                                                         " seti colorscheme
 Plug 'altercation/vim-colors-solarized'                                         " solarized color schemes
 Plug 'baeuml/summerfruit256.vim'                                                " 256 color scheme
+
 
 " --- the right way to handle trailing-whitespace
 Plug 'bronson/vim-trailing-whitespace'                                          " remove trailing white spaces
@@ -124,19 +124,20 @@ Plug 'tpope/vim-unimpaired'                                                     
 "Plug 'tpope/vim-classpath'                                                     " vim classpath
 "Plug 'jpalardy/vim-slime'                                                      " slime for vim
 Plug 'beloglazov/vim-online-thesaurus'                                          " word lookup in online thesaurus (-K)
+Plug 'thinca/vim-ref'                                                           " integrated reference viewer
 
 
 " --- for java script syntax check and auto-completions
-Plug 'maksimr/vim-jsbeautify', { 'for': 'javascript' }                          " beautify javascript
-Plug 'pangloss/vim-javascript', { 'for': 'javascript' }                         " javascript for vim
-Plug 'othree/yajs.vim', { 'for': 'javascript' }                                 " yet another javascript - lazy loading
-Plug 'einars/js-beautify', { 'for': 'javascript' }                              " javscript beautify
-Plug 'bigfish/vim-js-context-coloring', { 'for': 'javascript' }                 " javascript highlighting, context coloring in vim
+Plug 'maksimr/vim-jsbeautify', { 'for': 'javascript' }                          " beautify js
+Plug 'pangloss/vim-javascript', { 'for': 'javascript' }                         " js for vim
+Plug 'othree/yajs.vim', { 'for': 'javascript' }                                 " yet another js - lazy loading
+Plug 'einars/js-beautify', { 'for': 'javascript' }                              " js beautify
+Plug 'bigfish/vim-js-context-coloring', { 'for': 'javascript' }                 " js highlight, context & coloring
 " --- extends syntax for with jQuery,backbone,etc
-Plug 'othree/javascript-libraries-syntax.vim'                                   " javascript library support
+Plug 'othree/javascript-libraries-syntax.vim'                                   " js library support
 Plug 'mxw/vim-jsx'                                                              " json/js support
 Plug 'elzr/vim-json'                                                            " json highlighting
-Plug 'othree/javascript-libraries-syntax.vim'                                   " javascript syntax check and library support
+Plug 'othree/javascript-libraries-syntax.vim'                                   " js syntax check and library support
 
 " for erlang language auto-completions, syntax check and support
 Plug 'vim-erlang/vim-erlang-runtime', { 'for': 'erlang' }                       " erlang runtime check
@@ -148,6 +149,8 @@ Plug 'vim-erlang/vim-erlang-tags', { 'for': 'erlang' }                          
 " --- allow pane movement to jump out of vim into tmux navigator
 Plug 'christoomey/vim-tmux-navigator'                                           " terminal multiplex
 
+" --- display all the leader mappings with descriptions
+Plug 'ktonga/vim-follow-my-lead'
 
 " --- for scala language auto-complete, syntax and support
 Plug 'derekwyatt/vim-scala', { 'for': 'scala'}                                  " scala support
@@ -166,22 +169,26 @@ Plug 'octol/vim-cpp-enhanced-highlight', { 'for': 'cpp' }                       
 Plug 'vim-scripts/DoxygenToolkit.vim', { 'for': 'cpp' }                         " doxygen documentation
 "Plug 'Rip-Rip/clang_complete'                                                  " clang completion
 Plug 'myint/clang-complete', { 'for': ['cpp','c']}                              " using fork for python3 support
-"Plug 'Valloric/YouCompleteMe', { 'for': ['cpp','python'] }                     " ycm
+"Plug 'Valloric/YouCompleteMe', { 'for': ['cpp','python'] }                     " ycm using only when macvim in gui
 Plug 'vim-scripts/c.vim', { 'for': ['c','cpp'] }                                " c/cpp ide
-Plug 'rhysd/vim-clang-format', { 'on': 'ClangFormat' }                          " a formatter for C, C++, Obj-C, Java, JavaScript and TypeScript
-"Plug 'jeaye/color_coded', { 'for': ['c','cpp','objc'] }                        "  libclang-based highlighting in C, C++, ObjC
+Plug 'rhysd/vim-clang-format', { 'on': 'ClangFormat' }                          " a formatter for C, C++, Obj-C, Java, JS and TypeScript
 
-
-" --------------------------------------------------------------------------------------------------
-" --- libclang based highlighting for c/c++/objc
-" if has('lua')
-"     Plug 'jeaye/color_coded',
-"                 \ { 'do'  : 'cmake -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ . && make -j6',
-"                 \ 'for' : g:clang_languages,
-"                 \
-"         }
-" endif
-" --------------------------------------------------------------------------------------------------
+"  libclang-based highlighting in C, C++, ObjC
+"  define a function for building color coded
+" function! InstallClrCode(info)
+"     if a:info.status == 'installed' || a:info.force
+"         !cd ~/.vim/plugged/color_coded
+"         !mkdir build && cd build
+"         !cmake ..
+"         !make && make install
+"         !make clean && make clean_clang
+"     endif
+" endfunction
+" now install color_coded plugin
+" Plug 'jeaye/color_coded', {
+"     \ 'do': function('InstallClrCode'),
+"     \ 'for': ['c','cpp','objc']
+"     \ }
 
 
 " --- TeX file editing
@@ -193,6 +200,7 @@ Plug 'kien/ctrlp.vim'                                                           
 Plug 'vim-ctrlspace/vim-ctrlspace'                                              " tabs/buffers/file management
 Plug 'tyru/current-func-info.vim'                                               " get current function name
 Plug 'jiangmiao/auto-pairs'                                                     " parenthesis auto parentheses pairing
+Plug 'Raimondi/delimitMate'                                                     " auto quotes, parens, brackets, etc
 
 
 " --- plugins for vim textual snippets supporting code auto completion
@@ -205,6 +213,10 @@ Plug 'honza/vim-snippets'                                                       
 
 " --- Plugins for multiple text selection
 Plug 'terryma/vim-multiple-cursors'                                             " vim multiple cursors
+
+
+" --- Plugins for text visualization
+Plug 'osyo-manga/vim-brightest'                                                 " highlight cursor word
 
 
 " --- for elixir auto-complete syntax checking and development

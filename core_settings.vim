@@ -55,6 +55,9 @@ set ignorecase                              " case insensitive search
 set smartcase                               " unless search contains uppercase letter
 set laststatus=2                            " always show the status line
 set visualbell                              " no beep
+if has('syntax')
+    syntax enable
+endif
 
 " for 256 color terminal support
 if &term =~ '256color'
@@ -152,8 +155,9 @@ imap éé `
 " -- show the column number at 81
 if (exists('+colorcolumn'))
     "set colorcolumn=80
-    set colorcolumn=120
-    highlight ColorColumn ctermbg=0
+    "highlight ColorColumn ctermbg=0
+    set colorcolumn=110
+    highlight ColorColumn ctermbg=darkgray
 endif
 
 " if no .swp file for vim is needed

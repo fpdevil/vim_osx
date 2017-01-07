@@ -38,7 +38,9 @@
 " ########################################################################
 
 call plug#begin('~/.vim/plugged')
-source ~/.vim/bundled_plugins.vim
+if filereadable(expand("~/.vim/bundled_plugins.vim"))
+    source ~/.vim/bundled_plugins.vim
+endif
 call plug#end()
 
 " ########################################################################

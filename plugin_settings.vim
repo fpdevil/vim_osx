@@ -20,14 +20,16 @@ endif
 " ------------------------------------------------------------------------------------
 " ------                     NerdCommenter customizations                       ------
 " ------------------------------------------------------------------------------------
-" Allow commenting and inverting empty lines (useful when commenting a region)
-let g:NERDCommentEmptyLines      = 1
-" Enable trimming of trailing whitespace when un-commenting
-let g:NERDTrimTrailingWhitespace = 1
-" Add spaces after comment delimiters by default
-let g:NERDSpaceDelims            = 1
-" Use compact syntax for prettified multi-line comments
-let g:NERDCompactSexyComs        = 1
+if filereadable(expand("~/.vim/plugged/nerdcommenter/plugin/NERD_commenter.vim"))
+    " Allow commenting and inverting empty lines (useful when commenting a region)
+    let g:NERDCommentEmptyLines      = 1
+    " Enable trimming of trailing whitespace when un-commenting
+    let g:NERDTrimTrailingWhitespace = 1
+    " Add spaces after comment delimiters by default
+    let g:NERDSpaceDelims            = 1
+    " Use compact syntax for prettified multi-line comments
+    let g:NERDCompactSexyComs        = 1
+endif
 
 
 " ------------------------------------------------------------------------------------
@@ -39,8 +41,12 @@ let g:SuperTabDefaultCompletionType = 'context'
 
 " set the colorscheme to solarized light if running macvim in gui
 if has("gui_running")
+    let g:solarized_termtrans  = 1
+    let g:solarized_termcolors = 256
+    let g:solarized_contrast   = "high"
+    let g:solarized_visibility = "high"
+    let g:airline_theme        = 'cool'
     colorscheme solarized
-    let g:airline_theme = 'cool'
     imap <c-space> <c-r>=SuperTabAlternateCompletion("\<lt>c-x>\<lt>c-o>")<cr>
 else " no gui
     if has("unix")
@@ -143,8 +149,7 @@ vmap a, :Tabularize /<-<CR>
 " -----                     neco-ghc (haskell autocompleion)                     -----
 " ------------------------------------------------------------------------------------
 let $PATH=$PATH.':'.expand("~/Library/Haskell/bin/")
-" Disable haskell-vim omnifunc
-" let g:haskellmode_completion_ghc = 0
+" disablei/enable haskell-vim omnifunc
 let g:haskellmode_completion_ghc = 1
 autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
 autocmd BufEnter *.hs,*.lhs setlocal omnifunc=necoghc#omnifunc
@@ -152,7 +157,6 @@ autocmd BufEnter *.hs,*.lhs setlocal omnifunc=necoghc#omnifunc
 " but if boot time is more disable it necoghc_enable_detailed_browse = 0
 let g:necoghc_enable_detailed_browse = 1
 
-"
 " -- treat Frege files as haskell based
 autocmd BufEnter *.fr :filetype haskell
 
@@ -255,9 +259,9 @@ endif
 " ------------------------------------------------------------------------------------
 " -----------                    CtrlP customized bindings                 -----------
 " ------------------------------------------------------------------------------------
-let g:ctrlp_map = '<c-p>'
-let g:ctrlp_cmd = 'CtrlP'
-
+let g:ctrlp_map       = '<c-p>'
+let g:ctrlp_cmd       = 'CtrlP'
+let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'                 " for speeding up ctrl
 
 " ------------------------------------------------------------------------------------
 " ---------------------- custom settings for the vim git gutter ----------------------
@@ -448,6 +452,11 @@ vmap <silent> <Leader>rs <Plug>SendSelectionToTmux
 nmap <silent> <Leader>rs <Plug>NormalModeSendToTmux
 nmap <silent> <Leader>rv <Plug>SetTmuxVars
 
+" ------------------------------------------------------------------------------------
+" --------                      TagBar customization                         ---------
+" ------------------------------------------------------------------------------------
+let g:tagbar_usearrows = 1
+nnoremap <leader>l :TagbarToggle<CR>
 
 " ------------------------------------------------------------------------------------
 " -----                  terminal multiplex (TMUX) configuration                  ---
@@ -549,6 +558,7 @@ endif
 let g:jedi#goto_definitions_command   = "<leader>t"
 let g:jedi#show_call_signatures_delay = 0
 let g:jedi#auto_close_doc             = 1
+let g:jedi#show_call_signatures       = 1
 
 if has("gui_running")
     g:ycm_filetype_specific_completion_to_disable = { 'python': 1 }
@@ -581,8 +591,7 @@ let g:syntastic_cpp_include_dirs          = ['/Applications/Xcode.app/Contents/D
                                            \ '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include',
                                            \ '/usr/include',
                                            \ '/usr/local/include',
-                                           \ '/usr/local/opt/opencv3/include',
-                                           \ '/usr/local/Cellar/opencv3/HEAD-a4db983_4/include'
+                                           \ '/usr/local/opt/opencv3/include'
                                            \ ]
 
 " show balloon with mouse hovering over an error
@@ -653,6 +662,16 @@ let g:ycm_semantic_triggers =  {
 " let g:ycm_key_list_select_completion   = []
 " let g:ycm_key_list_previous_completion = []
 
+" ------------------------------------------------------------------------------------
+" ---------    avoid ycm auto-complete suggestions in MultipleCursor mode    ---------
+" ------------------------------------------------------------------------------------
+function! Multiple_cursors_before()
+    let g:ycm_auto_trigger = 0
+endfunction
+
+function! Multiple_cursors_after()
+    let g:ycm_auto_trigger = 1
+endfunction
 
 " ------------------------------------------------------------------------------------
 " ---------        customizations and settings for vim-clang and cpp         ---------
@@ -686,6 +705,7 @@ au FileType c,cpp,objc,objcpp noremap  <silent> <buffer> <leader>= :ClangFormat<
 let g:clang_languages = ['c', 'cpp', 'objc', 'python', 'haskell']
 
 " set the CLANG library path manually
+let g:clang_exec="/usr/bin/clang"
 let s:clang_library_path='/Library/Developer/CommandLineTools/usr/lib'
 if isdirectory(s:clang_library_path)
     let g:clang_library_path=s:clang_library_path
@@ -697,7 +717,6 @@ let g:clang_user_options = '-std=c++11' .
                          \ '-I/usr/include' .
                          \ '-I/usr/local/include' .
                          \ '-I/usr/local/opt/opencv3/include' .
-                         \ '-I/usr/local/Cellar/opencv3/HEAD-a4db983_4/include/opencv' .
                          \ '-I/usr/local/Cellar/opencv3/HEAD-a4db983_4/include'
 let g:clang_sort_algo       = "priority"
 let g:clang_snippets_engine = "ultisnips"
@@ -809,11 +828,26 @@ let g:startify_empty_buffer_key        = 'n'
 let g:startify_relative_path           = 1
 let g:startify_files_number            = 20
 autocmd User Startified AirlineRefresh
-try
-  autocmd BufEnter * call StartifyConfig()     " call function from custom_functions.vim
-catch
-  "echo "function cannot be executed until startify plugin is installed"
-endtry
+if filereadable(expand("~/.vim/plugged/vim-startify/autoload/startify.vim"))
+    try
+        autocmd BufEnter * call StartifyConfig()     " call function from custom_functions.vim"
+    catch
+        echo "function cannot be executed until startify plugin is installed"
+    endtry
+endif
+
+
+" ------------------------------------------------------------------------------------
+" settings for highlight cursor word underlines all occurances of a word in the buffer
+" ------------------------------------------------------------------------------------
+let g:brightest#highlight = {
+    \ "group": "BrightestUnderline",
+    \ }
+
+" ------------------------------------------------------------------------------------
+" ------ fix AutoPair inserting <CR> after pressing enter                       ------
+" ------------------------------------------------------------------------------------
+let g:AutoPairsMapCR = 0
 
 " ------------------------------------------------------------------------------------
 " -------                     balloon eval for gvim / gui                      -------
@@ -822,6 +856,12 @@ if has("ballooneval")         " available only for gvim
     set ballooneval           " balloons  act  as small hover menus
 endif
 
+" ------------------------------------------------------------------------------------
+" -------   settings for vim-follow-my-lead leader key mapping display (-fml)  -------
+" ------------------------------------------------------------------------------------
+if filereadable(expand("~/.vim/plugged/vim-follow-my-lead/plugin/follow-my-lead.vim"))
+    let g:fml_all_sources=1
+endif
 
 " END OF THE PLUGIN SETTINGS
 " =====================================================================================
