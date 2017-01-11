@@ -7,12 +7,15 @@
 " *******    note: set encoding BEFORE script encoding                         *******
 " ************************************************************************************
 set encoding=utf-8                              " utf-8 encoding
+set fileencoding=utf-8                          " file utf-8 encode
+set fileencodings=utf-8                         " file utf-8 encode
 scriptencoding utf-8                            " utf-8 encoding for scripts
 set binary                                      " enable binary support
 set showcmd                                     " show current command in status bar
 set showmode                                    " show mode in status bar
 set showmatch                                   " show matching brackets
 
+set backspace=indent,eol,start                  " fix backspace indent
 
 set nocompatible
 set hidden
@@ -20,14 +23,12 @@ set hidden
 filetype plugin on
 filetype indent on
 
-" Setting Italics for comments
-highlight Comment cterm=italic
-highlight htmlArg cterm=italic
-highlight Comment gui=italic
+" set default font for vim
+set guifont=Monaco\ for\ Powerline:h12
 
 " ************************************************************************************
 " ************                vim  Leader key mapping                     ************
-" ***************** use the option '-' + <keymap> for all shortcuts  *****************
+" ************      use the option '-' + <keymap> for all shortcuts       ************
 " ************************************************************************************
 if ! exists("mapleader")
     let mapleader = "-"
@@ -105,6 +106,32 @@ set smartindent
 set cindent
 set cinoptions=(0,u0,U0
 
+" ************************************************************************************
+" ***           custom color highlighting and alerts in common editing             ***
+" ************************************************************************************
+highlight Cursor guibg=black guifg=pink             " gui cursor color
+highlight Search guibg=peru guifg=wheat             " gui search highlight
+
+highlight CommaAndNonSpace      ctermbg=red guifg=white guibg=red
+highlight EOLSpace              ctermbg=red guifg=white guibg=red
+highlight HashRocketAndNonSpace ctermbg=red guifg=white guibg=red
+highlight NonSpaceAndHashRocket ctermbg=red guifg=white guibg=red
+highlight SpaceAndComma         ctermbg=red guifg=white guibg=red
+highlight Tab                   ctermbg=red guifg=white guibg=red
+highlight WideEisuu             ctermbg=red guifg=white guibg=red
+highlight WideSpace             ctermbg=red guifg=white guibg=red
+
+" Setting Italics for comments
+"highlight Comment cterm=italic
+"highlight Comment gui=italic
+highlight htmlArg cterm=italic
+
+" Searing red very visible cursor red back ground
+hi Cursor guibg=red
+" Use same color behind the concealed unicode characters
+hi clear Conceal
+
+
 " VIM Spellchecking
 if has("spell") " if vim support spell checking
     " Download the dictionaries automatically
@@ -140,19 +167,10 @@ if has("gui_running")
    set guioptions-=M
 endif
 
-
-" Searing red very visible cursor
-" red back ground
-hi Cursor guibg=red
-
-
-" Use same color behind the concealed unicode characters
-hi clear Conceal
-
 " Easier anti-quote
 imap éé `
 
-" -- show the column number at 81
+" show the column number at 81
 if (exists('+colorcolumn'))
     "set colorcolumn=80
     "highlight ColorColumn ctermbg=0

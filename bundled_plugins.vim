@@ -3,7 +3,7 @@
 " ####################################################################################
 " list of all the plugins to be installed through vimplug
 " thanks to https://github.com/junegunn/vim-plug
-"
+
 " ######################## set rtp+=~/.vim/vundle/Vundle.vim/ ########################
 " set the runtime path to include Vundle and initializ
 " set rtp+=~/.vim/bundle/vundle/
@@ -12,11 +12,11 @@
 " Bundle 'gmarik/vundle'                                    " completion during typing
 
 " Plugins section start {{{
-"
+
 " --- syntax checking and code formatting with syntastic vim plugin
 " --- syntastic needs jshint for checking the javascript and inorder to include
 " --- the dependency, a function is defined here to handle the npm installation
-"
+
 function! InstallJsHint(info)
     if a:info.status == 'installed' || a:info.force
         !npm install -g jshint
@@ -48,6 +48,7 @@ Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }                          
 " --- you have to go to .vim/plugin/vimproc.vim and do a ./make
 Plug 'Shougo/vimproc.vim', { 'do': 'make' }                                     " vimproc
 Plug 'Shougo/unite.vim'                                                         " unite
+Plug 'Shougo/unite-outline'                                                     " outline source for unite
 Plug 'mhinz/vim-startify'                                                       " fancy start screen for vim
 
 " --- for commenting the code
@@ -125,6 +126,7 @@ Plug 'tpope/vim-unimpaired'                                                     
 "Plug 'jpalardy/vim-slime'                                                      " slime for vim
 Plug 'beloglazov/vim-online-thesaurus'                                          " word lookup in online thesaurus (-K)
 Plug 'thinca/vim-ref'                                                           " integrated reference viewer
+Plug 'jceb/vim-hier'                                                            " hl quickfix errors
 
 
 " --- for java script syntax check and auto-completions
@@ -133,7 +135,7 @@ Plug 'pangloss/vim-javascript', { 'for': 'javascript' }                         
 Plug 'othree/yajs.vim', { 'for': 'javascript' }                                 " yet another js - lazy loading
 Plug 'einars/js-beautify', { 'for': 'javascript' }                              " js beautify
 Plug 'bigfish/vim-js-context-coloring', { 'for': 'javascript' }                 " js highlight, context & coloring
-" --- extends syntax for with jQuery,backbone,etc
+" --- extends syntax for js with jQuery,backbone,etc
 Plug 'othree/javascript-libraries-syntax.vim'                                   " js library support
 Plug 'mxw/vim-jsx'                                                              " json/js support
 Plug 'elzr/vim-json'                                                            " json highlighting
@@ -154,7 +156,8 @@ Plug 'ktonga/vim-follow-my-lead'
 
 " --- for scala language auto-complete, syntax and support
 Plug 'derekwyatt/vim-scala', { 'for': 'scala'}                                  " scala support
-"Plug 'ensime/ensime-vim'                                                       " ensime for scala auto-complete (uses python2 | commented)
+"Plug 'ensime/ensime-vim'                                                       " ensime for scala auto-complete
+                                                                                " it uses python2 | commented
 
 
 " --- for html, xml ... syntax, validation etc.
@@ -169,26 +172,10 @@ Plug 'octol/vim-cpp-enhanced-highlight', { 'for': 'cpp' }                       
 Plug 'vim-scripts/DoxygenToolkit.vim', { 'for': 'cpp' }                         " doxygen documentation
 "Plug 'Rip-Rip/clang_complete'                                                  " clang completion
 Plug 'myint/clang-complete', { 'for': ['cpp','c']}                              " using fork for python3 support
+Plug 'osyo-manga/vim-marching'                                                  " async clang code completion
 "Plug 'Valloric/YouCompleteMe', { 'for': ['cpp','python'] }                     " ycm using only when macvim in gui
 Plug 'vim-scripts/c.vim', { 'for': ['c','cpp'] }                                " c/cpp ide
 Plug 'rhysd/vim-clang-format', { 'on': 'ClangFormat' }                          " a formatter for C, C++, Obj-C, Java, JS and TypeScript
-
-"  libclang-based highlighting in C, C++, ObjC
-"  define a function for building color coded
-" function! InstallClrCode(info)
-"     if a:info.status == 'installed' || a:info.force
-"         !cd ~/.vim/plugged/color_coded
-"         !mkdir build && cd build
-"         !cmake ..
-"         !make && make install
-"         !make clean && make clean_clang
-"     endif
-" endfunction
-" now install color_coded plugin
-" Plug 'jeaye/color_coded', {
-"     \ 'do': function('InstallClrCode'),
-"     \ 'for': ['c','cpp','objc']
-"     \ }
 
 
 " --- TeX file editing
@@ -235,7 +222,9 @@ Plug 'vim-scripts/python.vim--Vasiliev'                                         
 Plug 'davidhalter/jedi-vim'                                                     " python jedi auto-completion (the best)
 Plug 'hynek/vim-python-pep8-indent', { 'for':'python' }                         " python indentation style for vim
 "Plug 'lambdalisue/vim-pyenv'                                                   " python virtual env (if required)
-"Plug 'Valloric/YouCompleteMe', { 'for': ['cpp','python'] }                     " ycm (not used in normal vim mode)
+
+
+" --- ycm being used only under gui mode for MacVim
 if has("gui_running")
     Plug 'valloric/youcompleteme', { 'for': ['cpp','python'] }
 endif

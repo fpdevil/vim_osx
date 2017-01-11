@@ -50,6 +50,7 @@ if has("gui_running")
     imap <c-space> <c-r>=SuperTabAlternateCompletion("\<lt>c-x>\<lt>c-o>")<cr>
 else " no gui
     if has("unix")
+        let g:airline_theme = 'badwolf'
         inoremap <Nul> <c-r>=SuperTabAlternateCompletion("\<lt>c-x>\<lt>c-o>")<cr>
     endif
 endif
@@ -63,7 +64,8 @@ let g:UltiSnipsJumpForwardTrigger  = "<tab>"
 let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
 
 " select the directory location for common snippets
-let g:UltiSnipsSnippetsDir       = $HOME . '/.vim/snippets'
+let g:UltiSnipsSnippetsDir        = $HOME . '/.vim/snippets'
+let g:UltiSnipsSnippetDirectories = ["UltiSnips", "CustomSnips"]
 
 
 " ------------------------------------------------------------------------------------
@@ -259,6 +261,8 @@ endif
 " ------------------------------------------------------------------------------------
 " -----------                    CtrlP customized bindings                 -----------
 " ------------------------------------------------------------------------------------
+set wildmode=list:longest,list:full
+
 let g:ctrlp_map       = '<c-p>'
 let g:ctrlp_cmd       = 'CtrlP'
 let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'                 " for speeding up ctrl
@@ -345,42 +349,83 @@ au Syntax * RainbowParenthesesLoadBraces
 " ####################################################################################
 " ############################## Personal Configuration ##############################
 " ####################################################################################
-" Using the powerline fonts for airline to display the glyphs
+
+" vim powerline symbols to be shown in the statusbar
+let g:Powerline_symbols                         = 'fancy'
+let g:airline_powerline_fonts                   = 1
+
+" status line and vim-airline
+set statusline=%F%m%r%h%w%=(%{&ff}/%Y)\ (line\ %l\/%L,\ col\ %c)\
+
+if exists("*fugitive#statusline")
+  set statusline+=%{fugitive#statusline()}
+endif
+
+let g:airline#extensions#syntastic#enabled      = 1
+let g:airline#extensions#branch#enabled         = 1
+let g:airline_skip_empty_sections               = 1
+let g:airline#extensions#tagbar#enabled         = 1
+let g:airline#extensions#tabline#enabled        = 1
+let g:airline#extensions#tabline#fnamemod       = ':t'
+let g:airline#extensions#tabline#buffer_nr_show = 1
+let g:airline_section_y                         = 'βη: %{bufnr("%")}'
+let g:airline_detect_paste                      = 1                     " show PASTE in paste mode
+let g:airline#extensions#hunks#non_zero_only    = 0                     " remove extra space with +/-/~ of 0
+
+
+" Using the powerline fonts for vim-airline to display the glyphs
 if !exists('g:airline_symbols')
    let g:airline_symbols = {}
 endif
 
 
-" fonts and vim powerline symbols to be shown in the statusbar
-set guifont=Monaco\ for\ Powerline:h12
-
-let g:airline_powerline_fonts                   = 1
-let g:airline_symbols.space                     = "\ua0"
-let g:Powerline_symbols                         = 'fancy'
-let g:airline#extensions#tabline#enabled        = 1
-let g:airline#extensions#tabline#fnamemod       = ':t'
-let g:airline#extensions#tabline#buffer_nr_show = 1
-let g:airline_section_y                         = 'BN: %{bufnr("%")}'
-let g:airline_detect_paste                      = 1                     " show PASTE in paste mode
-let g:airline#extensions#hunks#non_zero_only    = 1                     " remove extra space with +/-/~ of 0
+if !exists('g:airline_powerline_fonts')
+  let g:airline#extensions#tabline#left_sep     = ' '
+  let g:airline#extensions#tabline#left_alt_sep = '|'
+  let g:airline_left_sep                        = '▶'
+  let g:airline_left_alt_sep                    = '»'
+  let g:airline_right_sep                       = '◀'
+  let g:airline_right_alt_sep                   = '«'
+  let g:airline#extensions#branch#prefix        = '⤴' "➔, ➥, ⎇
+  let g:airline#extensions#readonly#symbol      = '⊘'
+  let g:airline#extensions#linecolumn#prefix    = '¶'
+  let g:airline#extensions#paste#symbol         = 'ρ'
+  let g:airline_symbols.linenr                  = '␊'
+  let g:airline_symbols.branch                  = '⎇'
+  let g:airline_symbols.paste                   = 'ρ'
+  let g:airline_symbols.paste                   = 'Þ'
+  let g:airline_symbols.paste                   = '∥'
+  let g:airline_symbols.whitespace              = 'Ξ'
+else
+  let g:airline#extensions#tabline#left_sep     = ''
+  let g:airline#extensions#tabline#left_alt_sep = ''
+  " powerline symbols
+  let g:airline_left_sep                        = ''
+  let g:airline_left_alt_sep                    = ''
+  let g:airline_right_sep                       = ''
+  let g:airline_right_alt_sep                   = ''
+  let g:airline_symbols.branch                  = ''
+  let g:airline_symbols.readonly                = ''
+  let g:airline_symbols.linenr                  = ''
+endif
 
 
 " ------------------------------------------------------------------------------------
 " /////////////  FANCY abcdefgh in status bar (copied from airline blog) ////////////
 " ------------------------------------------------------------------------------------
 function! AccentDemo()
-  let keys = ['a','b','c','d','e','f','g','h']
+  let keys = ['S','a','M','p','A','t','H','s']
   for k in keys
     call airline#parts#define_text(k, k)
   endfor
-  call airline#parts#define_accent('a', 'red')
-  call airline#parts#define_accent('b', 'green')
-  call airline#parts#define_accent('c', 'blue')
-  call airline#parts#define_accent('d', 'yellow')
-  call airline#parts#define_accent('e', 'orange')
-  call airline#parts#define_accent('f', 'purple')
-  call airline#parts#define_accent('g', 'bold')
-  call airline#parts#define_accent('h', 'italic')
+  call airline#parts#define_accent('S', 'red')
+  call airline#parts#define_accent('a', 'green')
+  call airline#parts#define_accent('M', 'blue')
+  call airline#parts#define_accent('p', 'yellow')
+  call airline#parts#define_accent('A', 'orange')
+  call airline#parts#define_accent('t', 'purple')
+  call airline#parts#define_accent('H', 'bold')
+  call airline#parts#define_accent('s', 'italic')
   let g:airline_section_a = airline#section#create(keys)
 endfunction
 autocmd VimEnter * call AccentDemo()
@@ -484,6 +529,7 @@ let g:syntastic_erlang_checkers   = ['syntaxerl']
 let g:syntastic_erlc_include_path = "ebin"
 let g:erlangManPath               = '/usr/local/opt/erlang/lib/erlang/man' " erlang man pages
 
+let erlang_show_errors            = 1
 
 " ------------------------------------------------------------------------------------
 " -------                Personal settings for Syntastic Checker               -------
@@ -528,6 +574,7 @@ let g:syntastic_error_symbol         = '✗'
 let g:syntastic_warning_symbol       = '⚠'
 let g:syntastic_style_error_symbol   = '✍'
 let g:syntastic_style_warning_symbol = '✍'
+let g:sytastic_stl_format            = "[ln:%F (%t)]"
 hi! link SyntasticErrorLine Visual
 hi! link SyntasticWarningLine Visual
 au VimEnter,ColorScheme * exec 'hi! SyntasticErrorSign guifg=red ctermfg=red ' . s:getbg('SyntasticErrorLine')
@@ -567,7 +614,6 @@ endif
 
 " custom settings for python through syntastic checker
 let g:syntastic_enable_highlighting        = 1
-let g:airline#extensions#syntastic#enabled = 1
 let g:syntastic_python_python_exec         = '/usr/local/bin/python3'
 " Using pylint as syntax checker and linting
 "let g:syntastic_python_checkers            = ['pylint']
@@ -586,13 +632,14 @@ let g:syntastic_cpp_compiler_options      = '-std=c++11 -stdlib=libstdc++'
 let g:syntastic_cpp_cpplint_exec          = 'cpplint'
 let g:syntastic_cpp_check_header          = 1
 let g:syntastic_cpp_remove_include_errors = 1
-let g:syntastic_cpp_include_dirs          = ['/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1',
-                                           \ '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/8.0.0/include',
-                                           \ '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include',
-                                           \ '/usr/include',
-                                           \ '/usr/local/include',
-                                           \ '/usr/local/opt/opencv3/include'
-                                           \ ]
+let g:syntastic_cpp_include_dirs          = [
+    \ '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1',
+    \ '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/8.0.0/include',
+    \ '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include',
+    \ '/usr/include',
+    \ '/usr/local/include',
+    \ '/usr/local/opt/opencv3/include'
+    \ ]
 
 " show balloon with mouse hovering over an error
 let g:syntastic_enable_balloons = 1
@@ -643,7 +690,7 @@ let g:ycm_filetype_blacklist                            = {
             \ 'pandoc' : 1,
             \ 'infolog' : 1,
             \ 'mail' : 1
-            \}
+            \ }
 let g:ycm_semantic_triggers =  {
   \   'c' : ['->', '.'],
   \   'objc' : ['->', '.', 're!\[[_a-zA-Z]+\w*\s', 're!^\s*[^\W\d]\w*\s','re!\[.*\]\s'],
@@ -735,6 +782,30 @@ let g:cpp_concepts_highlight              = 1        " highlight library concept
 
 
 " ------------------------------------------------------------------------------------
+" --- async clang code completion (https://github.com/osyo-manga/vim-marching)    ----
+" ------------------------------------------------------------------------------------
+if filereadable(expand("~/.vim/plugged/vim-marching/autoload/marching.vim"))
+    let g:marching_clang_command = "/usr/bin/clang"
+    let g:marching#clang_command#options = {
+                \ "cpp" : "-std=c++1y"
+                \ }
+    let g:marching_include_paths = [
+    \  "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1",
+    \  "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/8.0.0/include",
+    \  "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include",
+    \  "/usr/include",
+    \  "/usr/local/include",
+    \  "/usr/local/Cellar/opencv3/include"
+    \ ]
+    let g:marching_enable_neocomplete = 1
+    if !exists('g:neocomplete#force_omni_input_patterns')
+        let g:neocomplete#force_omni_input_patterns = {}
+    endif
+    let g:neocomplete#force_omni_input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
+    set updatetime=200
+endif
+
+" ------------------------------------------------------------------------------------
 " ---                 ultisnips snippets for python2 and python3                   ---
 " ------------------------------------------------------------------------------------
 if has("python")
@@ -776,21 +847,6 @@ let g:syntastic_check_on_open = 1
 
 " auto-complete using NeoCompletion for JavaScript
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-
-
-" custom colors and alerts in common editing
-highlight Cursor guifg=pink guibg=black
-highlight Search guifg=black guibg=gray
-
-highlight CommaAndNonSpace      ctermbg=red guifg=white guibg=red
-highlight EOLSpace              ctermbg=red guifg=white guibg=red
-highlight HashRocketAndNonSpace ctermbg=red guifg=white guibg=red
-highlight NonSpaceAndHashRocket ctermbg=red guifg=white guibg=red
-highlight SpaceAndComma         ctermbg=red guifg=white guibg=red
-highlight Tab                   ctermbg=red guifg=white guibg=red
-highlight WideEisuu             ctermbg=red guifg=white guibg=red
-highlight WideSpace             ctermbg=red guifg=white guibg=red
-
 
 function! s:highlight_general_checkstyles()
     "let w:m1=matchadd('Tab', '    ', -1)
@@ -848,6 +904,17 @@ let g:brightest#highlight = {
 " ------ fix AutoPair inserting <CR> after pressing enter                       ------
 " ------------------------------------------------------------------------------------
 let g:AutoPairsMapCR = 0
+
+
+" ------------------------------------------------------------------------------------
+" -------           settings for vim hier to highlight errors                  -------
+" ------------------------------------------------------------------------------------
+if filereadable(expand("~/.vim/plugged/vim-hier/plugin/hier.vim"))
+    execute "highlight qf_error_ucurl gui=undercurl guisp=Red"
+    let g:hier_highlight_group_qf  = "qf_error_ucurl"
+    execute "highlight qf_warning_ucurl gui=undercurl guisp=Blue"
+    let g:hier_highlight_group_qfw = "qf_warning_ucurl"
+endif
 
 " ------------------------------------------------------------------------------------
 " -------                     balloon eval for gvim / gui                      -------

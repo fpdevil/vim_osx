@@ -103,6 +103,6 @@ EOF
 endfunction
 
 augroup VimAwesomeComplete
-    autocmd!    
+    autocmd!
     autocmd FileType vim inoremap <c-x><c-v> <c-r>=VimAwesomeComplete()<cr>
 augroup END
