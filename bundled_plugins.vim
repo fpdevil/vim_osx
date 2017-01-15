@@ -36,6 +36,7 @@ Plug 'morhetz/gruvbox'                                                          
 Plug 'trusktr/seti.vim'                                                         " seti colorscheme
 Plug 'altercation/vim-colors-solarized'                                         " solarized color schemes
 Plug 'baeuml/summerfruit256.vim'                                                " 256 color scheme
+Plug 'jacoborus/tender.vim'                                                     " 24bit colorscheme for Vim, Airline
 
 
 " --- the right way to handle trailing-whitespace
@@ -163,6 +164,8 @@ Plug 'derekwyatt/vim-scala', { 'for': 'scala'}                                  
 " --- for html, xml ... syntax, validation etc.
 Plug 'othree/html5.vim'                                                         " html5 support
 Plug 'othree/xml.vim', { 'for': 'xml' }                                         " xml support
+Plug 'sukima/xmledit'                                                           " xml editor
+Plug 'vim-scripts/xslt'                                                         " xslt ftplugin
 Plug 'Valloric/MatchTagAlways'                                                  " highlight matching tags on markup languages
 
 
@@ -176,6 +179,8 @@ Plug 'osyo-manga/vim-marching'                                                  
 "Plug 'Valloric/YouCompleteMe', { 'for': ['cpp','python'] }                     " ycm using only when macvim in gui
 Plug 'vim-scripts/c.vim', { 'for': ['c','cpp'] }                                " c/cpp ide
 Plug 'rhysd/vim-clang-format', { 'on': 'ClangFormat' }                          " a formatter for C, C++, Obj-C, Java, JS and TypeScript
+Plug 'derekwyatt/vim-protodef', { 'for': 'cpp' }                                " pull c++ function prototypes
+
 
 
 " --- TeX file editing

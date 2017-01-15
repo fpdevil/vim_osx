@@ -50,7 +50,7 @@ if has("gui_running")
     imap <c-space> <c-r>=SuperTabAlternateCompletion("\<lt>c-x>\<lt>c-o>")<cr>
 else " no gui
     if has("unix")
-        let g:airline_theme = 'badwolf'
+        let g:airline_theme = 'laederon'
         inoremap <Nul> <c-r>=SuperTabAlternateCompletion("\<lt>c-x>\<lt>c-o>")<cr>
     endif
 endif
@@ -339,6 +339,10 @@ let g:rbpt_colorpairs = [
 	\ ['darkred',     'firebrick3'],
 	\ ]
 
+let g:rbpt_max            = 16
+let g:rbpt_loadcmd_toggle = 0
+
+
 " Rainbow Always On
 au VimEnter * RainbowParenthesesToggle
 au Syntax * RainbowParenthesesLoadRound
@@ -361,6 +365,7 @@ if exists("*fugitive#statusline")
   set statusline+=%{fugitive#statusline()}
 endif
 
+" enable/disable the airline extensions
 let g:airline#extensions#syntastic#enabled      = 1
 let g:airline#extensions#branch#enabled         = 1
 let g:airline_skip_empty_sections               = 1
@@ -371,6 +376,11 @@ let g:airline#extensions#tabline#buffer_nr_show = 1
 let g:airline_section_y                         = 'βη: %{bufnr("%")}'
 let g:airline_detect_paste                      = 1                     " show PASTE in paste mode
 let g:airline#extensions#hunks#non_zero_only    = 0                     " remove extra space with +/-/~ of 0
+let g:airline#extensions#hunks#enabled          = 1
+let g:airline#extensions#syntastic#enabled      = 1
+let g:airline#extensions#tmuxline#enabled       = 1
+let g:airline#extensions#promptline#enabled     = 1
+let g:airline#extensions#unicode#enabled        = 1
 
 
 " Using the powerline fonts for vim-airline to display the glyphs
@@ -378,7 +388,7 @@ if !exists('g:airline_symbols')
    let g:airline_symbols = {}
 endif
 
-
+" set options based on powerline font availability
 if !exists('g:airline_powerline_fonts')
   let g:airline#extensions#tabline#left_sep     = ' '
   let g:airline#extensions#tabline#left_alt_sep = '|'
@@ -414,7 +424,7 @@ endif
 " /////////////  FANCY abcdefgh in status bar (copied from airline blog) ////////////
 " ------------------------------------------------------------------------------------
 function! AccentDemo()
-  let keys = ['S','a','M','p','A','t','H','s']
+  let keys = ['S','a','M','p','A','t','H']
   for k in keys
     call airline#parts#define_text(k, k)
   endfor
@@ -425,24 +435,9 @@ function! AccentDemo()
   call airline#parts#define_accent('A', 'orange')
   call airline#parts#define_accent('t', 'purple')
   call airline#parts#define_accent('H', 'bold')
-  call airline#parts#define_accent('s', 'italic')
   let g:airline_section_a = airline#section#create(keys)
 endfunction
 autocmd VimEnter * call AccentDemo()
-
-" Airline Modeline display Info and Eye Candy (custom symbols)
-" git gutter show
-" personal appearance options
-" let g:airline_left_sep                        = '['
-" let g:airline_right_sep                       = ']'
-let g:airline#extensions#hunks#enabled          = 1
-let g:airline_linecolumn_prefix                 = '§'
-let g:airline_paste_symbol                      = 'Þ'
-let g:airline_readonly_symbol                   = 'Ʀ'
-let g:airline_enable_branch                     = 1
-let g:airline#extensions#syntastic#enabled      = 1
-" deprecated option
-" let g:airline_enable_syntastic                = 0
 
 
 " ------------------------------------------------------------------------------------

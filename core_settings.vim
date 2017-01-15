@@ -23,8 +23,20 @@ set hidden
 filetype plugin on
 filetype indent on
 
-" set default font for vim
-set guifont=Monaco\ for\ Powerline:h12
+" get the system os running
+let os = substitute(system('uname'), '\n', '', '')
+if os == 'Darwin' || os == 'Mac'
+    let s:sysos = 'osx'
+endif
+
+" set the default fontset for vim in gui mode
+if has('gui_running')
+    if s:sysos == 'osx'
+        set guifont=Monaco\ for\ Powerline:h12
+    elseif s:sysos == 'linux'
+        set guifont=DejaVu\ Sans\ Mono\ 12 
+    endif
+endif
 
 " ************************************************************************************
 " ************                vim  Leader key mapping                     ************
@@ -66,6 +78,10 @@ if &term =~ '256color'
    " render properly when inside 256-color tmux and GNU screen.
    " see also http://snk.tuxfamily.org/log/vim-256color-bce.html
     set t_ut=
+endif
+
+if has("termguicolors")
+    set termguicolors
 endif
 
 
@@ -188,6 +204,10 @@ endif
 " ****  /usr/local/Cellar/opencv3/HEAD-6328076_4/include/                          ****
 " *************************************************************************************
 set tags+=~/.vim/tags/opencv
+
+" additional path settings to include opencv
+set path+=/usr/local/opt/opencv3/include
+
 
 " for MacVim specific settings
 " override macvim color scheme
