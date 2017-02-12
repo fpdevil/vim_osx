@@ -15,7 +15,7 @@ The configuration is split across 4 files
 # Installation
 ----------------
 ```sh
-        git clone https://github.com/singamsetty/vimrc.git .vim
+        git clone https://github.com/fpdevil/vimrc.git .vim
         ln -s .vim/vimrc .vimrc
         vim +PlugInstall +qall
         cd ~/.vim/plugged/vimproc.vim && make # this step is not needed now
@@ -51,6 +51,10 @@ export EXTRA_CMAKE_ARGS="-DEXTERNAL_LIBCLANG_PATH=/Library/Developer/CommandLine
 # any additional language options can be provided here as flags
 
 python3 ./install.py --clang-completer --system-libclang
+
+or
+
+python3 ./install.py --clang-completer --system-libclang --gocode-completer --tern-complete
 
 ```
 

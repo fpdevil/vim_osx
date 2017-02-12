@@ -44,6 +44,7 @@ endif
 " ************************************************************************************
 if ! exists("mapleader")
     let mapleader = "-"
+    "let mapleader = "\<Space>"
 endif
 
 if ! exists("g:mapleader")
@@ -200,13 +201,15 @@ endif
 " *************************************************************************************
 " **********  ctags generated using exuverant ctags at /usr/local/bin/ctags  **********
 " **** /usr/local/bin/ctags -R --sort=yes --c++-kinds=+p --fields=+iaS --extra=+q  ****
-" **** --language-force=C++ -f opencv                                              ****
+" **** --language-force=c++ -f opencv                                              ****
 " ****  /usr/local/Cellar/opencv3/HEAD-6328076_4/include/                          ****
 " *************************************************************************************
 set tags+=~/.vim/tags/opencv
 
 " additional path settings to include opencv
 set path+=/usr/local/opt/opencv3/include
+set path+=/usr/local/opt/opencv3/include/opencv
+set path+=/usr/local/opt/opencv3/include/opencv2
 
 
 " for MacVim specific settings

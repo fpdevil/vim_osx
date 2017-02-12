@@ -106,3 +106,54 @@ augroup VimAwesomeComplete
     autocmd!
     autocmd FileType vim inoremap <c-x><c-v> <c-r>=VimAwesomeComplete()<cr>
 augroup END
+
+
+" ------------------------------------------------------------------------------------
+" ---  get the username in the form of space delimited first name and last name    ---
+" ------------------------------------------------------------------------------------
+if has('mac')
+    let s:usrname = split(system("finger `whoami`|awk -F: '{print $3}'|head -n1|sed 's/^ //'"), '\n')[0]
+elseif has('unix')
+    let s:usrname = split(system('whoami | head -n1'), '\n')[0]
+endif
+
+" define the line width as under 80
+let s:width = 77
+
+" ------------------------------------------------------------------------------------
+" --- define function for inserting header information in erlang code file        ---
+" ------------------------------------------------------------------------------------
+function! s:ErlHeader()
+    let s:comment = "%%%"
+    let s:line = "%%%" . repeat('-', s:width)
+    let s:filename = bufname("%")
+    let s:todo = "TODO <explanation>"
+    if s:usrname != ''
+        let s:author = s:comment . " @author " . s:usrname . " <>"
+        let s:cpr = s:comment . " @copyright (C) " . strftime('%Y') . ", " . s:usrname
+        let s:doc = s:comment . " @doc"
+        let s:end = s:comment . " @end"
+        let s:created = s:comment . " Created : " . strftime('%d %b %Y') . " by " . s:usrname . " <>"
+        call append(0, s:line)
+        call append(1, s:author)
+        call append(2, s:cpr)
+        call append(3, s:doc)
+        call append(4, s:comment)
+        call append(5, s:end)
+        call append(6, s:created)
+        call append(7, s:line)
+    endif
+    unlet s:comment
+    unlet s:line
+    unlet s:filename
+    unlet s:todo
+    unlet s:author
+    unlet s:cpr
+    unlet s:doc
+    unlet s:end
+    unlet s:created
+endfunction
+
+augroup ErlHeader
+    autocmd BufNewFile *.erl call s:ErlHeader()
+augroup END

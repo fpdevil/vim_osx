@@ -45,11 +45,12 @@ if has("gui_running")
     let g:solarized_termcolors = 256
     let g:solarized_contrast   = "high"
     let g:solarized_visibility = "high"
-    let g:airline_theme        = 'cool'
+    let g:airline_theme        = 'aurora'
     colorscheme solarized
     imap <c-space> <c-r>=SuperTabAlternateCompletion("\<lt>c-x>\<lt>c-o>")<cr>
 else " no gui
     if has("unix")
+        colorscheme materialbox
         let g:airline_theme = 'laederon'
         inoremap <Nul> <c-r>=SuperTabAlternateCompletion("\<lt>c-x>\<lt>c-o>")<cr>
     endif
@@ -93,7 +94,7 @@ nnoremap <silent> <leader>hz :HoogleClose<CR>   " Hoogle, close the Hoogle windo
 " let g:syntastic_mode_map={'mode': 'active', 'passive_filetypes': ['haskell']}
 let g:syntastic_mode_map={'mode': 'active',
                         \ 'active_filetypes': ['haskell', 'python', 'cpp'],
-                        \ 'passive_filetypes': []}
+                        \ 'passive_filetypes': ['go']}
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list            = 0
 " for skipping syntax the checking while exiting vim using :wq
@@ -136,6 +137,31 @@ let NERDTreeShowHidden            = 1            " show hidden files
 let g:NERDTreeDirArrowExpandable  = '▸'          " horizontal arrow
 let g:NERDTreeDirArrowCollapsible = '▾'          " vertical arrow
 
+" ------------------------------------------------------------------------------------
+" -----                      for NerdTree and Tabs                               -----
+" ------------------------------------------------------------------------------------
+if filereadable(expand('~/.vim/plugged/vim-nerdtree-tabs/nerdtree_plugin/vim-nerdtree-tabs.vim'))
+    function! NERDTreeFileHighlight(extension, fg, bg, guifg, guibg)
+        exec 'autocmd filetype nerdtree highlight ' . a:extension 
+                    \ .' ctermbg=' . a:bg . ' ctermfg='. a:fg
+                    \ .' guibg='. a:guibg .' guifg='. a:guifg
+        exec 'autocmd filetype nerdtree syn match ' . a:extension
+                    \ .' #^\s\+.*'. a:extension .'$#'
+    endfunction
+    call NERDTreeFileHighlight('hrl', 'green', 'none', 'green', '#eee8d5')
+    call NERDTreeFileHighlight('erl', 'LightRed', 'none', '#FA5882', '#eee8d5')
+    call NERDTreeFileHighlight('ini', 'yellow', 'none', 'yellow', '#eee8d5')
+    call NERDTreeFileHighlight('md', 'blue', 'none', '#3366FF', '#eee8d5')
+    call NERDTreeFileHighlight('yml', 'LightMagenta', 'none', 'LightMagenta', '#eee8d5')
+    call NERDTreeFileHighlight('sh', 'DarkYellow', 'none', 'DarkYellow', '#eee8d5')
+    call NERDTreeFileHighlight('conf', 'yellow', 'none', 'yellow', '#eee8d5')
+    call NERDTreeFileHighlight('json', 'yellow', 'none', 'yellow', '#eee8d5')
+    call NERDTreeFileHighlight('html', 'yellow', 'none', 'yellow', '#eee8d5')
+    call NERDTreeFileHighlight('css', 'cyan', 'none', 'cyan', '#eee8d5')
+    call NERDTreeFileHighlight('coffee', 'Red', 'none', 'red', '#eee8d5')
+    call NERDTreeFileHighlight('js', 'Red', 'none', '#ffa500', '#eee8d5')
+    call NERDTreeFileHighlight('py', 'Magenta', 'none', '#FA8258', '#eee8d5')
+endif
 
 " ------------------------------------------------------------------------------------
 " -----                      for tab alignment configuration                     -----
@@ -171,7 +197,7 @@ autocmd BufEnter *.fr :filetype haskell
 "let g:acp_enableAtStartup                          = 0             " for disabling the AutoComplPop
 let g:neocomplete#enable_at_startup                 = 1             " use neocomplete at startup
 let g:neocomplete#enable_smart_case                 = 1             " use smart-case
-let g:neocomplete#sources#syntax#min_keyword_length = 2             " set minimum syntax keyword length
+let g:neocomplete#sources#syntax#min_keyword_length = 1             " set minimum syntax keyword length
 let g:neocomplete#lock_buffer_name_pattern          = '\*ku\*'      " regex for buffer name
 " define a dictionary
 let g:neocomplete#sources#dictionary#dictionaries = {
@@ -381,6 +407,7 @@ let g:airline#extensions#syntastic#enabled      = 1
 let g:airline#extensions#tmuxline#enabled       = 1
 let g:airline#extensions#promptline#enabled     = 1
 let g:airline#extensions#unicode#enabled        = 1
+let g:airline#extensions#tabline#formatter      = 'unique_tail_improved'
 
 
 " Using the powerline fonts for vim-airline to display the glyphs
@@ -517,7 +544,7 @@ autocmd BufEnter *.hs set formatprg=pointfree
 
 
 " ------------------------------------------------------------------------------------
-" ------------------------------------ for erlang ------------------------------------
+" ---                               for erlang                                     ---
 " ------------------------------------------------------------------------------------
 " for erlang development - syntax checking through syntaxerl
 let g:syntastic_erlang_checkers   = ['syntaxerl']
@@ -720,7 +747,9 @@ endfunction
 " ------------------------------------------------------------------------------------
 let g:clang_c_options            = '-std=gnu11'
 let g:clang_cpp_options          = '-std=c++11 -stdlib=libc++'
-" Clang-Format Setup
+
+" vim clang-format setup
+let g:clang_format#command       = "/usr/local/bin/clang-format"
 let g:clang_format#style_options = {
     \ "Standard": "Cpp11",
     \ "SortIncludes": "false",
@@ -780,7 +809,7 @@ let g:cpp_concepts_highlight              = 1        " highlight library concept
 " --- async clang code completion (https://github.com/osyo-manga/vim-marching)    ----
 " ------------------------------------------------------------------------------------
 if filereadable(expand("~/.vim/plugged/vim-marching/autoload/marching.vim"))
-    let g:marching_clang_command = "/usr/bin/clang"
+    let g:marching_clang_command         = "/usr/bin/clang"
     let g:marching#clang_command#options = {
                 \ "cpp" : "-std=c++1y"
                 \ }
@@ -925,5 +954,57 @@ if filereadable(expand("~/.vim/plugged/vim-follow-my-lead/plugin/follow-my-lead.
     let g:fml_all_sources=1
 endif
 
+
+" ------------------------------------------------------------------------------------
+" -------   START Configuration settings for vim-go golang support             -------
+" ------------------------------------------------------------------------------------
+if filereadable(expand("~/.vim/plugged/vim-go/plugin/go.vim"))
+    let g:go_highlight_functions         = 1
+    let g:go_highlight_methods           = 1
+    let g:go_highlight_fields            = 1
+    let g:go_highlight_types             = 1
+    let g:go_highlight_operators         = 1
+    let g:go_highlight_build_constraints = 1
+    let g:go_fmt_command                 = "goimports"
+    let g:go_play_open_browser           = 0
+endif
+
+" syntastic checking for go {{{
+let g:syntastic_go_chckers = ['golint']
+let g:go_list_type         = "quickfix"
+" }}}
+
+" Tagbar settings for go {{{
+let g:tagbar_type_go = {
+    \ 'ctagstype' : 'go',
+    \ 'kinds'     : [
+        \ 'p:package',
+        \ 'i:imports:1',
+        \ 'c:constants',
+        \ 'v:variables',
+        \ 't:types',
+        \ 'n:interfaces',
+        \ 'w:fields',
+        \ 'e:embedded',
+        \ 'm:methods',
+        \ 'r:constructor',
+        \ 'f:functions'
+    \ ],
+    \ 'sro' : '.',
+    \ 'kind2scope' : {
+        \ 't' : 'ctype',
+        \ 'n' : 'ntype'
+    \ },
+    \ 'scope2kind' : {
+        \ 'ctype' : 't',
+        \ 'ntype' : 'n'
+    \ },
+    \ 'ctagsbin'  : 'gotags',
+    \ 'ctagsargs' : '-sort -silent'
+\ }
+" }}}
+" ///                         END of GOLANG Settings                              ///
+" ------------------------------------------------------------------------------------
+ 
 " END OF THE PLUGIN SETTINGS
 " =====================================================================================

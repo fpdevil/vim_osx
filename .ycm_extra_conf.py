@@ -40,8 +40,6 @@ BASE_FLAGS = [
         '-I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1',
         '-I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/8.0.0/include',
         '-I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include',
-        '-I/usr/local/Cellar/opencv3/HEAD-7dd3723_4/include/opencv',
-        '-I/usr/local/Cellar/opencv3/HEAD-7dd3723_4/include',
         '-I/usr/local/opt/opencv3/lib',
         '-I/usr/local/opt/opencv3/include'
 ]

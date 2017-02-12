@@ -36,14 +36,16 @@ Plug 'morhetz/gruvbox'                                                          
 Plug 'trusktr/seti.vim'                                                         " seti colorscheme
 Plug 'altercation/vim-colors-solarized'                                         " solarized color schemes
 Plug 'baeuml/summerfruit256.vim'                                                " 256 color scheme
+Plug 'junegunn/limelight.vim'                                                   " limelight theme
 Plug 'jacoborus/tender.vim'                                                     " 24bit colorscheme for Vim, Airline
 
 
 " --- the right way to handle trailing-whitespace
 Plug 'bronson/vim-trailing-whitespace'                                          " remove trailing white spaces
 
-" --- A Tree for file browser and Undo list
-Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }                          " NERDTree file browser
+" --- File Exploring
+Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }                          " NERDTree file browser, Undo list
+Plug 'jistr/vim-nerdtree-tabs'                                                  " NERDTree and tabs together
 
 " --- depending on your vimproc location
 " --- you have to go to .vim/plugin/vimproc.vim and do a ./make
@@ -122,6 +124,7 @@ Plug 'guns/vim-sexp'                                                            
 Plug 'tpope/vim-repeat'                                                         " vim repeat the last command on
 Plug 'tpope/vim-surround'                                                       " parenthesizing made simple
 Plug 'tpope/vim-unimpaired'                                                     " pairs of handy bracket mappings
+Plug 'gorkunov/smartpairs.vim'                                                  " fantastic selection for vim
 " --- vim-fireplace dependencies
 "Plug 'tpope/vim-classpath'                                                     " vim classpath
 "Plug 'jpalardy/vim-slime'                                                      " slime for vim
@@ -142,11 +145,14 @@ Plug 'mxw/vim-jsx'                                                              
 Plug 'elzr/vim-json'                                                            " json highlighting
 Plug 'othree/javascript-libraries-syntax.vim'                                   " js syntax check and library support
 
+
 " for erlang language auto-completions, syntax check and support
-Plug 'vim-erlang/vim-erlang-runtime', { 'for': 'erlang' }                       " erlang runtime check
+Plug 'vim-erlang/vim-erlang-runtime', { 'for': 'erlang' }                       " erlang indentation, syntax
 Plug 'vim-erlang/vim-erlang-omnicomplete', { 'for': 'erlang' }                  " erlang code auto completion
-Plug 'vim-erlang/vim-erlang-compiler', { 'for': 'erlang' }                      " erlang support
-Plug 'vim-erlang/vim-erlang-tags', { 'for': 'erlang' }                          " erlang tag support
+Plug 'vim-erlang/vim-erlang-compiler', { 'for': 'erlang' }                      " erlang syntax checker, compiler
+Plug 'youthy/vimerl-complete', { 'for': 'erlang' }                              " erlang auto complete
+Plug 'vim-erlang/vim-erlang-skeletons', { 'for': 'erlang' }                     " erlang templates
+Plug 'akalyaev/vim-erlang-spec', { 'for': 'erlang' }                            " erlang generate specifications
 
 
 " --- allow pane movement to jump out of vim into tmux navigator
@@ -227,11 +233,11 @@ Plug 'vim-scripts/python.vim--Vasiliev'                                         
 Plug 'davidhalter/jedi-vim'                                                     " python jedi auto-completion (the best)
 Plug 'hynek/vim-python-pep8-indent', { 'for':'python' }                         " python indentation style for vim
 "Plug 'lambdalisue/vim-pyenv'                                                   " python virtual env (if required)
-
+Plug 'tell-k/vim-autopep8'                                                      " autopep8 plugin for python
 
 " --- ycm being used only under gui mode for MacVim
 if has("gui_running")
-    Plug 'valloric/youcompleteme', { 'for': ['cpp','python'] }
+    Plug 'valloric/youcompleteme', { 'for': ['cpp','python','go','js'] }
 endif
 
 " end of plugin section }}}
