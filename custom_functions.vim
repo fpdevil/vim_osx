@@ -157,3 +157,30 @@ endfunction
 augroup ErlHeader
     autocmd BufNewFile *.erl call s:ErlHeader()
 augroup END
+
+" ------------------------------------------------------------------------------------
+" --- define function for finding an appropriate .jshintrc file for javascript     ---
+" ------------------------------------------------------------------------------------
+function s:locate_jshintrc(dir)
+    let l:found = globpath(a:dir, '.jshintrc')
+    if filereadable(l:found)
+        return l:found
+    endif
+
+    let l:parent = fnamemodify(a:dir, ':h')
+    if l:parent != a:dir
+        return s:locate_jshintrc(l:parent)
+    endif
+
+    return "~/.jshintrc"
+endfunction
+
+function UpdJsHintConf()
+    let l:dir = expand('%:p:h')
+    let l:jshintrc = s:locate_jshintrc(l:dir)
+    " deprecated option
+    " let g:syntastic_javascript_jshint_conf = l:jshintrc
+    let g:syntastic_javascript_jshint_args = l:jshintrc
+endfunction
+
+au BufEnter * call UpdJsHintConf()

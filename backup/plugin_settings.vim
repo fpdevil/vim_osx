@@ -41,15 +41,12 @@ let g:SuperTabDefaultCompletionType = 'context'
 
 " set the colorscheme to solarized light if running macvim in gui
 if has("gui_running")
-    colorscheme tender
-    "colorscheme solarized
-    if exists('g:colors_name') && g:colors_name == 'solarized'
-        let g:solarized_termtrans  = 1
-        let g:solarized_termcolors = 256
-        let g:solarized_contrast   = "high"
-        let g:solarized_visibility = "high"
-        let g:airline_theme        = 'tenderplus'
-    endif
+    let g:solarized_termtrans  = 1
+    let g:solarized_termcolors = 256
+    let g:solarized_contrast   = "high"
+    let g:solarized_visibility = "high"
+    let g:airline_theme        = 'aurora'
+    colorscheme solarized
     imap <c-space> <c-r>=SuperTabAlternateCompletion("\<lt>c-x>\<lt>c-o>")<cr>
 else " no gui
     if has("unix")
@@ -100,7 +97,7 @@ let g:syntastic_mode_map={'mode': 'active',
                         \ 'passive_filetypes': ['go']}
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list            = 0
-" for skipping syntax checking while exiting vim using :wq
+" for skipping syntax the checking while exiting vim using :wq
 let g:syntastic_check_on_wq              = 0
 
 " auto-checking on writing
@@ -234,7 +231,6 @@ let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 inoremap <expr><C-g> neocomplete#undo_completion()
 inoremap <expr><C-l> neocomplete#complete_common_string()
 
-
 " settings for enabling the OmniCompletion for various languages
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
@@ -250,6 +246,32 @@ else
 endif
 
 autocmd BufRead,BufNewFile *.go set filetype=go
+
+
+" ************************************************************************************
+" ////////////////////////////////// COMMENTED OUT ///////////////////////////////////
+" ------------------- below section commented in favour of neocomplete ---------------
+"let g:neocomplcache_enable_at_startup = 1
+"let g:neocomplcache_enable_smart_case = 1
+"let g:neocomplcache_dictionary_filetype_lists = {
+"    \ 'default' : '',
+"    \ 'vimshell' : $HOME.'/.vimshell_hist',
+"    \ 'scheme' : $HOME.'.ghosh_completions'
+"    \ }
+"inoremap <expr><C-g> neocomplcache#undo_completion()
+"inoremap <expr><C-l> neocomplcache#complete_common_string()
+"inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+"function! s:my_cr_function()
+"    return neocomplcache#smart_close_popup() . "\<CR>"
+"endfunction
+"inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
+"function! SetToCabalBuild()
+"    if glob("*.cabal") != ''
+"        set makeprg=cabal\ build
+"    endif
+"endfunction
+"autocmd BufEnter *.hs,*.lhs :call SetToCabalBuild()
+" ************************************************************************************
 
 " ------------------------------------------------------------------------------------
 " ---------              CtrlSpace customization settings                    ---------
@@ -528,14 +550,8 @@ autocmd BufEnter *.hs set formatprg=pointfree
 let g:syntastic_erlang_checkers   = ['syntaxerl']
 let g:syntastic_erlc_include_path = "ebin"
 let g:erlangManPath               = '/usr/local/opt/erlang/lib/erlang/man' " erlang man pages
-let g:erlangCompiler              = "erlc"
+
 let erlang_show_errors            = 1
-let g:erlang_use_conceal          = 1
-
-" autocmd FileType erlang set omnifunc=erlangcomplete#Complete
-autocmd FileType erlang set ai sw=2 st=2 ts=2 et
-
-let erlang_path=substitute(system("which erl"), "/bin/erl", "/lib/**/src/", "")
 
 " ------------------------------------------------------------------------------------
 " -------                Personal settings for Syntastic Checker               -------
@@ -614,7 +630,7 @@ let g:jedi#auto_close_doc             = 1
 let g:jedi#show_call_signatures       = 1
 
 if has("gui_running")
-    let g:ycm_filetype_specific_completion_to_disable = { 'python': 1 }
+    g:ycm_filetype_specific_completion_to_disable = { 'python': 1 }
 endif
 
 
@@ -656,8 +672,8 @@ let python_highlight_all=1
 
 " choose the python binary to select while using YouCompleteMe
 if has('python')
-    let g:ycm_python_binary_path        = 'python'
-    let g:ycm_server_python_interpreter = 'python'
+    let g:ycm_python_binary_path        = '/usr/local/bin/python'
+    let g:ycm_server_python_interpreter = '/usr/local/bin/python'
 else
     let g:ycm_python_binary_path        = '/usr/local/bin/python3'
     let g:ycm_server_python_interpreter = '/usr/local/bin/python3'
@@ -682,7 +698,6 @@ let g:ycm_collect_identifiers_from_tags_files           = 1
 let g:ycm_complete_in_comments                          = 1
 let g:ycm_collect_identifiers_from_comments_and_strings = 1
 let g:ycm_add_preview_to_completeopt                    = 1
-let g:ycm_cache_omnifunc                                = 0
 let g:ycm_server_log_level                              = 'info'
 let g:ycm_filetype_blacklist                            = {
             \ 'vim' : 1,
@@ -830,7 +845,6 @@ autocmd FileType javascript noremap <buffer> <c-f> :call JsBeautify()<cr>
 autocmd FileType html noremap <buffer> <c-f> :call JsBeautify()<cr>
 autocmd FileType css noremap <buffer> <c-f> :call JsBeautify()<cr>
 " Character Concealing in the editor mode
-set conceallevel=1
 " https://github.com/pangloss/vim-javascript
 let g:javascript_conceal_function       = "ƒ"
 let g:javascript_conceal_null           = "ø"
@@ -843,8 +857,6 @@ let g:javascript_conceal_static         = "•"
 let g:javascript_conceal_super          = "Ω"
 let g:javascript_conceal_arrow_function = "⇒"
 
-" for jsdocs
-let g:javascript_plugin_jsdoc = 1
 
 " javascript-libraries-syntax customization
 let g:used_javascript_libs = 'underscore,angularjs,jasmine,chai'
@@ -852,10 +864,10 @@ let g:used_javascript_libs = 'underscore,angularjs,jasmine,chai'
 " real time syntax checking with jshint lint for javascript
 " jshint will be installed as a dependency while installing the syntastic
 " vim plugin using the underlying os x npm installer
-let g:syntastic_javascript_checkers = ['jshint', 'eshint']
+let g:syntastic_javascript_checkers = ['jshint']
 
 " show any javascript based linting errors immediately
-let g:syntastic_check_on_open = 0
+let g:syntastic_check_on_open = 1
 
 " auto-complete using NeoCompletion for JavaScript
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
@@ -872,22 +884,6 @@ endf
 
 call s:highlight_general_checkstyles()
 
-" settings for vim-js-context-coloring
-" let g:js_context_colors_colorize_comments        = 1    " colorize comments
-" let g:js_context_colors_show_error_message       = 1    " handling error mesages
-" let g:js_context_colors_highlight_function_names = 1    " highlight function names
-" let g:js_context_colors_block_scope              = 1    " color scope
-" let g:js_context_colors_jsx                      = 1    " colors for jsx files
-" let g:js_context_colors_allow_jsx_syntax         = 1    " colors allowed for es6 and jsx
-
-" ------------------------------------------------------------------------------------
-" -------                settings for the jshint2 js linting                   -------
-" ------------------------------------------------------------------------------------
-if filereadable(expand("~/.vim/plugged/jshint2.vim/plugin/jshint2.vim"))
-    let jshint2_read  = 1   " lint files after reading it
-    let jshint2_save  = 1   " lint files after saving it
-    let jshint2_close = 0   " do not automatically close orphaned error lists
-endif
 
 " ------------------------------------------------------------------------------------
 " -------                settings for the matching tag highlight               -------
@@ -967,7 +963,6 @@ if filereadable(expand("~/.vim/plugged/vim-go/plugin/go.vim"))
     let g:go_highlight_methods           = 1
     let g:go_highlight_fields            = 1
     let g:go_highlight_types             = 1
-    let g:go_highlight_structs           = 1
     let g:go_highlight_operators         = 1
     let g:go_highlight_build_constraints = 1
     let g:go_fmt_command                 = "goimports"
@@ -1013,42 +1008,9 @@ let g:tagbar_type_go = {
 " ------------------------------------------------------------------------------------
 " ---- vim notes                                                                  ----
 " ------------------------------------------------------------------------------------
-let g:notes_directories = ['~/Documents/Notes']
-let g:notes_suffix      = '.txt'
+let g:notes_directories = ['~/Downloads/Notes']
+let g:notes_suffix = '.txt'
 
-" ------------------------------------------------------------------------------------
-" ---- vim-move move lines and selections up or down                              ----
-" ------------------------------------------------------------------------------------
-if filereadable(expand("~/.vim/plugged/vim-move/plugin/move.vim"))
-    let g:move_map_keys = 0
-    vmap <C-j> <Plug>MoveBlockDown
-    vmap <C-k> <Plug>MoveBlockUp
-    nmap <A-j> <Plug>MoveLineDown
-    nmap <A-k> <Plug>MoveLineUp
-endif
-
-" ------------------------------------------------------------------------------------
-" ---- vim async code completion settings                                         ----
-" ------------------------------------------------------------------------------------
-if filereadable(expand("~/.vim/plugged/completor/plugin/completor.vim"))
-    let g:completor_python_binary                                        = "/usr/local/bin/python3"
-    let g:completor_node_binary                                          = "/usr/local/bin/node"
-    let g:completor_clang_binary                                         = "/usr/bin/clang"
-    let g:completor_gocode_binary                                        = "/usr/local/opt/go/libexec/bin/go"
-    " Use Tab to trigger completion (disable auto trigger)
-    " let g:completor_auto_trigger                                         = 0
-    " inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<C-x>\<C-u>\<C-p>"
-endif
-
-" ------------------------------------------------------------------------------------
-" ---- vim html completions using emmet mode                                      ----
-" ------------------------------------------------------------------------------------
-if filereadable(expand("~/.vim/plugged/emmet-vim/plugin/emmet.vim"))
-    let g:user_emmet_install_global         = 0
-    let g:user_emmet_leader_key             = 'C-Z'
-    autocmd FileType html,css, EmmetInstall
-endif
-
-
+ 
 " END OF THE PLUGIN SETTINGS
 " =====================================================================================

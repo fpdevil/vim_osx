@@ -20,12 +20,16 @@ set backspace=indent,eol,start                  " fix backspace indent
 set nocompatible
 set hidden
 
-set list
-set listchars=tab:\|\ ,
-set grepformat=%f:%l:%c:%m,%f:%l:%m
-
 filetype plugin on
+" turn on omni-completion (CTRL-X CTRL-O to activate completion)
+set omnifunc=syntaxcomplete#Complete
+
 filetype indent on
+
+" ominicomplete preview window
+" set completeopt+=preview
+set completeopt+=longest,menuone,preview
+
 
 " get the system os running
 let os = substitute(system('uname'), '\n', '', '')
@@ -214,19 +218,6 @@ set tags+=~/.vim/tags/opencv
 set path+=/usr/local/opt/opencv3/include
 set path+=/usr/local/opt/opencv3/include/opencv
 set path+=/usr/local/opt/opencv3/include/opencv2
-
-" path for erlang
-set path+=/usr/local/opt/erlang/bin
-
-" for external path setup in macvim
-if has('gui_running')
-    set path+=/usr/local/lib/python3.6/site-packages
-    let $PYTHONPATH = "/usr/local/lib/python3.6/site-packages"
-    let $PYTHON3_INCLUDE_DIR = "/usr/local/opt/python3/Frameworks/Python.framework/Versions/3.6/include/python3.6m"
-    let $PYTHON3_LIBRARY = "/usr/local/opt/python3/Frameworks/Python.framework/Versions/3.6/lib/python3.6/config-3.6m-darwin"
-    let $GOPATH = $HOME . "/sw/programming/gocode/go"
-    let $PATH = $HOME . "/usr/local/opt/go/libexec/bin:" . $PATH
-endif
 
 
 " for MacVim specific settings

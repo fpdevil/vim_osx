@@ -29,7 +29,6 @@ BASE_FLAGS = [
         '-isystem', '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/8.0.0/include',
         '-isystem', '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include',
         '-isystem', '/usr/local/opt/opencv3/include',
-        '-isystem', '/usr/local/Cellar/opencv3/HEAD-7dd3723_4/include',
         '-isystem', '/System/Library/Frameworks',
         '-isystem', '/Library/Frameworks',
         '-isystem', '/System/Library/Frameworks/Python.framework/Headers',
@@ -42,6 +41,8 @@ BASE_FLAGS = [
         '-I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include',
         '-I/usr/local/opt/opencv3/lib',
         '-I/usr/local/opt/opencv3/include'
+        '-I/usr/local/opt/opencv3/include/opencv'
+        '-I/usr/local/opt/opencv3/include/opencv2'
 ]
 
 SOURCE_EXTENSIONS = [

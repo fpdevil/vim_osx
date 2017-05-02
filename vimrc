@@ -33,20 +33,23 @@
 " ====        cd ~/.vim/bundle/vimproc.vim && make                     ====
 " =========================================================================
 " Installing the vim-plug directly without the above {{{
-let is_vim_plug_already_installed = 0
-let vim_plug_location = expand('~/.vim/autoload/plug.vim')
-if !filereadable(vim_plug_location)
+let s:is_vim_plug_already_installed = 0
+let s:vim_plug_manager = expand('~/.vim/autoload/plug.vim')
+let s:vim_plug_url='https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+
+if empty(glob(s:vim_plug_manager))
     echo "> Installing the vim-plug..."
     echo ">"
-    silent !mkdir -p ~/.vim/autoload
-    silent !/usr/bin/curl -fLo ~/.vim/autoload/plug.vim \
-                            --create-dirs \
-                            https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-    let is_vim_plug_already_installed = 1
+    silent exec '!/usr/bin/curl -fLo' . s:vim_plug_manager . ' --create-dirs ' . s:vim_plug_url
+    let s:is_vim_plug_already_installed = 1
+    augroup vimplug
+        autocmd!
+        autocmd VimEnter * PlugInstall
+    augroup END
 endif
 " load the vim-plug for first time manually
-if is_vim_plug_already_installed
-    :execute 'source '.fnameescape(vim_plug_location)
+if s:is_vim_plug_already_installed
+    :execute 'source ' . fnameescape(s:vim_plug_location)
 endif
 " }}}
 
@@ -54,7 +57,8 @@ endif
 " ########################    Plugin conf start   ########################
 " ########################################################################
 
-call plug#begin('~/.vim/plugged')
+let g:plug_dir = expand('~/.vim/plugged')
+call plug#begin(g:plug_dir)
 if filereadable(expand("~/.vim/bundled_plugins.vim"))
     source ~/.vim/bundled_plugins.vim
 endif
@@ -65,7 +69,7 @@ call plug#end()
 " ########################################################################
 
 " install the plugins for the first time {{{
-if is_vim_plug_already_installed
+if s:is_vim_plug_already_installed
     echo "> Installing bundled plugins... ignore errors for keymap..."
     :PlugInstall
 endif

@@ -23,6 +23,13 @@ function! InstallJsHint(info)
     endif
 endfunction
 
+function! BuildTern(info)
+    if a:info.status == 'installed' || a:info.force
+        !npm install
+    endif
+endfunction
+
+
 Plug 'scrooloose/syntastic', { 'do': function('InstallJsHint') }                " realtime syntax checker
 "Plug 'scrooloose/syntastic'                                                    " realtime syntax checker
 Plug 'Chiel92/vim-autoformat'                                                   " easy code formatting in vim
@@ -39,6 +46,7 @@ Plug 'baeuml/summerfruit256.vim'                                                
 Plug 'junegunn/limelight.vim'                                                   " limelight theme
 Plug 'jacoborus/tender.vim'                                                     " 24bit colorscheme for Vim, Airline
 
+Plug 'maralla/completor.vim'                                                    " async completion framework
 
 " --- the right way to handle trailing-whitespace
 Plug 'bronson/vim-trailing-whitespace'                                          " remove trailing white spaces
@@ -136,14 +144,18 @@ Plug 'jceb/vim-hier'                                                            
 " --- for java script syntax check and auto-completions
 Plug 'maksimr/vim-jsbeautify', { 'for': 'javascript' }                          " beautify js
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' }                         " js for vim
-Plug 'othree/yajs.vim', { 'for': 'javascript' }                                 " yet another js - lazy loading
+Plug 'jelera/vim-javascript-syntax', { 'for': 'javascript' }                    " enhanced js syntax
+" yet another js and its dependency es.next with lazy loading only for js
+Plug 'othree/yajs.vim' | Plug 'othree/es.next.syntax.vim', { 'for': 'javascript' } 
 Plug 'einars/js-beautify', { 'for': 'javascript' }                              " js beautify
-Plug 'bigfish/vim-js-context-coloring', { 'for': 'javascript' }                 " js highlight, context & coloring
+"Plug 'bigfish/vim-js-context-coloring', { 'for': 'javascript' }                " js highlight, context & coloring
 " --- extends syntax for js with jQuery,backbone,etc
 Plug 'othree/javascript-libraries-syntax.vim'                                   " js library support
 Plug 'mxw/vim-jsx'                                                              " json/js support
 Plug 'elzr/vim-json'                                                            " json highlighting
 Plug 'othree/javascript-libraries-syntax.vim'                                   " js syntax check and library support
+Plug 'marijnh/tern_for_vim', { 'do': function('BuildTern') }                    " tern plugin for vim js
+Plug 'shutnik/jshint2.vim', { 'for': 'javascript' }                             " JSHint integration
 
 
 " for erlang language auto-completions, syntax check and support
@@ -168,6 +180,7 @@ Plug 'derekwyatt/vim-scala', { 'for': 'scala'}                                  
 
 
 " --- for html, xml ... syntax, validation etc.
+Plug 'mattn/emmet-vim'                                                          " emmet for vim
 Plug 'othree/html5.vim'                                                         " html5 support
 Plug 'othree/xml.vim', { 'for': 'xml' }                                         " xml support
 Plug 'sukima/xmledit'                                                           " xml editor
@@ -193,6 +206,7 @@ Plug 'derekwyatt/vim-protodef', { 'for': 'cpp' }                                
 Plug 'lervag/vimtex'                                                            " editing LaTeX files
 
 " --- miscellaneous utilities
+Plug 'matze/vim-move'                                                           " move lines and selections
 Plug 'edkolev/promptline.vim'                                                   " promptline
 Plug 'kien/ctrlp.vim'                                                           " fuzzy file, buffer, mru, tag etc
 Plug 'vim-ctrlspace/vim-ctrlspace'                                              " tabs/buffers/file management
@@ -204,8 +218,8 @@ Plug 'Raimondi/delimitMate'                                                     
 " --- plugins for vim textual snippets supporting code auto completion
 Plug 'tomtom/tlib_vim'                                                          " for snippets
 Plug 'MarcWeber/vim-addon-mw-utils' | Plug 'garbas/vim-snipmate'                " for snippets
-Plug 'honza/vim-snippets'                                                       " vim-snippets
-"Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'                            " vim-snippets depends on ultisnippets
+" Plug 'SirVer/ultisnips' | 
+Plug 'honza/vim-snippets'                                                       " vim-snippets depends on ultisnippets
 "Plug 'hecal3/vim-leader-guide'                                                 " vim keymap-display
 
 
@@ -225,6 +239,7 @@ Plug 'slashmili/alchemist.vim'                                                  
 " --- for documentation purposes and writing
 Plug 'vim-pandoc/vim-pandoc'                                                    " pandoc integration and utilities
 Plug 'vim-pandoc/vim-pandoc-syntax'                                             " pandoc markdown syntax
+Plug 'xolox/vim-notes' | Plug 'xolox/vim-misc'                                  " easy note taking
 
 
 " --- for python/python3 language auto-completion
@@ -237,7 +252,8 @@ Plug 'tell-k/vim-autopep8'                                                      
 
 " --- ycm being used only under gui mode for MacVim
 if has("gui_running")
-    Plug 'valloric/youcompleteme', { 'for': ['cpp','python','go','js'] }
+    "Plug 'valloric/youcompleteme', { 'for': ['cpp','python','go','js'] }
+    Plug 'valloric/youcompleteme'
 endif
 
 " end of plugin section }}}
