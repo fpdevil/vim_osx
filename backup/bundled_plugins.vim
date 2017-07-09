@@ -5,7 +5,7 @@
 " thanks to https://github.com/junegunn/vim-plug
 
 " ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-" JAN 10, 2017
+" Last updated on: JUNE 10, 2017
 " not using color_coded anymore so removing the entries
 " and keeping in this file as a backup if needed.
 " ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -29,12 +29,14 @@ function! InstallJsHint(info)
     endif
 endfunction
 
+" -- auto complete and syntax checkers
 Plug 'scrooloose/syntastic', { 'do': function('InstallJsHint') }                " realtime syntax checker
-"Plug 'scrooloose/syntastic'                                                    " realtime syntax checker
-Plug 'Chiel92/vim-autoformat'                                                   " easy code formatting in vim
 Plug 'Shougo/neocomplete.vim'                                                   " neocompletion with cache (need lua support)
 Plug 'Shougo/neoinclude.vim'                                                    " include completion framework for neocomplete
-"Plug 'neocomplcache'                                                           " neo compile caching (using neocomplete for completion)
+Plug 'w0rp/ale'                                                                 " asynchronous lint engine
+"Plug 'scrooloose/syntastic'                                                    " realtime syntax checker
+"Plug 'neocomplcache'                                                           " neo compile caching (using neocomplete now)
+
 
 " --- 3rd party color themes
 Plug 'flazz/vim-colorschemes'                                                   " Color Schemes
@@ -53,6 +55,8 @@ Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }                          
 " --- depending on your vimproc location
 " --- you have to go to .vim/plugin/vimproc.vim and do a ./make
 Plug 'Shougo/vimproc.vim', { 'do': 'make' }                                     " vimproc
+
+" -- unite plugins
 Plug 'Shougo/unite.vim'                                                         " unite
 Plug 'Shougo/unite-outline'                                                     " outline source for unite
 Plug 'mhinz/vim-startify'                                                       " fancy start screen for vim
@@ -70,6 +74,7 @@ Plug 'junegunn/vim-easy-align', { 'on': ['<Plug>(EasyAlign)', 'EasyAlign']  }   
 Plug 'godlygeek/tabular'                                                        " text filtering and alignment
 Plug 'nathanaelkane/vim-indent-guides'                                          " vim indentation display
 Plug 'ervandew/supertab'                                                        " use TAB for all insertions
+
 
 " --- for haskell language auto-complete, syntax and code check
 " --- load these plugins only while opening haskell code or source
@@ -100,11 +105,11 @@ Plug 'lambdatoast/elm.vim'                                                      
 
 
 " --- for some eye candies like status bars and colors
-"Plug 'bling/vim-airline'                                                       " using vim-airline repo
-"Plug 'bling/vim-bufferline'                                                    " show number of buffers
 Plug 'vim-airline/vim-airline'                                                  " Airline statusbar
 Plug 'vim-airline/vim-airline-themes'                                           " Airline themes
 Plug 'majutsushi/tagbar'                                                        " tagbar support
+"Plug 'bling/vim-airline'                                                       " using vim-airline repo
+"Plug 'bling/vim-bufferline'                                                    " show number of buffers
 
 
 " --- for rainbow parenthesis colorful brackets
@@ -127,12 +132,12 @@ Plug 'guns/vim-sexp'                                                            
 Plug 'tpope/vim-repeat'                                                         " vim repeat the last command on
 Plug 'tpope/vim-surround'                                                       " parenthesizing made simple
 Plug 'tpope/vim-unimpaired'                                                     " pairs of handy bracket mappings
-" --- vim-fireplace dependencies
-"Plug 'tpope/vim-classpath'                                                     " vim classpath
-"Plug 'jpalardy/vim-slime'                                                      " slime for vim
 Plug 'beloglazov/vim-online-thesaurus'                                          " word lookup in online thesaurus (-K)
 Plug 'thinca/vim-ref'                                                           " integrated reference viewer
 Plug 'jceb/vim-hier'                                                            " hl quickfix errors
+" --- vim-fireplace dependencies
+"Plug 'tpope/vim-classpath'                                                     " vim classpath
+"Plug 'jpalardy/vim-slime'                                                      " slime for vim
 
 
 " --- for java script syntax check and auto-completions
@@ -141,11 +146,13 @@ Plug 'pangloss/vim-javascript', { 'for': 'javascript' }                         
 Plug 'othree/yajs.vim', { 'for': 'javascript' }                                 " yet another js - lazy loading
 Plug 'einars/js-beautify', { 'for': 'javascript' }                              " js beautify
 Plug 'bigfish/vim-js-context-coloring', { 'for': 'javascript' }                 " js highlight, context & coloring
-" --- extends syntax for js with jQuery,backbone,etc
-Plug 'othree/javascript-libraries-syntax.vim'                                   " js library support
+
+
+" --- extended syntax for js with jQuery,backbone,etc
 Plug 'mxw/vim-jsx'                                                              " json/js support
 Plug 'elzr/vim-json'                                                            " json highlighting
 Plug 'othree/javascript-libraries-syntax.vim'                                   " js syntax check and library support
+
 
 " for erlang language auto-completions, syntax check and support
 Plug 'vim-erlang/vim-erlang-runtime', { 'for': 'erlang' }                       " erlang runtime check
@@ -165,11 +172,11 @@ Plug 'derekwyatt/vim-scala', { 'for': 'scala'}                                  
 "Plug 'ensime/ensime-vim'                                                       " ensime for scala auto-complete
                                                                                 " it uses python2 | commented
 
-
 " --- for html, xml ... syntax, validation etc.
 Plug 'othree/html5.vim'                                                         " html5 support
 Plug 'othree/xml.vim', { 'for': 'xml' }                                         " xml support
 Plug 'Valloric/MatchTagAlways'                                                  " highlight matching tags on markup languages
+Plug 'firegoby/xslt-snippets'                                                   " xslt snippets
 
 
 " --- for c/c++ language support (load on demand only)
@@ -194,6 +201,7 @@ Plug 'vim-ctrlspace/vim-ctrlspace'                                              
 Plug 'tyru/current-func-info.vim'                                               " get current function name
 Plug 'jiangmiao/auto-pairs'                                                     " parenthesis auto parentheses pairing
 Plug 'Raimondi/delimitMate'                                                     " auto quotes, parens, brackets, etc
+Plug 'Chiel92/vim-autoformat'                                                   " easy code formatting in vim
 
 
 " --- plugins for vim textual snippets supporting code auto completion
