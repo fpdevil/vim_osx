@@ -37,6 +37,9 @@ Plug 'Shougo/neocomplete.vim'                                                   
 Plug 'Shougo/neoinclude.vim'                                                    " include completion framework for neocomplete
 "Plug 'neocomplcache'                                                           " neo compile caching (using neocomplete for completion)
 
+" -- utilities
+Plug 'shougo/vimshell.vim'                                                      " shell in vim
+
 " --- 3rd party color themes
 Plug 'flazz/vim-colorschemes'                                                   " Color Schemes
 Plug 'morhetz/gruvbox'                                                          " Retro groove color scheme
@@ -45,20 +48,26 @@ Plug 'altercation/vim-colors-solarized'                                         
 Plug 'baeuml/summerfruit256.vim'                                                " 256 color scheme
 Plug 'junegunn/limelight.vim'                                                   " limelight theme
 Plug 'jacoborus/tender.vim'                                                     " 24bit colorscheme for Vim, Airline
+Plug 'kabbamine/yowish.vim'                                                     " A dark & yellowish vim colorscheme
 
+" --- color scheme browsing helper
+Plug 'ujihisa/unite-colorscheme'                                                " Unite color scheme browser
+
+" --- code completion framework
 Plug 'maralla/completor.vim'                                                    " async completion framework
 
 " --- the right way to handle trailing-whitespace
 Plug 'bronson/vim-trailing-whitespace'                                          " remove trailing white spaces
 
 " --- File Exploring
-Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }                          " NERDTree file browser, Undo list
+Plug 'scrooloose/nerdtree' , { 'on': 'NERDTreeToggle' }                         " NERDTree file browser, Undo list
 Plug 'jistr/vim-nerdtree-tabs'                                                  " NERDTree and tabs together
 
 " --- depending on your vimproc location
 " --- you have to go to .vim/plugin/vimproc.vim and do a ./make
 Plug 'Shougo/vimproc.vim', { 'do': 'make' }                                     " vimproc
 Plug 'Shougo/unite.vim'                                                         " unite
+Plug 'shougo/denite.nvim'                                                       " nexgen unite
 Plug 'Shougo/unite-outline'                                                     " outline source for unite
 Plug 'mhinz/vim-startify'                                                       " fancy start screen for vim
 
@@ -109,6 +118,7 @@ Plug 'lambdatoast/elm.vim'                                                      
 "Plug 'bling/vim-bufferline'                                                    " show number of buffers
 Plug 'vim-airline/vim-airline'                                                  " Airline statusbar
 Plug 'vim-airline/vim-airline-themes'                                           " Airline themes
+Plug 'osyo-manga/unite-airline_themes'                                          " preview airline themes
 Plug 'majutsushi/tagbar'                                                        " tagbar support
 
 
@@ -150,12 +160,13 @@ Plug 'othree/yajs.vim' | Plug 'othree/es.next.syntax.vim', { 'for': 'javascript'
 Plug 'einars/js-beautify', { 'for': 'javascript' }                              " js beautify
 "Plug 'bigfish/vim-js-context-coloring', { 'for': 'javascript' }                " js highlight, context & coloring
 " --- extends syntax for js with jQuery,backbone,etc
-Plug 'othree/javascript-libraries-syntax.vim'                                   " js library support
 Plug 'mxw/vim-jsx'                                                              " json/js support
 Plug 'elzr/vim-json'                                                            " json highlighting
 Plug 'othree/javascript-libraries-syntax.vim'                                   " js syntax check and library support
 Plug 'marijnh/tern_for_vim', { 'do': function('BuildTern') }                    " tern plugin for vim js
 Plug 'shutnik/jshint2.vim', { 'for': 'javascript' }                             " JSHint integration
+Plug 'heavenshell/vim-jsdoc'                                                    " Generate JSDoc to your JavaScript code
+Plug 'moll/vim-node', { 'for': 'javascript' }                                   " Tools & Env for node.js
 
 
 " for erlang language auto-completions, syntax check and support
