@@ -184,3 +184,4 @@ function UpdJsHintConf()
 endfunction
 
 au BufEnter * call UpdJsHintConf()
+" ------------------------------------------------------------------------------------
