@@ -5,6 +5,7 @@
 " ------------------------------------------------------------------------------------
 " -----                         Auto formatting options                          -----
 " ------------------------------------------------------------------------------------
+" {{{
 nnoremap <silent> <Leader>f :Autoformat<CR>
 if !exists('g:formatter_yapf_style')
     let g:formatter_yapf_style = 'pep8'
@@ -15,11 +16,13 @@ endif
 if !exists('g:formatters_python')
     let g:formatters_python = ['yapf']
 endif
+" }}}
 
 
 " ------------------------------------------------------------------------------------
 " ------                     NerdCommenter customizations                       ------
 " ------------------------------------------------------------------------------------
+" {{{
 if filereadable(expand("~/.vim/plugged/nerdcommenter/plugin/NERD_commenter.vim"))
     " Allow commenting and inverting empty lines (useful when commenting a region)
     let g:NERDCommentEmptyLines      = 1
@@ -30,39 +33,44 @@ if filereadable(expand("~/.vim/plugged/nerdcommenter/plugin/NERD_commenter.vim")
     " Use compact syntax for prettified multi-line comments
     let g:NERDCompactSexyComs        = 1
 endif
+" }}}
 
 
 " ------------------------------------------------------------------------------------
 " ------           SuperTab TAB Completions and Color Customizations            ------
 " ------------------------------------------------------------------------------------
+" {{{
 let g:SuperTabDefaultCompletionType = '<c-x><c-o>'
 " for working in tandem with OmniCompletion
 let g:SuperTabDefaultCompletionType = 'context'
 
 " set the colorscheme to solarized light if running macvim in gui
 if has("gui_running")
-    colorscheme tender
-    "colorscheme solarized
+    "colorscheme tender
+    colorscheme solarized
     if exists('g:colors_name') && g:colors_name == 'solarized'
         let g:solarized_termtrans  = 1
         let g:solarized_termcolors = 256
         let g:solarized_contrast   = "high"
         let g:solarized_visibility = "high"
-        let g:airline_theme        = 'tenderplus'
+        let g:airline_theme        = 'base16_spacemacs'
     endif
     imap <c-space> <c-r>=SuperTabAlternateCompletion("\<lt>c-x>\<lt>c-o>")<cr>
 else " no gui
     if has("unix")
-        colorscheme materialbox
+        " colorscheme materialbox
+        colorscheme yowish
         let g:airline_theme = 'laederon'
         inoremap <Nul> <c-r>=SuperTabAlternateCompletion("\<lt>c-x>\<lt>c-o>")<cr>
     endif
 endif
+" }}}
 
 
 " ------------------------------------------------------------------------------------
 " ------              key bindings for UltiSnipsExpandTrigger                   ------
 " ------------------------------------------------------------------------------------
+" {{{
 let g:UltiSnipsExpandTrigger       = "<tab>"
 let g:UltiSnipsJumpForwardTrigger  = "<tab>"
 let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
@@ -70,30 +78,33 @@ let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
 " select the directory location for common snippets
 let g:UltiSnipsSnippetsDir        = $HOME . '/.vim/snippets'
 let g:UltiSnipsSnippetDirectories = ["UltiSnips", "CustomSnips"]
+" }}}
 
 
 " ------------------------------------------------------------------------------------
 " ------                      Haskell ghc customization                         ------
 " ------------------------------------------------------------------------------------
+" ghc-mod shortcuts {{{
 " normal mode key mappings (ex: press -ht)
-" **** ghc-mod shortcuts ****
 nmap <silent> <leader>ht :GhcModType<CR>
 nmap <silent> <leader>he :GhcModTypeClear<CR>
 nmap <silent> <leader>hi :GhcModTypeInsert<CR>
 nmap <silent> <leader>hs :GhcModSplitFunCase<CR>
 nmap <silent> <leader>hc :SyntasticCheck ghc_mod<CR>:lopen<CR>
 nmap <silent> <leader>hl :SyntasticCheck hlint<CR>:lopen<CR>
+" }}}
 
 
-" ****  hoogle shortcuts ****
+" hoogle shortcuts {{{
 nnoremap <silent> <leader>hh :Hoogle<CR>        " Hoogle the word under the cursor
 nnoremap <leader>hH :Hoogle                     " Hoogle and prompt for input
 nnoremap <silent> <leader>hi :HoogleInfo<CR>    " Hoogle for detailed documentation (e.g. "Functor")
 nnoremap <leader>hI :HoogleInfo                 " Hoogle for detailed documentation and prompt for input
 nnoremap <silent> <leader>hz :HoogleClose<CR>   " Hoogle, close the Hoogle window
+" }}}
 
 
-" **** syntax checking for haskell ****
+" syntax checking for haskell {{{
 " let g:syntastic_mode_map={'mode': 'active', 'passive_filetypes': ['haskell']}
 let g:syntastic_mode_map={'mode': 'active',
                         \ 'active_filetypes': ['haskell', 'python', 'cpp'],
@@ -102,47 +113,50 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list            = 0
 " for skipping syntax checking while exiting vim using :wq
 let g:syntastic_check_on_wq              = 0
+" }}}
 
-" auto-checking on writing
+
+" auto-checking on writing {{{
 autocmd BufWritePost *.hs,*.lhs GhcModCheckAndLintAsync
+" }}}
 
-" key-bindings for the haskell hdevtools type info
+" key-bindings for the haskell hdevtools type info {{{
 au FileType haskell nnoremap <buffer> <F1> :HdevtoolsType<CR>
 au FileType haskell nnoremap <buffer> <silent> <F2> :HdevtoolsClear<CR>
 au FileType haskell nnoremap <buffer> <silent> <F3> :HdevtoolsInfo<CR>
+" }}}
 
-" ------------------------------------------------------------------------------------
-" ----------                 for haskell-vim customization                  ----------
-" ------------------------------------------------------------------------------------
+" for haskell-vim customization {{{
 let g:haskell_enable_quantification   = 1   " to enable highlighting of `forall`
 let g:haskell_enable_recursivedo      = 1   " to enable highlighting of `mdo` and `rec`
 let g:haskell_enable_arrowsyntax      = 1   " to enable highlighting of `proc`
 let g:haskell_enable_pattern_synonyms = 1   " to enable highlighting of `pattern`
 let g:haskell_enable_typeroles        = 1   " to enable highlighting of type roles
 let g:haskell_enable_static_pointers  = 1   " to enable highlighting of `static`
+" }}}
 
 
-" ------------------------------------------------------------------------------------
-" ---------               Pretty unicode haskell symbols                     ---------
-" ------------------------------------------------------------------------------------
+" Pretty unicode haskell symbols {{{
 let g:haskell_conceal_wide         = 1
 let g:haskell_conceal_enumerations = 1
 let hscoptions                     = "𝐒𝐓𝐄𝐌xRtB𝔻w"
+" }}}
+
 
 " ------------------------------------------------------------------------------------
 " -----                       for NerdTree configuration                         -----
-" ----- invoke by using the leader key map as - + nt                             -----
 " ------------------------------------------------------------------------------------
+" invoke by using the leader key map as - + nt {{{
 nmap <leader>nt :NERDTreeToggle<CR>
 
 let NERDTreeHighlightCursorline   = 1            " highlight current cursor line
 let NERDTreeShowHidden            = 1            " show hidden files
 let g:NERDTreeDirArrowExpandable  = '▸'          " horizontal arrow
 let g:NERDTreeDirArrowCollapsible = '▾'          " vertical arrow
+" }}}
 
-" ------------------------------------------------------------------------------------
-" -----                      for NerdTree and Tabs                               -----
-" ------------------------------------------------------------------------------------
+
+" for NerdTree and Tabs {{{
 if filereadable(expand('~/.vim/plugged/vim-nerdtree-tabs/nerdtree_plugin/vim-nerdtree-tabs.vim'))
     function! NERDTreeFileHighlight(extension, fg, bg, guifg, guibg)
         exec 'autocmd filetype nerdtree highlight ' . a:extension 
@@ -165,6 +179,8 @@ if filereadable(expand('~/.vim/plugged/vim-nerdtree-tabs/nerdtree_plugin/vim-ner
     call NERDTreeFileHighlight('js', 'Red', 'none', '#ffa500', '#eee8d5')
     call NERDTreeFileHighlight('py', 'Magenta', 'none', '#FA8258', '#eee8d5')
 endif
+" }}}
+
 
 " ------------------------------------------------------------------------------------
 " -----                      for tab alignment configuration                     -----
@@ -185,7 +201,8 @@ let g:haskellmode_completion_ghc = 1
 autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
 autocmd BufEnter *.hs,*.lhs setlocal omnifunc=necoghc#omnifunc
 " if necoghc_enable_detailed_browse = 1, it provides detailed info,
-" but if boot time is more disable it necoghc_enable_detailed_browse = 0
+" but if boot time is more disable it with the following
+" let g:necoghc_enable_detailed_browse = 0
 let g:necoghc_enable_detailed_browse = 1
 
 " -- treat Frege files as haskell based
@@ -358,9 +375,15 @@ au Syntax * RainbowParenthesesLoadBraces
 " ############################## Personal Configuration ##############################
 " ####################################################################################
 
+" {{{
+" airline configuration - use unite-airline_themes plugin for previewing the airline 
+" themes with the below command
+" :Unite airline_themes -auto-preview -winheight=12
+"
+"
 " vim powerline symbols to be shown in the statusbar
-let g:Powerline_symbols                         = 'fancy'
-let g:airline_powerline_fonts                   = 1
+let g:Powerline_symbols       = 'fancy'
+let g:airline_powerline_fonts = 1
 
 " status line and vim-airline
 set statusline=%F%m%r%h%w%=(%{&ff}/%Y)\ (line\ %l\/%L,\ col\ %c)\
@@ -444,37 +467,38 @@ function! AccentDemo()
 endfunction
 autocmd VimEnter * call AccentDemo()
 
+" }}}
 
 " ------------------------------------------------------------------------------------
 " --------------------- Alignment Helper, Easy align interactive ---------------------
 " ------------------------------------------------------------------------------------
 let g:easy_align_delimiters = {
-\ '>': { 'pattern': '>>\|=>\|>' },
-\ '\': { 'pattern': '\\' },
-\ '/': { 'pattern': '//\+\|/\*\|\*/', 'delimiter_align': 'l', 'ignore_groups': ['!Comment'] },
-\ ']': {
-\     'pattern':       '\]\zs',
-\     'left_margin':   0,
-\     'right_margin':  1,
-\     'stick_to_left': 0
-\   },
-\ ')': {
-\     'pattern':       ')\zs',
-\     'left_margin':   0,
-\     'right_margin':  1,
-\     'stick_to_left': 0
-\   },
-\ 'f': {
-\     'pattern': ' \(\S\+(\)\@=',
-\     'left_margin': 0,
-\     'right_margin': 0
-\   },
-\ 'd': {
-\     'pattern': ' \ze\S\+\s*[;=]',
-\     'left_margin': 0,
-\     'right_margin': 0
-\   }
-\ }
+        \ '>': { 'pattern': '>>\|=>\|>' },
+        \ '\': { 'pattern': '\\' },
+        \ '/': { 'pattern': '//\+\|/\*\|\*/', 'delimiter_align': 'l', 'ignore_groups': ['!Comment'] },
+        \ ']': {
+        \     'pattern':       '\]\zs',
+        \     'left_margin':   0,
+        \     'right_margin':  1,
+        \     'stick_to_left': 0
+        \   },
+        \ ')': {
+        \     'pattern':       ')\zs',
+        \     'left_margin':   0,
+        \     'right_margin':  1,
+        \     'stick_to_left': 0
+        \   },
+        \ 'f': {
+        \     'pattern': ' \(\S\+(\)\@=',
+        \     'left_margin': 0,
+        \     'right_margin': 0
+        \   },
+        \ 'd': {
+        \     'pattern': ' \ze\S\+\s*[;=]',
+        \     'left_margin': 0,
+        \     'right_margin': 0
+        \   }
+        \ }
 
 vnoremap <silent> <Enter> :EasyAlign<cr>
 " Start interactive EasyAlign in visual mode (e.g. vipga)
@@ -621,13 +645,13 @@ endif
 " custom settings for python through syntastic checker
 let g:syntastic_enable_highlighting        = 1
 let g:syntastic_python_python_exec         = '/usr/local/bin/python3'
-" Using pylint as syntax checker and linting
+let g:syntastic_python_checkers            = ['flake8']
+let g:syntastic_python_flake8_args         = '--ignore="D400,E501,E302,E261,E701,E241,E126,E127,E128,W801"'
+" using flake8 as syntax checking and linting
+"let g:syntastic_python_flake8_args        = '--ignore="D400"'
+" using pylint as syntax checker and linting
 "let g:syntastic_python_checkers            = ['pylint']
 "let g:syntastic_python_pylint_args         = '--disable=C0103'
-" Using flake8 as syntax checking and linting
-let g:syntastic_python_checkers            = ['flake8']
-"let g:syntastic_python_flake8_args        = '--ignore="D400"'
-let g:syntastic_python_flake8_args         = '--ignore="D400,E501,E302,E261,E701,E241,E126,E127,E128,W801"'
 
 " syntastic checker settings for c and c++
 "let g:syntastic_c_compiler                = 'gcc'
@@ -1031,12 +1055,12 @@ endif
 " ---- vim async code completion settings                                         ----
 " ------------------------------------------------------------------------------------
 if filereadable(expand("~/.vim/plugged/completor/plugin/completor.vim"))
-    let g:completor_python_binary                                        = "/usr/local/bin/python3"
-    let g:completor_node_binary                                          = "/usr/local/bin/node"
-    let g:completor_clang_binary                                         = "/usr/bin/clang"
-    let g:completor_gocode_binary                                        = "/usr/local/opt/go/libexec/bin/go"
+    let g:completor_python_binary                               = "/usr/local/bin/python3"
+    let g:completor_node_binary                                 = "/usr/local/bin/node"
+    let g:completor_clang_binary                                = "/usr/bin/clang"
+    let g:completor_gocode_binary                               = "/usr/local/opt/go/libexec/bin/go"
     " Use Tab to trigger completion (disable auto trigger)
-    " let g:completor_auto_trigger                                         = 0
+    " let g:completor_auto_trigger                              = 0
     " inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<C-x>\<C-u>\<C-p>"
 endif
 
