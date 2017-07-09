@@ -46,6 +46,19 @@ Open `macvim` or `gvim` and run `:PlugInstall`
 
 ```bash
 export EXTRA_CMAKE_ARGS="-DEXTERNAL_LIBCLANG_PATH=/Library/Developer/CommandLineTools/usr/lib/libclang.dylib"
+```
+
+> In case if pre-built llvm libraries for Mac OSX are downloaded from the official sources
+> available as archive at <http://releases.llvm.org/4.0.1/clang+llvm-4.0.1-x86_64-apple-darwin.tar.xz>
+> and extracted to some convenient location like `/opt/software`, we may use the below exporting
+
+```bash
+export EXTRA_CMAKE_ARGS="-DEXTERNAL_LIBCLANG_PATH=/opt/software/clang+llvm-3.9.0-x86_64-apple-darwin/lib/libclang.dylib"
+```
+
+> Now the following can be used for the actual build process
+
+```bash
 
 # execute the python installation script using the python3 binary as below
 # any additional language options can be provided here as flags
@@ -61,6 +74,27 @@ python3 ./install.py --clang-completer --system-libclang --gocode-completer --te
 - Wait for the build to complete and ensure that its a success as shown below, else check the error message
 
 ```bash
+Searching Python 3.6 libraries...
+Found Python library: /usr/local/opt/python3/Frameworks/Python.framework/Versions/3.6/lib/python3.6/config-3.6m-darwin/libpython3.6.dylib
+Found Python headers folder: /usr/local/Cellar/python3/3.6.1/Frameworks/Python.framework/Versions/3.6/include/python3.6m
+-- The C compiler identification is AppleClang 8.1.0.8020042
+-- The CXX compiler identification is AppleClang 8.1.0.8020042
+-- Check for working C compiler: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc
+-- Check for working C compiler: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc -- works
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Check for working CXX compiler: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++
+-- Check for working CXX compiler: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ -- works
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+...
+.....
+.......
+
 Scanning dependencies of target ycm_core
 [ 83%] Building CXX object ycm/CMakeFiles/ycm_core.dir/Candidate.cpp.o
 [ 84%] Building CXX object ycm/CMakeFiles/ycm_core.dir/CandidateRepository.cpp.o
@@ -99,4 +133,3 @@ This should show the status of each plugin.
 - Haskell syntax highlighting and real-time checking will be shown as below
 
 ![alt text](screenshots/haskell.png "A haskell syntax highlighting screenshot")
-
