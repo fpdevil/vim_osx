@@ -9,13 +9,13 @@
 " set rtp+=~/.vim/bundle/vundle/
 " ################################# call vundle#rc() #################################
 " the vundle plugin is used only for initial installation of the vim plugin
-" Bundle 'gmarik/vundle'                                    " completion during typing
+" Bundle 'gmarik/vundle'
 
 " Plugins section start {{{
 
-" --- syntax checking and code formatting with syntastic vim plugin
-" --- syntastic needs jshint for checking the javascript and inorder to include
-" --- the dependency, a function is defined here to handle the npm installation
+"  syntax checking and code formatting with syntastic vim plugin
+"  syntastic needs jshint for checking the javascript and inorder to include
+"  the dependency, a function is defined here to handle the npm installation
 
 function! InstallJsHint(info)
     if a:info.status == 'installed' || a:info.force
@@ -29,9 +29,21 @@ function! BuildTern(info)
     endif
 endfunction
 
+function! YCMBuilder(info)
+    " info dictionary structure has following 3 fields
+    " -- name: name of plugin
+    " -- status: 'installed', 'updated', 'unchanged'
+    " -- force: set with PlugInstall! or PlugUpdate!
+    if a:info.status == 'installed' || a:info.force
+        let $EXTRA_CMAKE_ARGS='-DEXTERNAL_LIBCLANG_PATH'
+                    \ . '='
+                    \ . '/opt/software/clang+llvm-3.9.0-x86_64-apple-darwin/lib/libclang.dylib'
+        !python3 install.py --clang-completer --system-libclang --gocode-completer --tern-completer
+    endif
+endfunction
 
+" -- syntax checkers
 Plug 'scrooloose/syntastic', { 'do': function('InstallJsHint') }                " realtime syntax checker
-"Plug 'scrooloose/syntastic'                                                    " realtime syntax checker
 Plug 'Chiel92/vim-autoformat'                                                   " easy code formatting in vim
 Plug 'Shougo/neocomplete.vim'                                                   " neocompletion with cache (need lua support)
 Plug 'Shougo/neoinclude.vim'                                                    " include completion framework for neocomplete
@@ -60,7 +72,7 @@ Plug 'maralla/completor.vim'                                                    
 Plug 'bronson/vim-trailing-whitespace'                                          " remove trailing white spaces
 
 " --- File Exploring
-Plug 'scrooloose/nerdtree' , { 'on': 'NERDTreeToggle' }                         " NERDTree file browser, Undo list
+Plug 'scrooloose/nerdtree' , { 'on': ['NERDTreeToggle', 'NERDTreeFind'] }       " NERDTree file browser, Undo list
 Plug 'jistr/vim-nerdtree-tabs'                                                  " NERDTree and tabs together
 
 " --- depending on your vimproc location
@@ -156,7 +168,8 @@ Plug 'maksimr/vim-jsbeautify', { 'for': 'javascript' }                          
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' }                         " js for vim
 Plug 'jelera/vim-javascript-syntax', { 'for': 'javascript' }                    " enhanced js syntax
 " yet another js and its dependency es.next with lazy loading only for js
-Plug 'othree/yajs.vim' | Plug 'othree/es.next.syntax.vim', { 'for': 'javascript' } 
+Plug 'othree/yajs.vim' | Plug 'othree/es.next.syntax.vim', { 'for': 'javascript' }
+Plug 'othree/jspc.vim', { 'for': ['javascript', 'javascript.jsx'] }             " js param complete
 Plug 'einars/js-beautify', { 'for': 'javascript' }                              " js beautify
 "Plug 'bigfish/vim-js-context-coloring', { 'for': 'javascript' }                " js highlight, context & coloring
 " --- extends syntax for js with jQuery,backbone,etc
@@ -167,6 +180,7 @@ Plug 'marijnh/tern_for_vim', { 'do': function('BuildTern') }                    
 Plug 'shutnik/jshint2.vim', { 'for': 'javascript' }                             " JSHint integration
 Plug 'heavenshell/vim-jsdoc'                                                    " Generate JSDoc to your JavaScript code
 Plug 'moll/vim-node', { 'for': 'javascript' }                                   " Tools & Env for node.js
+Plug 'ahayman/vim-nodejs-complete'                                              " nodejs omnifunc
 
 
 " for erlang language auto-completions, syntax check and support
@@ -203,15 +217,11 @@ Plug 'Valloric/MatchTagAlways'                                                  
 Plug 'justmao945/vim-clang', { 'for': ['cpp','c'] }                             " clang completion plugin for vim
 Plug 'octol/vim-cpp-enhanced-highlight', { 'for': 'cpp' }                       " additional vim syntax highlighting
 Plug 'vim-scripts/DoxygenToolkit.vim', { 'for': 'cpp' }                         " doxygen documentation
-"Plug 'Rip-Rip/clang_complete'                                                  " clang completion
 Plug 'myint/clang-complete', { 'for': ['cpp','c']}                              " using fork for python3 support
 Plug 'osyo-manga/vim-marching'                                                  " async clang code completion
-"Plug 'Valloric/YouCompleteMe', { 'for': ['cpp','python'] }                     " ycm using only when macvim in gui
 Plug 'vim-scripts/c.vim', { 'for': ['c','cpp'] }                                " c/cpp ide
 Plug 'rhysd/vim-clang-format', { 'on': 'ClangFormat' }                          " a formatter for C, C++, Obj-C, Java, JS and TypeScript
 Plug 'derekwyatt/vim-protodef', { 'for': 'cpp' }                                " pull c++ function prototypes
-
-
 
 " --- TeX file editing
 Plug 'lervag/vimtex'                                                            " editing LaTeX files
@@ -224,12 +234,14 @@ Plug 'vim-ctrlspace/vim-ctrlspace'                                              
 Plug 'tyru/current-func-info.vim'                                               " get current function name
 Plug 'jiangmiao/auto-pairs'                                                     " parenthesis auto parentheses pairing
 Plug 'Raimondi/delimitMate'                                                     " auto quotes, parens, brackets, etc
+Plug 'editorconfig/editorconfig-vim'                                            " editorconfg
 
 
 " --- plugins for vim textual snippets supporting code auto completion
 Plug 'tomtom/tlib_vim'                                                          " for snippets
-Plug 'MarcWeber/vim-addon-mw-utils' | Plug 'garbas/vim-snipmate'                " for snippets
-" Plug 'SirVer/ultisnips' | 
+Plug 'MarcWeber/vim-addon-mw-utils'                                             " for snippets
+Plug 'garbas/vim-snipmate'                                                      " for snippets
+Plug 'SirVer/ultisnips'                                                         " for snippets
 Plug 'honza/vim-snippets'                                                       " vim-snippets depends on ultisnippets
 "Plug 'hecal3/vim-leader-guide'                                                 " vim keymap-display
 
@@ -263,8 +275,7 @@ Plug 'tell-k/vim-autopep8'                                                      
 
 " --- ycm being used only under gui mode for MacVim
 if has("gui_running")
-    "Plug 'valloric/youcompleteme', { 'for': ['cpp','python','go','js'] }
-    Plug 'valloric/youcompleteme'
+    Plug 'valloric/youcompleteme', { 'do': function('YCMBuilder'), 'for': [ 'cpp', 'python', 'go' ] }
 endif
 
 " end of plugin section }}}
