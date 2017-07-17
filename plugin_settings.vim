@@ -482,9 +482,7 @@ if !exists('g:airline_powerline_fonts')
   let g:airline#extensions#paste#symbol         = 'ρ'
   let g:airline_symbols.linenr                  = '␊'
   let g:airline_symbols.branch                  = '⎇'
-  let g:airline_symbols.paste                   = 'ρ'
-  let g:airline_symbols.paste                   = 'Þ'
-  let g:airline_symbols.paste                   = '∥'
+  let g:airline_symbols.paste                   = '𝓟'
   let g:airline_symbols.whitespace              = 'Ξ'
 else
   let g:airline#extensions#tabline#left_sep     = ''
