@@ -24,6 +24,10 @@ set list
 set listchars=tab:\|\ ,
 set grepformat=%f:%l:%c:%m,%f:%l:%m
 
+" highlight the current line and active column
+set cursorline
+set cuc cul"
+
 filetype plugin on
 filetype indent on
 
@@ -41,6 +45,7 @@ if has('gui_running')
         set guifont=DejaVu\ Sans\ Mono\ 12 
     endif
 endif
+
 
 " ************************************************************************************
 " ************                vim  Leader key mapping                     ************
