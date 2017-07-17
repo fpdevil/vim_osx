@@ -20,6 +20,19 @@ endif
 
 
 " ------------------------------------------------------------------------------------
+" --- vimshell customizations
+" ------------------------------------------------------------------------------------
+"{{{ vimshell prompt setup
+if filereadable(expand("~/.vim/plugged/vimshell.vim"))
+    let g:vimshell_user_prompt = 'fnamemodify(getcwd(), ":~")'
+    let g:vimshell_prompt = '$ '
+    let g:vimshell_prompt_expr = 'escape(fnamemodify(getcwd(), ":~").">", "\\[]()?! ")." "'
+    let g:vimshell_prompt_pattern = '^\%(\f\|\\.\)\+> '
+endif
+"}}}
+
+
+" ------------------------------------------------------------------------------------
 " ------                     NerdCommenter customizations                       ------
 " ------------------------------------------------------------------------------------
 " {{{
@@ -71,12 +84,15 @@ endif
 " ------              key bindings for UltiSnipsExpandTrigger                   ------
 " ------------------------------------------------------------------------------------
 " {{{
-let g:UltiSnipsExpandTrigger       = "<tab>"
-let g:UltiSnipsJumpForwardTrigger  = "<tab>"
-let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+if has('gui_running')
+    let g:UltiSnipsExpandTrigger="<c-s>" 
+    let g:UltiSnipsJumpForwardTrigger="<c-j>" 
+    let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+endif
 
 " select the directory location for common snippets
-let g:UltiSnipsSnippetsDir        = $HOME . '/.vim/snippets'
+" let g:UltiSnipsSnippetsDir        = $HOME . '/.vim/snippets'
+let g:UltiSnipsSnippetsDir        = '~/.vim/plugged/vim-snippets/UltiSnips'
 let g:UltiSnipsSnippetDirectories = ["UltiSnips", "CustomSnips"]
 " }}}
 
@@ -159,7 +175,7 @@ let g:NERDTreeDirArrowCollapsible = '▾'          " vertical arrow
 " for NerdTree and Tabs {{{
 if filereadable(expand('~/.vim/plugged/vim-nerdtree-tabs/nerdtree_plugin/vim-nerdtree-tabs.vim'))
     function! NERDTreeFileHighlight(extension, fg, bg, guifg, guibg)
-        exec 'autocmd filetype nerdtree highlight ' . a:extension 
+        exec 'autocmd filetype nerdtree highlight ' . a:extension
                     \ .' ctermbg=' . a:bg . ' ctermfg='. a:fg
                     \ .' guibg='. a:guibg .' guifg='. a:guifg
         exec 'autocmd filetype nerdtree syn match ' . a:extension
@@ -214,11 +230,11 @@ autocmd BufEnter *.fr :filetype haskell
 " ----------            NeoComplcache (advanced auto completion)            ----------
 " ----------       using neocomplete instead of the neocomplete cache       ----------
 " ------------------------------------------------------------------------------------
-"let g:acp_enableAtStartup                          = 0             " for disabling the AutoComplPop
-let g:neocomplete#enable_at_startup                 = 1             " use neocomplete at startup
-let g:neocomplete#enable_smart_case                 = 1             " use smart-case
-let g:neocomplete#sources#syntax#min_keyword_length = 1             " set minimum syntax keyword length
-let g:neocomplete#lock_buffer_name_pattern          = '\*ku\*'      " regex for buffer name
+"let g:acp_enableAtStartup                               = 0             " for disabling the AutoComplPop
+let g:neocomplete#enable_at_startup                      = 1             " use neocomplete at startup
+let g:neocomplete#enable_smart_case                      = 1             " use smart-case
+let g:neocomplete#sources#syntax#min_keyword_length      = 1             " set minimum syntax keyword length
+let g:neocomplete#lock_buffer_name_pattern               = '\*ku\*'      " regex for buffer name
 " define a dictionary
 let g:neocomplete#sources#dictionary#dictionaries = {
     \ 'default'     : '',
@@ -247,17 +263,43 @@ if !exists('g:neocomplete#keyword_patterns')
 endif
 let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 
+" {{{ for tern completions with omnifunc
+if !exists('g:neocomplete#omni#functions')
+    let g:neocomplete#omni#functions = {}
+endif
+
+if !exists('g:neocomplete#sources#omni#input_patterns')
+  let g:neocomplete#sources#omni#input_patterns = {}
+endif
+
+let g:neocomplete#omni#functions.javascript = [
+            \ 'tern#Complete',
+            \ 'jspc#omni'
+            \ ]
+
+if exists('g:plugs["tern_for_vim"]')
+    let g:tern#command               = ['tern']
+    let g:tern#arguments             = ['--persistent']
+    let g:tern_map_keys              = 1
+    let g:tern_show_signature_in_pum = 1
+    let g:tern_show_argument_hints   = 'on_move'
+    autocmd FileType javascript setlocal omnifunc=tern#Complete
+endif
+" }}}
+
+
 " plugin key mappings for NeoComplete
 inoremap <expr><C-g> neocomplete#undo_completion()
 inoremap <expr><C-l> neocomplete#complete_common_string()
 
 
-" settings for enabling the OmniCompletion for various languages
+" {{{ settings for enabling the OmniCompletion for various languages
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 autocmd FileType c set omnifunc=ccomplete#CompleteCpp
+" using tern completion instead of CompleteJS
+"autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 "autocmd FileType c set omnifunc=ccomplete#Complete
 "autocmd FileType python setlocal omnifunc=python3complete#Complete
 if has('python3')
@@ -265,6 +307,16 @@ if has('python3')
 else
     autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 endif
+" }}}
+
+" {{{ nodejs omnifunc for vim
+if filereadable(expand("~/.vim/plugged/vim-nodejs-complete/after/autoload/nodejscomplete.vim"))
+    let g:nodejs_complete_config = {
+                \ 'js_compl_fn': 'jscomplete#CompleteJS',
+                \  'max_node_compl_len': 15
+                \ }
+endif
+" }}}
 
 autocmd BufRead,BufNewFile *.go set filetype=go
 
@@ -376,7 +428,7 @@ au Syntax * RainbowParenthesesLoadBraces
 " ####################################################################################
 
 " {{{
-" airline configuration - use unite-airline_themes plugin for previewing the airline 
+" airline configuration - use unite-airline_themes plugin for previewing the airline
 " themes with the below command
 " :Unite airline_themes -auto-preview -winheight=12
 "
@@ -638,7 +690,10 @@ let g:jedi#auto_close_doc             = 1
 let g:jedi#show_call_signatures       = 1
 
 if has("gui_running")
-    let g:ycm_filetype_specific_completion_to_disable = { 'python': 1 }
+    let g:ycm_filetype_specific_completion_to_disable = {
+                \ 'python': 1,
+                \ 'gitcommit': 1
+                \ }
 endif
 
 
@@ -647,9 +702,6 @@ let g:syntastic_enable_highlighting        = 1
 let g:syntastic_python_python_exec         = '/usr/local/bin/python3'
 let g:syntastic_python_checkers            = ['flake8']
 let g:syntastic_python_flake8_args         = '--ignore="D400,E501,E302,E261,E701,E241,E126,E127,E128,W801"'
-" using flake8 as syntax checking and linting
-"let g:syntastic_python_flake8_args        = '--ignore="D400"'
-" using pylint as syntax checker and linting
 "let g:syntastic_python_checkers            = ['pylint']
 "let g:syntastic_python_pylint_args         = '--disable=C0103'
 
@@ -678,7 +730,7 @@ let g:syntastic_enable_balloons = 1
 " enable all the python syntax highlighting features
 let python_highlight_all=1
 
-" choose the python binary to select while using YouCompleteMe
+" {{{ choose the python binary to select while using YouCompleteMe
 if has('python')
     let g:ycm_python_binary_path        = 'python'
     let g:ycm_server_python_interpreter = 'python'
@@ -686,6 +738,7 @@ else
     let g:ycm_python_binary_path        = '/usr/local/bin/python3'
     let g:ycm_server_python_interpreter = '/usr/local/bin/python3'
 endif
+" }}}
 
 " ------------------------------------------------------------------------------------
 " --- miscellaneous ycmd settings (https://valloric.github.io/YouCompleteMe)       ---
@@ -693,8 +746,9 @@ endif
 " ------------------------------------------------------------------------------------
 let g:ycm_global_ycm_extra_conf                         = '~/.vim/.ycm_extra_conf.py'
 let g:ycm_extra_conf_globlist                           = ['~/.vim/plugged/YouCompleteMe/third_party/ycmd/cpp/ycm/*','!~/*']
-let g:ycm_always_populate_location_list                 = 0
-let g:ycm_auto_trigger                                  = 1
+let g:ycm_always_populate_location_list                 = 1
+let g:ycm_auto_trigger                                  = 0
+let g:ycm_key_invoke_completion                         = '<C-Space>'
 let g:ycm_enable_diagnostic_highlighting                = 1
 let g:ycm_enable_diagnostic_signs                       = 1
 let g:ycm_max_diagnostics_to_display                    = 10000
@@ -703,11 +757,15 @@ let g:ycm_min_num_of_chars_for_completion               = 1
 let g:ycm_open_loclist_on_ycm_diags                     = 1
 let g:ycm_show_diagnostics_ui                           = 1
 let g:ycm_collect_identifiers_from_tags_files           = 1
-let g:ycm_complete_in_comments                          = 1
+let g:ycm_complete_in_comments                          = 0
 let g:ycm_collect_identifiers_from_comments_and_strings = 1
 let g:ycm_add_preview_to_completeopt                    = 1
+let g:ycm_autoclose_preview_window_after_completion     = 1
 let g:ycm_cache_omnifunc                                = 0
+let g:ycm_use_ultisnips_completer                       = 1
+let g:ycm_goto_buffer_command                           = 'vertical-split'
 let g:ycm_server_log_level                              = 'info'
+let g:ycm_key_list_select_completion                    = ['<TAB>', '<Down>', '<Enter>']
 let g:ycm_filetype_blacklist                            = {
             \ 'vim' : 1,
             \ 'tagbar' : 1,
@@ -731,6 +789,10 @@ let g:ycm_semantic_triggers =  {
   \   'haskell' : ['.']
   \ }
 
+"{{{ for go code
+let g:ycm_gocode_binary_path = "$GOPATH/bin/gocode"
+let g:ycm_godef_binary_path  = "$GOPATH/bin/godef"
+"}}}
 
 " Default YCM key bindings conflict with those of UltiSnips. Both YCM and UltiSnips
 " suggest mapping expansion triggers to different keys, which did was a bit fuzzy,
@@ -740,16 +802,34 @@ let g:ycm_semantic_triggers =  {
 " let g:ycm_key_list_select_completion   = []
 " let g:ycm_key_list_previous_completion = []
 
-" ------------------------------------------------------------------------------------
-" ---------    avoid ycm auto-complete suggestions in MultipleCursor mode    ---------
-" ------------------------------------------------------------------------------------
+
+" {{{ for multiple cursors
+"     avoid ycm auto-complete suggestions in MultipleCursor mode also prevent
+"     neocomplete trigger function calls until we are finished with multiple
+"     cursors editing by locking and unlocking
 function! Multiple_cursors_before()
     let g:ycm_auto_trigger = 0
+    if exists(':NeoCompleteLock') == 2
+       exe 'NeoCompleteLock'
+    endif
 endfunction
 
 function! Multiple_cursors_after()
     let g:ycm_auto_trigger = 1
+    if exists('NeoCompleteLockUnlock') == 2
+      exe 'NeoCompleteLockUnlock'
+    endif
 endfunction
+
+" default highlighting (see help :highlight and help :highlight-link)
+highlight multiple_cursors_cursor term=reverse cterm=reverse gui=reverse
+highlight link multiple_cursors_visual Visual
+" }}}
+
+" {{{ turn off and turn on YCM
+nnoremap <leader>y :let g:ycm_auto_trigger=0<CR>
+nnoremap <leader>Y :let g:ycm_auto_trigger=1<CR>
+" }}}
 
 " ------------------------------------------------------------------------------------
 " ---------        customizations and settings for vim-clang and cpp         ---------
@@ -782,11 +862,12 @@ let g:clang_format#style_options = {
 au FileType c,cpp,objc,objcpp noremap  <silent> <buffer> <leader>= :ClangFormat<cr>
 
 " languages to load clang-based plugins for (YCM, color_coded)
-let g:clang_languages = ['c', 'cpp', 'objc', 'python', 'haskell']
+let g:clang_languages       = ['c', 'cpp', 'objc', 'python', 'haskell']
+let g:color_coded_filetypes = ['c', 'cpp', 'objc', 'python', 'haskell']
 
 " set the CLANG library path manually
-let g:clang_exec="/usr/bin/clang"
-let s:clang_library_path='/Library/Developer/CommandLineTools/usr/lib'
+let g:clang_exec         = "/usr/bin/clang"
+let s:clang_library_path = '/Library/Developer/CommandLineTools/usr/lib'
 if isdirectory(s:clang_library_path)
     let g:clang_library_path=s:clang_library_path
 endif
@@ -880,9 +961,6 @@ let g:syntastic_javascript_checkers = ['jshint', 'eshint']
 
 " show any javascript based linting errors immediately
 let g:syntastic_check_on_open = 0
-
-" auto-complete using NeoCompletion for JavaScript
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 
 function! s:highlight_general_checkstyles()
     "let w:m1=matchadd('Tab', '    ', -1)
@@ -1059,6 +1137,7 @@ if filereadable(expand("~/.vim/plugged/completor/plugin/completor.vim"))
     let g:completor_node_binary                                 = "/usr/local/bin/node"
     let g:completor_clang_binary                                = "/usr/bin/clang"
     let g:completor_gocode_binary                               = "/usr/local/opt/go/libexec/bin/go"
+    let g:completor_css_omni_trigger                            = '([\w-]+|@[\w-]*|[\w-]+:\s*[\w-]*)$'
     " Use Tab to trigger completion (disable auto trigger)
     " let g:completor_auto_trigger                              = 0
     " inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<C-x>\<C-u>\<C-p>"
@@ -1072,7 +1151,6 @@ if filereadable(expand("~/.vim/plugged/emmet-vim/plugin/emmet.vim"))
     let g:user_emmet_leader_key             = 'C-Z'
     autocmd FileType html,css, EmmetInstall
 endif
-
 
 " END OF THE PLUGIN SETTINGS
 " =====================================================================================
