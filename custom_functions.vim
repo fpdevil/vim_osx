@@ -2,7 +2,8 @@
 " ################        Custom functions required for vim         ##################
 " ####################################################################################
 
-" define a function for customizing the vim-startify based on the working directory
+
+" # define a function for customizing the vim-startify based on the working directory {{{
 function StartifyConfig()
     if getcwd() == $HOME
         let g:startify_list_order = [
@@ -20,11 +21,11 @@ function StartifyConfig()
                 \ ]
     endif
 endfunction
+"}}}
 
-" ------------------------------------------------------------------------------------
-" --- define function for switching between the source and header files using the  ---
-" --- ctags. this only supports .cpp and .h files                                  ---
-" ------------------------------------------------------------------------------------
+" # define function for switching between the source and header files using the
+"   ctags. this only supports .cpp and .h files {{{
+
 function! SwitchHeader()
     if(expand("%:e") == "c" || expand("%:e") == "cpp")
         execute ":edit " . expand("%:r") . ".h"
@@ -35,11 +36,12 @@ function! SwitchHeader()
     endif
 endfunction
 nmap <silent> <Leader>fs :call SwitchHeader()<CR>
+"}}}
 
-" define a function for highlighting the duplicate lines
-" shamelessly copied from StackOverflow at the below link
-" http://stackoverflow.com/questions/1268032/marking-duplicate-lines
-"
+" # define a function for highlighting the duplicate lines
+"   shamelessly copied from StackOverflow at the below link
+"   http://stackoverflow.com/questions/1268032/marking-duplicate-lines {{{
+
 function! HighlightRepeats() range
     let lineCounts={}
     let lineNum=a:firstline
@@ -58,11 +60,11 @@ function! HighlightRepeats() range
     endfor
 endfunction
 command! -range=% HighlightRepeats <line1>,<line2>call HighlightRepeats()
+"}}}
 
-" ------------------------------------------------------------------------------------
-" --- define function for getting the Plug lists for vimawesome.com                ---
-" --- courtesy: junegunn                                                           ---
-" ------------------------------------------------------------------------------------
+" # define function for getting the Plug lists for vimawesome.com
+"   courtesy: junegunn {{{
+"
 function! VimAwesomeComplete() abort
   let prefix = matchstr(strpart(getline('.'), 0, col('.') - 1), '[.a-zA-Z0-9_/-]*$')
   echohl WarningMsg
@@ -106,23 +108,24 @@ augroup VimAwesomeComplete
     autocmd!
     autocmd FileType vim inoremap <c-x><c-v> <c-r>=VimAwesomeComplete()<cr>
 augroup END
+"}}}
 
 
-" ------------------------------------------------------------------------------------
-" ---  get the username in the form of space delimited first name and last name    ---
-" ------------------------------------------------------------------------------------
+" # get the username in the form of space delimited first name and last name{{{
+
 if has('mac')
     let s:usrname = split(system("finger `whoami`|awk -F: '{print $3}'|head -n1|sed 's/^ //'"), '\n')[0]
 elseif has('unix')
     let s:usrname = split(system('whoami | head -n1'), '\n')[0]
 endif
+"}}}
 
-" define the line width as under 80
+" # define the line width as under 80 {{{
 let s:width = 77
+"}}}
 
-" ------------------------------------------------------------------------------------
-" --- define function for inserting header information in erlang code file        ---
-" ------------------------------------------------------------------------------------
+"# define function for inserting header information in erlang code file {{{
+
 function! s:ErlHeader()
     let s:comment = "%%%"
     let s:line = "%%%" . repeat('-', s:width)
@@ -157,10 +160,11 @@ endfunction
 augroup ErlHeader
     autocmd BufNewFile *.erl call s:ErlHeader()
 augroup END
+"}}}
 
-" ------------------------------------------------------------------------------------
-" --- define function for finding an appropriate .jshintrc file for javascript     ---
-" ------------------------------------------------------------------------------------
+
+" # define function for finding an appropriate .jshintrc file for javascript {{{
+
 function s:locate_jshintrc(dir)
     let l:found = globpath(a:dir, '.jshintrc')
     if filereadable(l:found)
@@ -184,4 +188,49 @@ function UpdJsHintConf()
 endfunction
 
 au BufEnter * call UpdJsHintConf()
+"}}}
+
+" # function to toggle the background {{{
+
+function! ToggleBG()
+    let s:togglebg = &background
+    if s:togglebg == "dark"
+        set background=light
+    else
+        set background=dark
+    endif
+endfunction
+
+noremap <Leader>bg :call ToggleBG()<CR>
+"}}}
+
+"{{{ function to toggle line numbers
+function! ToggleNumber()
+    let s:numberPresent = &nu
+    let s:relativeNumberPresent = &relativenumber
+    if s:numberPresent && s:relativeNumberPresent
+        set paste!
+        set nonumber
+        set norelativenumber
+    else
+        set paste!
+        set number
+        set relativenumber
+    endif
+endfunction
+"}}}
+
+"{{{ show current color scheme name
+"    usage :call ShowColorTheme()
+function! ShowColorTheme()
+    try
+        echo g:colors_name
+    catch /^Vim:E121/
+        echo "default
+    endtry
+endfunction
+
+noremap <Leader>st :call ShowColorTheme()<CR>
+"}}}
+
 " ------------------------------------------------------------------------------------

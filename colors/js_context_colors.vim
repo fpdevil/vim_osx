@@ -1,8 +1,6 @@
-" Vim color file
+" js context vim color file
 "
-" Author: David Wilhelm <dewilhelm@gmail.com>
-"
-" Note: Used by the JavaScript Context Colors plugin
+" To be used by the JavaScript Context Colors plugin
 " to highlight function scopes differently by level
 " top level = 0
 " To override these colors, copy this colorscheme

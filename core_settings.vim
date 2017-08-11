@@ -24,12 +24,15 @@ set list
 set listchars=tab:\|\ ,
 set grepformat=%f:%l:%c:%m,%f:%l:%m
 
-" highlight the current line and active column
-set cursorline
+" highlight the current line and active column (shows crosshairs as +)
+"set cursorline
 set cuc cul"
 
 filetype plugin on
 filetype indent on
+
+" generate documentation tags automatically
+silent! helptags ALL
 
 " get the system os running
 let os = substitute(system('uname'), '\n', '', '')
@@ -42,10 +45,13 @@ if has('gui_running')
     if s:sysos == 'osx'
         set guifont=Monaco\ for\ Powerline:h12
     elseif s:sysos == 'linux'
-        set guifont=DejaVu\ Sans\ Mono\ 12 
+        set guifont=DejaVu\ Sans\ Mono\ 11
     endif
 endif
 
+" show number and relative number
+set relativenumber
+set number
 
 " ************************************************************************************
 " ************                vim  Leader key mapping                     ************
@@ -73,7 +79,7 @@ set history=10000                           " keep 100000 lines of command line 
 set ruler                                   " show the cursor position all the time
 syntax on                                   " syntax highlighting
 set hlsearch                                " highlight searches
-set incsearch                               " incremental search
+set incsearch                               " incremental search highlights as you type
 set ignorecase                              " case insensitive search
 set smartcase                               " unless search contains uppercase letter
 set laststatus=2                            " always show the status line
@@ -131,6 +137,16 @@ set autoindent
 set smartindent
 set cindent
 set cinoptions=(0,u0,U0
+
+" Text auto formatting options
+set formatoptions=c,q,r,t
+                " | | | |
+                " | | | +------- Auto-wrap text using textwidth.
+                " | | +--------- Auto insert the current comment leader after
+                " | |            hitting <Enter> in Insert mode.
+                " | +----------- Allow formatting of comments with 'gq'.
+                " +------------- Auto-wrap comments using textwidth, inserting
+                "                the current comment leader automatically.
 
 " ************************************************************************************
 " ***           custom color highlighting and alerts in common editing             ***
@@ -214,6 +230,9 @@ endif
 " ****  /usr/local/Cellar/opencv3/HEAD-6328076_4/include/                          ****
 " *************************************************************************************
 set tags+=~/.vim/tags/opencv
+
+" cpp includes
+set path=.,/usr/include,/usr/local/include
 
 " additional path settings to include opencv
 set path+=/usr/local/opt/opencv3/include

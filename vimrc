@@ -8,7 +8,7 @@
 "
 "
 " Sampath Singamsetty (Singamsetty.Sampath@gmail.com)
-" Last Updated Date: 16 Dec 2016
+" Last Updated Date: 28 July 2017
 "
 " Customized .vimrc configuration file
 " It supports some of the major languages which I use
@@ -78,11 +78,14 @@ endif
 " ------------------------------------------------------------------------
 " load the plugin settings, vim core editor settings and custom functions
 " ------------------------------------------------------------------------
-" {{{
+"{{{
+
 source ~/.vim/core_settings.vim
 source ~/.vim/plugin_settings.vim
 source ~/.vim/custom_functions.vim
-" }}}
+source ~/.vim/custom_settings.vim
+
+"}}}
 
 " End of the main .vimrc configuration
 " ========================================================================

@@ -1,0 +1,106 @@
+"------------------------------------------------------------------------------------
+"---------    python/python3 and JEDI syntastic integration for checking    ---------
+"----- ycm can also be used,  but pretty happy with the JEDI completion for now -----
+"------------------------------------------------------------------------------------
+" jedi auto-completion and syntax checking for python3
+" the below section first does a check on which version of python to choose
+
+if has('python')
+    let g:jedi#force_py_version        = 2
+    let g:syntastic_python_python_exec = 'python'
+    let g:pymode_python                = 'python'
+elseif has('python3')
+    let g:jedi#force_py_version        = 3
+    let g:syntastic_python_python_exec = '/usr/local/bin/python3'
+    let g:pymode_python                = '/usr/local/bin/python3'
+else
+    let g:loaded_jedi = 1
+endif
+
+" omnifunc for python
+" autocmd FileType python setlocal completefunc=jedi#complete
+
+autocmd FileType python setlocal omnifunc=jedi#completions
+au FileType python setlocal completeopt=preview,menu,longest
+
+" set the keymapping for definition browsing (-t)
+au FileType python let g:jedi#completions_enabled        = 0
+au FileType python let g:jedi#goto_definitions_command   = "<leader>t"
+au FileType python let g:jedi#show_call_signatures_delay = 0
+au FileType python let g:jedi#auto_close_doc             = 1
+au FileType python let g:jedi#show_call_signatures       = 2
+au FileType python let g:jedi#auto_vim_configuration     = 0
+au FileType python let g:jedi#smart_auto_mappings        = 0
+
+"{{{ using rope for python code assist
+if has_key(g:plugs, 'ropevim')
+    let ropevim_extended_complete=1
+endif
+"}}}
+
+" custom settings for python through syntastic checker
+let g:syntastic_enable_highlighting        = 1
+let g:syntastic_python_python_exec         = '/usr/local/bin/python3'
+let g:syntastic_python_checkers            = ['flake8', 'pyflakes']
+let g:syntastic_python_flake8_args         = '--max-line-length=80 ' .
+            \ '--max-complexity=10 ' .
+            \ '--ignore=D400,E501,E302,E261,E701,E241,E126,E127,E128,W801,' .
+            \ 'E111,E114,E121,E125,E129,E131,E133,E201,E202,E203,E211,E221' .
+            \ 'E222,E241,E251,E261,E303,E402,W503'
+" not using pylint
+" let g:syntastic_python_pylint_args         = '--disable=C0103'
+
+" syntastic checker settings for c and c++
+"let g:syntastic_c_compiler                = 'gcc'
+"let g:syntastic_cpp_compiler              = 'g++'
+let g:syntastic_c_compiler                = '/usr/bin/clang'
+let g:syntastic_cpp_compiler              = '/usr/bin/clang++'
+let g:syntastic_cpp_compiler_options      = '-std=c++11 -stdlib=libstdc++'
+let g:syntastic_cpp_cpplint_exec          = 'cpplint'
+let g:syntastic_cpp_check_header          = 1
+let g:syntastic_cpp_remove_include_errors = 1
+let g:syntastic_cpp_include_dirs          = [
+            \ '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1',
+            \ '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/8.0.0/include',
+            \ '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include',
+            \ '/usr/include',
+            \ '/usr/local/include',
+            \ '/usr/local/opt/opencv3/include'
+            \ ]
+
+
+"{{{ show balloon with mouse hovering over an error
+let g:syntastic_enable_balloons = 1
+"}}}
+
+
+"{{{  python language specific customizations
+"     enable all the python syntax highlighting features
+let python_highlight_all=1
+"}}}
+
+" ------------------------------------------------------------------------------------
+" ---                 ultisnips snippets for python2 and python3                   ---
+" ------------------------------------------------------------------------------------
+if has("python")
+    let g:UltiSnipsUsePythonVersion = 2
+else
+    let g:UltiSnipsUsePythonVersion = 3
+endif
+
+" ------------------------------------------------------------------------------------
+" -----                         Auto formatting options                          -----
+" ------------------------------------------------------------------------------------
+"{{{
+nnoremap <silent> <Leader>f :Autoformat<CR>
+let g:autoformat_verbosemode=1
+if !exists('g:formatter_yapf_style')
+    let g:formatter_yapf_style = 'pep8'
+endif
+if !exists('g:formatdef_yapf')
+    let g:formatdef_yapf = "'yapf --style =\"{based_on_style:'.g:formatter_yapf_style.',indent_width:'.&shiftwidth.',column_limit:'.&text  width.'}\" -l '.a:firstline.'-'.a:lastline"
+endif
+if !exists('g:formatters_python')
+    let g:formatters_python = ['yapf']
+endif
+"}}}

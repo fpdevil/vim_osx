@@ -1,21 +1,23 @@
 " ####################################################################################
 " ############### All Vim plugins installed through Vim Plugin Manager ###############
 " ####################################################################################
+
+scriptencoding utf-8
+
 " list of all the plugins to be installed through vimplug
 " thanks to https://github.com/junegunn/vim-plug
 
 " ######################## set rtp+=~/.vim/vundle/Vundle.vim/ ########################
-" set the runtime path to include Vundle and initializ
+" set the runtime path to include Vundle and initialize
 " set rtp+=~/.vim/bundle/vundle/
-" ################################# call vundle#rc() #################################
 " the vundle plugin is used only for initial installation of the vim plugin
 " Bundle 'gmarik/vundle'
+" ################################# call vundle#rc() #################################
 
-" Plugins section start {{{
-
-"  syntax checking and code formatting with syntastic vim plugin
-"  syntastic needs jshint for checking the javascript and inorder to include
-"  the dependency, a function is defined here to handle the npm installation
+"{{{ Plugins sections start
+"    syntax checking and code formatting with syntastic vim plugin
+"    syntastic needs jshint for checking the javascript and inorder to include
+"    the dependency, a function is defined here to handle the npm installation
 
 function! InstallJsHint(info)
     if a:info.status == 'installed' || a:info.force
@@ -26,6 +28,7 @@ endfunction
 function! BuildTern(info)
     if a:info.status == 'installed' || a:info.force
         !npm install
+        !npm install -g tern
     endif
 endfunction
 
@@ -38,67 +41,98 @@ function! YCMBuilder(info)
         let $EXTRA_CMAKE_ARGS='-DEXTERNAL_LIBCLANG_PATH'
                     \ . '='
                     \ . '/opt/software/clang+llvm-3.9.0-x86_64-apple-darwin/lib/libclang.dylib'
+                    "\ . '/Library/Developer/CommandLineTools/usr/lib/libclang.dylib'
         !python3 install.py --clang-completer --system-libclang --gocode-completer --tern-completer
     endif
 endfunction
 
-" -- syntax checkers
+" --- syntax checkers section
 Plug 'scrooloose/syntastic', { 'do': function('InstallJsHint') }                " realtime syntax checker
 Plug 'Chiel92/vim-autoformat'                                                   " easy code formatting in vim
 Plug 'Shougo/neocomplete.vim'                                                   " neocompletion with cache (need lua support)
 Plug 'Shougo/neoinclude.vim'                                                    " include completion framework for neocomplete
-"Plug 'neocomplcache'                                                           " neo compile caching (using neocomplete for completion)
 
-" -- utilities
+" --- utilities section
+"     you have to go to .vim/plugin/vimproc.vim and do a ./make
+Plug 'Shougo/vimproc.vim', { 'do': 'make' }                                     " vimproc asynchronous
+
+" --- shell/terminal utilities for vim
 Plug 'shougo/vimshell.vim'                                                      " shell in vim
+Plug 'mattn/vim-terminal'                                                       " terminal for vim
 
-" --- 3rd party color themes
+Plug 'benizi/vim-automkdir'                                                     " create dir as required
+Plug 'bronson/vim-trailing-whitespace'                                          " remove trailing white spaces
+Plug 'mhinz/vim-startify'                                                       " fancy start screen for vim
+Plug 'easymotion/vim-easymotion'                                                " vim motions on speed
+Plug 'Yggdroot/indentLine', { 'on': 'IndentLinesEnable' }                       " display the indention levels
+Plug 'itchyny/calendar.vim'                                                     " calendar application
+
+" --- 3rd party color themes section
 Plug 'flazz/vim-colorschemes'                                                   " Color Schemes
 Plug 'morhetz/gruvbox'                                                          " Retro groove color scheme
 Plug 'trusktr/seti.vim'                                                         " seti colorscheme
 Plug 'altercation/vim-colors-solarized'                                         " solarized color schemes
 Plug 'baeuml/summerfruit256.vim'                                                " 256 color scheme
-Plug 'junegunn/limelight.vim'                                                   " limelight theme
 Plug 'jacoborus/tender.vim'                                                     " 24bit colorscheme for Vim, Airline
 Plug 'kabbamine/yowish.vim'                                                     " A dark & yellowish vim colorscheme
 
-" --- color scheme browsing helper
-Plug 'ujihisa/unite-colorscheme'                                                " Unite color scheme browser
 
-" --- code completion framework
-Plug 'maralla/completor.vim'                                                    " async completion framework
+" --- color scheme switcher
+Plug 'xolox/vim-colorscheme-switcher'
 
-" --- the right way to handle trailing-whitespace
-Plug 'bronson/vim-trailing-whitespace'                                          " remove trailing white spaces
+" --- vim distraction free typing
+Plug 'junegunn/goyo.vim'                                                        " distraction-free writing in Vim
+Plug 'junegunn/limelight.vim'                                                   " light theme for goyo
 
-" --- File Exploring
-Plug 'scrooloose/nerdtree' , { 'on': ['NERDTreeToggle', 'NERDTreeFind'] }       " NERDTree file browser, Undo list
-Plug 'jistr/vim-nerdtree-tabs'                                                  " NERDTree and tabs together
-
-" --- depending on your vimproc location
-" --- you have to go to .vim/plugin/vimproc.vim and do a ./make
-Plug 'Shougo/vimproc.vim', { 'do': 'make' }                                     " vimproc
-Plug 'Shougo/unite.vim'                                                         " unite
+" --- unite family
+Plug 'Shougo/unite.vim'                                                         " unite color changer helper
 Plug 'shougo/denite.nvim'                                                       " nexgen unite
 Plug 'Shougo/unite-outline'                                                     " outline source for unite
-Plug 'mhinz/vim-startify'                                                       " fancy start screen for vim
+Plug 'ujihisa/unite-colorscheme'                                                " Unite color scheme browser
+Plug 'Shougo/neomru.vim'                                                        " includes unite.vim MRU sources
+Plug 'mattn/unite-vim_advent-calendar'                                          " unite source for calendar
+Plug 'mattn/webapi-vim'                                                         " vim interface to web api
+Plug 'mattn/wwwrenderer-vim'                                                    " vim renderer
+Plug 'thinca/vim-openbuf'                                                       " open and manage buffers
+Plug 'choplin/unite-vim_hacks'                                                  " this needs above 3 plugins
 
-" --- for commenting the code
+" --- Fuzzy Finder for vim
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } | Plug 'junegunn/fzf.vim'
+
+" --- code completion and commenting framework(s) section
+if !has('gui_running')
+    " this does not go along well with ycm which is only
+    " in the gui mode, so disabling it in the gui mode
+    "Plug 'maralla/completor.vim'                                               " async completion framework
+endif
+
 Plug 'scrooloose/nerdcommenter'                                                 " intensely orgasmic commenting
 
-" --- source code control, git integration
+" --- File Exploring section
+Plug 'shougo/vimfiler.vim'                                                      " file explorer
+Plug 'scrooloose/nerdtree' , { 'on': ['NERDTreeToggle', 'NERDTreeFind'] }       " NERDTree file browser, Undo list
+Plug 'jistr/vim-nerdtree-tabs'                                                  " NERDTree and tabs together
+Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }                              " undo history visualizer
+
+" --- source code control, git integration sections
 Plug 'tpope/vim-fugitive'                                                       " git integration
 Plug 'airblade/vim-gitgutter'                                                   " show which line changed using git
 Plug 'mhinz/vim-signify'                                                        " show diff via vim sign column
 
-" --- for aligning the code and or text manipulation
+" --- code alignment/completion, text manipulation sections
 Plug 'junegunn/vim-easy-align', { 'on': ['<Plug>(EasyAlign)', 'EasyAlign']  }   " text and code alignment
 Plug 'godlygeek/tabular'                                                        " text filtering and alignment
 Plug 'nathanaelkane/vim-indent-guides'                                          " vim indentation display
 Plug 'ervandew/supertab'                                                        " use TAB for all insertions
+Plug 'Shougo/neco-syntax'                                                       " syntax source for source for neocomplete
+Plug 'tenfyzhong/CompleteParameter.vim'                                         " complete parameter after select completion
 
-" --- for haskell language auto-complete, syntax and code check
-" --- load these plugins only while opening haskell code or source
+" --- vim source for neocomplete
+Plug 'Shougo/neco-vim', { 'for': 'vim' }
+Plug 'mhinz/vim-lookup', { 'for': 'vim' }                                       " jump to vim code definitions
+
+" --- haskell language specific auto-complete, syntax and code checking sections
+"     load these plugins only while opening haskell code or source
 Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }                          " syntax indentation / highlight
 Plug 'enomsg/vim-haskellConcealPlus', { 'for': 'haskell' }                      " unicode for concealing haskell operators
 Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }                                " ghcmod for haskell in vim
@@ -113,32 +147,27 @@ Plug 'dan-t/vim-hsimport', {'for': 'haskell'}                                   
 "Plug 'dag/vim2hs'                                                              " vimscripts for haskell development
 
 
-" --- for idris language syntax
+" --- idris language syntax section
 Plug 'idris-hackers/idris-vim'                                                  " idris language support
 
 
-" --- for agda language support
+" --- agda language support section
 Plug 'rking/ag.vim'                                                             " AGDA language
 
-
-" --- for elm-lang scripting support
+" --- elm-lang scripting support section
 Plug 'lambdatoast/elm.vim'                                                      " elm scripting language
 
-
-" --- for some eye candies like status bars and colors
-"Plug 'bling/vim-airline'                                                       " using vim-airline repo
-"Plug 'bling/vim-bufferline'                                                    " show number of buffers
+" --- some eye candies like status bars and colors
 Plug 'vim-airline/vim-airline'                                                  " Airline statusbar
 Plug 'vim-airline/vim-airline-themes'                                           " Airline themes
 Plug 'osyo-manga/unite-airline_themes'                                          " preview airline themes
 Plug 'majutsushi/tagbar'                                                        " tagbar support
+Plug 'kien/rainbow_parentheses.vim'                                             " rainbow parenthesis color brackets
+"Plug 'bling/vim-bufferline'                                                    " show number of buffers
+"Plug 'bling/vim-airline'                                                       " using vim-airline repo
 
 
-" --- for rainbow parenthesis colorful brackets
-Plug 'kien/rainbow_parentheses.vim'                                             " rainbow parenthesis
-
-
-" --- for clojure language auto-completion, syntax and formatting
+" --- clojure language specific auto-completion, syntax and formatting sections
 Plug 'guns/vim-clojure-static', { 'for': 'clojure' }                            " clojure support
 Plug 'venantius/vim-cljfmt', { 'for': 'clojure' }                               " clojure formatting tool
 Plug 'venantius/vim-eastwood', { 'for': 'clojure'}                              " clojure lint tool
@@ -146,50 +175,48 @@ Plug 'tpope/vim-fireplace', { 'for': 'clojure' }                                
 Plug 'kovisoft/paredit', { 'for': ['clojure', 'scheme'] }                       " clojure and scheme support
 
 
-" --- for GO language
+" --- GO language section
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }                             " go development support
-
-" --- some utilities
-Plug 'guns/vim-sexp'                                                            " vim expression support
-Plug 'tpope/vim-repeat'                                                         " vim repeat the last command on
-Plug 'tpope/vim-surround'                                                       " parenthesizing made simple
-Plug 'tpope/vim-unimpaired'                                                     " pairs of handy bracket mappings
-Plug 'gorkunov/smartpairs.vim'                                                  " fantastic selection for vim
-" --- vim-fireplace dependencies
-"Plug 'tpope/vim-classpath'                                                     " vim classpath
-"Plug 'jpalardy/vim-slime'                                                      " slime for vim
-Plug 'beloglazov/vim-online-thesaurus'                                          " word lookup in online thesaurus (-K)
-Plug 'thinca/vim-ref'                                                           " integrated reference viewer
-Plug 'jceb/vim-hier'                                                            " hl quickfix errors
+Plug 'nsf/gocode', { 'rtp': 'vim', 'do': '~/.vim/plugged/gocode/vim/symlink.sh' }
 
 
-" --- for java script syntax check and auto-completions
+" --- for javascript specific syntax check and auto-completions section
 Plug 'maksimr/vim-jsbeautify', { 'for': 'javascript' }                          " beautify js
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' }                         " js for vim
 Plug 'jelera/vim-javascript-syntax', { 'for': 'javascript' }                    " enhanced js syntax
-" yet another js and its dependency es.next with lazy loading only for js
-Plug 'othree/yajs.vim' | Plug 'othree/es.next.syntax.vim', { 'for': 'javascript' }
+
+Plug 'othree/yajs.vim', { 'for': 'javascript' }                                 " yet another js
+Plug 'othree/es.next.syntax.vim', { 'for': 'javascript' }                       " syntax for ECMA
+
 Plug 'othree/jspc.vim', { 'for': ['javascript', 'javascript.jsx'] }             " js param complete
-Plug 'einars/js-beautify', { 'for': 'javascript' }                              " js beautify
-"Plug 'bigfish/vim-js-context-coloring', { 'for': 'javascript' }                " js highlight, context & coloring
-" --- extends syntax for js with jQuery,backbone,etc
+Plug 'einars/js-beautify', { 'do': 'git submodule update --init --recursive', 'for': 'javascript' }
+
+"    extended syntax for js with jQuery,backbone,etc
 Plug 'mxw/vim-jsx'                                                              " json/js support
 Plug 'elzr/vim-json'                                                            " json highlighting
-Plug 'othree/javascript-libraries-syntax.vim'                                   " js syntax check and library support
+Plug 'othree/javascript-libraries-syntax.vim', { 'for': [
+            \ 'javascript',
+            \ 'coffee',
+            \ 'ls',
+            \ 'typescript']
+            \ }                                                                 " js syntax check and library support
 Plug 'marijnh/tern_for_vim', { 'do': function('BuildTern') }                    " tern plugin for vim js
 Plug 'shutnik/jshint2.vim', { 'for': 'javascript' }                             " JSHint integration
-Plug 'heavenshell/vim-jsdoc'                                                    " Generate JSDoc to your JavaScript code
+Plug 'heavenshell/vim-jsdoc', { 'for': 'javascript' }                           " Generate JSDoc to your JavaScript code
 Plug 'moll/vim-node', { 'for': 'javascript' }                                   " Tools & Env for node.js
-Plug 'ahayman/vim-nodejs-complete'                                              " nodejs omnifunc
+Plug 'ahayman/vim-nodejs-complete', { 'for': 'javascript' }                     " nodejs omnifunc
+Plug 'mattn/jscomplete-vim', { 'for': 'javascript' }                            " vim omnifunc for JavaScript 
+"Plug 'bigfish/vim-js-context-coloring', { 'for': 'javascript' }                " js highlight, context & coloring
 
 
-" for erlang language auto-completions, syntax check and support
+" for erlang language specific auto-completions, syntax check and support section
 Plug 'vim-erlang/vim-erlang-runtime', { 'for': 'erlang' }                       " erlang indentation, syntax
 Plug 'vim-erlang/vim-erlang-omnicomplete', { 'for': 'erlang' }                  " erlang code auto completion
 Plug 'vim-erlang/vim-erlang-compiler', { 'for': 'erlang' }                      " erlang syntax checker, compiler
 Plug 'youthy/vimerl-complete', { 'for': 'erlang' }                              " erlang auto complete
 Plug 'vim-erlang/vim-erlang-skeletons', { 'for': 'erlang' }                     " erlang templates
 Plug 'akalyaev/vim-erlang-spec', { 'for': 'erlang' }                            " erlang generate specifications
+Plug 'vim-erlang/vim-erlang-tags'                                               " erlang tag generate for vim
 
 
 " --- allow pane movement to jump out of vim into tmux navigator
@@ -197,12 +224,13 @@ Plug 'christoomey/vim-tmux-navigator'                                           
 
 " --- display all the leader mappings with descriptions
 Plug 'ktonga/vim-follow-my-lead'
+Plug 'hecal3/vim-leader-guide'                                                  " vim keymap-display
+Plug 'jimmay5469/vim-spacemacs'                                                 " spacemacs key bindings
 
 " --- for scala language auto-complete, syntax and support
 Plug 'derekwyatt/vim-scala', { 'for': 'scala'}                                  " scala support
 "Plug 'ensime/ensime-vim'                                                       " ensime for scala auto-complete
                                                                                 " it uses python2 | commented
-
 
 " --- for html, xml ... syntax, validation etc.
 Plug 'mattn/emmet-vim'                                                          " emmet for vim
@@ -219,44 +247,74 @@ Plug 'octol/vim-cpp-enhanced-highlight', { 'for': 'cpp' }                       
 Plug 'vim-scripts/DoxygenToolkit.vim', { 'for': 'cpp' }                         " doxygen documentation
 Plug 'myint/clang-complete', { 'for': ['cpp','c']}                              " using fork for python3 support
 Plug 'osyo-manga/vim-marching'                                                  " async clang code completion
-Plug 'vim-scripts/c.vim', { 'for': ['c','cpp'] }                                " c/cpp ide
 Plug 'rhysd/vim-clang-format', { 'on': 'ClangFormat' }                          " a formatter for C, C++, Obj-C, Java, JS and TypeScript
 Plug 'derekwyatt/vim-protodef', { 'for': 'cpp' }                                " pull c++ function prototypes
+Plug 'vim-jp/vim-cpp', { 'for': [ 'c', 'cpp' ] }                                " c/c++ syntax files
+Plug 'vim-scripts/c.vim', { 'for': ['c','cpp'] }                                " c/cpp ide
+Plug 'wolfgangmehner/c-support', { 'for': [ 'c','cpp' ] }                       " same as above but updated
+
 
 " --- TeX file editing
 Plug 'lervag/vimtex'                                                            " editing LaTeX files
 
+
+" --- CtrlP Family
+Plug 'kien/ctrlp.vim'                                                           " fuzzy file, buffer, mru, tag etc
+Plug 'tacahiroy/ctrlp-funky'                                                    " function navigator for ctrlp
+Plug 'voronkovich/ctrlp-nerdtree.vim'                                           " ctrlp for opening nerdtree
+Plug 'sgur/ctrlp-extensions.vim', { 'on': [
+            \ 'CtrlPCmdline',
+            \ 'CtrlPMenu',
+            \ 'CtrlPYankring']
+            \ }                                                                 " extensions for ctrlp 
+Plug 'pielgrzym/ctrlp-sessions', { 'on': ['CtrlPSessions', 'MkS'] }             " vim sessions with ctrlp
+Plug 'vim-ctrlspace/vim-ctrlspace'                                              " tabs/buffers/file management
+Plug 'mattn/ctrlp-launcher', { 'on': 'CtrlPLauncher' }                          " ctrlp launcher extension
+Plug 'felikz/ctrlp-py-matcher'                                                  " fast ctrlp matcher based on python
+Plug 'h14i/vim-ctrlp-buftab', { 'on': 'CtrlPBufTab' }                           " 
+
+
 " --- miscellaneous utilities
+Plug 'brookhong/k.vim'                                                          " run external commands
 Plug 'matze/vim-move'                                                           " move lines and selections
 Plug 'edkolev/promptline.vim'                                                   " promptline
-Plug 'kien/ctrlp.vim'                                                           " fuzzy file, buffer, mru, tag etc
-Plug 'vim-ctrlspace/vim-ctrlspace'                                              " tabs/buffers/file management
 Plug 'tyru/current-func-info.vim'                                               " get current function name
 Plug 'jiangmiao/auto-pairs'                                                     " parenthesis auto parentheses pairing
 Plug 'Raimondi/delimitMate'                                                     " auto quotes, parens, brackets, etc
 Plug 'editorconfig/editorconfig-vim'                                            " editorconfg
+Plug 'guns/vim-sexp'                                                            " vim expression support
+Plug 'tpope/vim-repeat'                                                         " vim repeat the last command on
+Plug 'tpope/vim-surround'                                                       " parenthesizing made simple
+Plug 'tpope/vim-unimpaired'                                                     " pairs of handy bracket mappings
+Plug 'gorkunov/smartpairs.vim'                                                  " fantastic selection for vim
+"     vim-fireplace dependencies
+"Plug 'tpope/vim-classpath'                                                     " vim classpath
+"Plug 'jpalardy/vim-slime'                                                      " slime for vim
+Plug 'beloglazov/vim-online-thesaurus'                                          " word lookup in online thesaurus (-K)
+Plug 'thinca/vim-ref'                                                           " integrated reference viewer
+Plug 'jceb/vim-hier'                                                            " hl quickfix errors
+Plug 'mattesgroeger/vim-bookmarks'                                              " vim bookmarks
+Plug 'jakedouglas/exuberant-ctags'                                              " ctags for multiple langs
 
 
 " --- plugins for vim textual snippets supporting code auto completion
 Plug 'tomtom/tlib_vim'                                                          " for snippets
-Plug 'MarcWeber/vim-addon-mw-utils'                                             " for snippets
-Plug 'garbas/vim-snipmate'                                                      " for snippets
 Plug 'SirVer/ultisnips'                                                         " for snippets
 Plug 'honza/vim-snippets'                                                       " vim-snippets depends on ultisnippets
-"Plug 'hecal3/vim-leader-guide'                                                 " vim keymap-display
+Plug 'MarcWeber/vim-addon-mw-utils'                                             " for snippets
+Plug 'garbas/vim-snipmate'                                                      " for snippets
 
 
 " --- Plugins for multiple text selection
 Plug 'terryma/vim-multiple-cursors'                                             " vim multiple cursors
 
-
 " --- Plugins for text visualization
 Plug 'osyo-manga/vim-brightest'                                                 " highlight cursor word
-
+Plug 't9md/vim-quickhl'                                                         " highlight selected word
 
 " --- for elixir auto-complete syntax checking and development
-Plug 'elixir-lang/vim-elixir'                                                   " vim for elixir
-Plug 'slashmili/alchemist.vim'                                                  " elixir integration for vim
+Plug 'elixir-lang/vim-elixir', { 'for': ['elixir', 'eelixir'] }                 " vim for elixir
+Plug 'slashmili/alchemist.vim', { 'for': ['elixir', 'eelixir'] }                " elixir integration for vim
 
 
 " --- for documentation purposes and writing
@@ -264,18 +322,24 @@ Plug 'vim-pandoc/vim-pandoc'                                                    
 Plug 'vim-pandoc/vim-pandoc-syntax'                                             " pandoc markdown syntax
 Plug 'xolox/vim-notes' | Plug 'xolox/vim-misc'                                  " easy note taking
 
-
 " --- for python/python3 language auto-completion
 " --- syntax checking, highlighting and more
 Plug 'vim-scripts/python.vim--Vasiliev'                                         " enhanced python syntax highlighting
 Plug 'davidhalter/jedi-vim'                                                     " python jedi auto-completion (the best)
-Plug 'hynek/vim-python-pep8-indent', { 'for':'python' }                         " python indentation style for vim
+Plug 'Vimjas/vim-python-pep8-indent', { 'for':'python' }                        " python indentation style for vim
 "Plug 'lambdalisue/vim-pyenv'                                                   " python virtual env (if required)
 Plug 'tell-k/vim-autopep8'                                                      " autopep8 plugin for python
+Plug 'python-rope/ropevim'                                                      " rope for python code assist
 
-" --- ycm being used only under gui mode for MacVim
+" --- Asynchronous Lint Engine (using syntastic for now)
+" Plug 'w0rp/ale'
+
+" --- YouCompleteMe being used only in gui mode for MacVim
 if has("gui_running")
-    Plug 'valloric/youcompleteme', { 'do': function('YCMBuilder'), 'for': [ 'cpp', 'python', 'go' ] }
+    Plug 'valloric/youcompleteme', 
+                \ { 'do': function('YCMBuilder'), 
+                \ 'for': [ 'c', 'cpp', 'go', 'javascript', 'erlang' ] 
+                \ }
 endif
 
 " end of plugin section }}}
