@@ -133,3 +133,11 @@ This should show the status of each plugin.
 - Haskell syntax highlighting and real-time checking will be shown as below
 
 ![alt text](screenshots/haskell.png "A haskell syntax highlighting screenshot")
+
+- MacVim JavaScript Auto-Completion and real-time checking with Tern Completion and YouCompleteMe
+
+![alt text](screenshots/javascript.png "A JavaScript auto-completion and syntax highlight screenshot")
+
+- Erlang Auto-Completion and real-time syntax checking with VimErl plugin
+
+![alt text](screenshots/erlang.png "An erlang auto-completion and syntax highlighting screenshot")
