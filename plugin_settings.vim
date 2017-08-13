@@ -163,6 +163,9 @@ source ~/.vim/plugins_config/fzf_config.vim
 " load vim bookmarks configuration
 source ~/.vim/plugins_config/bookmarks_config.vim
 
+" load the configuration settings for promptline
+source ~/.vim/plugins_config/promptline_config.vim
+
 " ####################################################################################
 " ############################## Personal Configuration ##############################
 " ####################################################################################
