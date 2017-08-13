@@ -205,7 +205,7 @@ Plug 'shutnik/jshint2.vim', { 'for': 'javascript' }                             
 Plug 'heavenshell/vim-jsdoc', { 'for': 'javascript' }                           " Generate JSDoc to your JavaScript code
 Plug 'moll/vim-node', { 'for': 'javascript' }                                   " Tools & Env for node.js
 Plug 'ahayman/vim-nodejs-complete', { 'for': 'javascript' }                     " nodejs omnifunc
-Plug 'mattn/jscomplete-vim', { 'for': 'javascript' }                            " vim omnifunc for JavaScript 
+Plug 'mattn/jscomplete-vim', { 'for': 'javascript' }                            " vim omnifunc for JavaScript
 "Plug 'bigfish/vim-js-context-coloring', { 'for': 'javascript' }                " js highlight, context & coloring
 
 
@@ -266,12 +266,12 @@ Plug 'sgur/ctrlp-extensions.vim', { 'on': [
             \ 'CtrlPCmdline',
             \ 'CtrlPMenu',
             \ 'CtrlPYankring']
-            \ }                                                                 " extensions for ctrlp 
+            \ }                                                                 " extensions for ctrlp
 Plug 'pielgrzym/ctrlp-sessions', { 'on': ['CtrlPSessions', 'MkS'] }             " vim sessions with ctrlp
 Plug 'vim-ctrlspace/vim-ctrlspace'                                              " tabs/buffers/file management
 Plug 'mattn/ctrlp-launcher', { 'on': 'CtrlPLauncher' }                          " ctrlp launcher extension
 Plug 'felikz/ctrlp-py-matcher'                                                  " fast ctrlp matcher based on python
-Plug 'h14i/vim-ctrlp-buftab', { 'on': 'CtrlPBufTab' }                           " 
+Plug 'h14i/vim-ctrlp-buftab', { 'on': 'CtrlPBufTab' }                           "
 
 
 " --- miscellaneous utilities
@@ -336,9 +336,9 @@ Plug 'python-rope/ropevim'                                                      
 
 " --- YouCompleteMe being used only in gui mode for MacVim
 if has("gui_running")
-    Plug 'valloric/youcompleteme', 
-                \ { 'do': function('YCMBuilder'), 
-                \ 'for': [ 'c', 'cpp', 'go', 'javascript', 'erlang' ] 
+    Plug 'valloric/youcompleteme',
+                \ { 'do': function('YCMBuilder'),
+                \ 'for': [ 'c', 'cpp', 'go', 'javascript', 'erlang', 'python', 'haskell' ]
                 \ }
 endif
 
