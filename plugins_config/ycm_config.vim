@@ -54,6 +54,7 @@ let g:ycm_key_list_select_completion                    = ['<C-TAB>', '<Down>']
 let g:ycm_key_list_previous_completion                  = ['<C-S-TAB>','<Up>']
 let g:ycm_extra_conf_vim_data                           = ['&filetype']
 
+
 let g:ycm_filetype_blacklist                            = {
             \ 'vim' : 1,
             \ 'tagbar' : 1,
@@ -88,15 +89,6 @@ let g:ycm_semantic_triggers =  {
 
 " let g:ycm_key_list_select_completion   = []
 " let g:ycm_key_list_previous_completion = []
-
-"{{{ shortcut mappings for ycm
-nnoremap <leader>yt :YcmCompleter GetType<cr>
-nnoremap <leader>yd :YcmCompleter GetDoc<cr>
-nnoremap <leader>yo :YcmCompleter GoTo<cr>
-nnoremap <leader>yf :YcmCompleter GoToDefinition<cr>
-nnoremap <leader>yr :YcmCompleter GoToReferences<cr>
-nnoremap <leader>yc :YcmCompleter ClearCompilationFlagCache<cr>
-"}}}
 
 
 "{{{ turn off and turn on YCM
