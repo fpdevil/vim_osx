@@ -176,7 +176,7 @@ Plug 'kovisoft/paredit', { 'for': ['clojure', 'scheme'] }                       
 
 
 " --- GO language section
-Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }                             " go development support
+Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
 Plug 'nsf/gocode', { 'rtp': 'vim', 'do': '~/.vim/plugged/gocode/vim/symlink.sh' }
 
 
@@ -250,7 +250,7 @@ Plug 'osyo-manga/vim-marching'                                                  
 Plug 'rhysd/vim-clang-format', { 'on': 'ClangFormat' }                          " a formatter for C, C++, Obj-C, Java, JS and TypeScript
 Plug 'derekwyatt/vim-protodef', { 'for': 'cpp' }                                " pull c++ function prototypes
 Plug 'vim-jp/vim-cpp', { 'for': [ 'c', 'cpp' ] }                                " c/c++ syntax files
-Plug 'vim-scripts/c.vim', { 'for': ['c','cpp'] }                                " c/cpp ide
+"Plug 'vim-scripts/c.vim', { 'for': ['c','cpp'] }                               " c/cpp ide
 Plug 'wolfgangmehner/c-support', { 'for': [ 'c','cpp' ] }                       " same as above but updated
 
 
