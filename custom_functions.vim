@@ -77,7 +77,7 @@ ruby << EOF
   query = VIM::evaluate('prefix').gsub('/', '%20')
   items = 1.upto(max_pages = 3).map do |page|
     Thread.new do
-      url  = "http://vimawesome.com/api/plugins?page=#{page}&query=#{query}"
+      url  = "https://vimawesome.com/api/plugins?page=#{page}&query=#{query}"
       data = open(url).read
       json = JSON.parse(data, symbolize_names: true)
       json[:plugins].map do |info|
