@@ -34,6 +34,14 @@ let g:startify_custom_footer           =
             \ + map(split(system('lsb_release -a | tail -n 3'), '\n'), '"   ". v:val') 
             \ + ['']
 
+" custom display colors
+hi StartifyBracket ctermfg=240
+hi StartifyFooter  ctermfg=111
+hi StartifyHeader  ctermfg=203
+hi StartifyPath    ctermfg=245
+hi StartifySlash   ctermfg=240
+
+" show startify
 autocmd User Startified AirlineRefresh
 if has_key(g:plugs, 'vim-startify')
     try
