@@ -1,0 +1,4 @@
+1. Change a word at multiple locations within the same file
+    search the required string with /str
+    then type cgn and type the word to be changed
+    then press . to change further
