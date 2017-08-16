@@ -1,14 +1,11 @@
 " set the required color scheme for vim in gui/terminal
 " set the colorscheme to solarized light if running macvim in gui
 if has("gui_running")
-    "colorscheme whitebox
-    "colorscheme tender
     colorscheme solarized
-    "colorscheme bubblegum-256-light
 else " no gui
     if has("unix")
-        colorscheme seoul256-light
-        "let g:airline_theme = 'cool'
+        colorscheme PaperColor
+        "colorscheme seoul256-light
         let g:airline_theme = 'zenburn'
     endif
 endif
