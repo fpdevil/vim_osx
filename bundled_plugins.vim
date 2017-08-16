@@ -32,6 +32,7 @@ function! BuildTern(info)
     endif
 endfunction
 
+" function for handling the YouCompleteMe post build and installation
 function! YCMBuilder(info)
     " info dictionary structure has following 3 fields
     " -- name: name of plugin
@@ -45,6 +46,7 @@ function! YCMBuilder(info)
         !python3 install.py --clang-completer --system-libclang --gocode-completer --tern-completer
     endif
 endfunction
+
 
 " --- syntax checkers section
 Plug 'scrooloose/syntastic', { 'do': function('InstallJsHint') }                " realtime syntax checker
@@ -326,8 +328,8 @@ Plug 'xolox/vim-notes' | Plug 'xolox/vim-misc'                                  
 " --- syntax checking, highlighting and more
 Plug 'vim-scripts/python.vim--Vasiliev'                                         " enhanced python syntax highlighting
 Plug 'davidhalter/jedi-vim'                                                     " python jedi auto-completion (the best)
-Plug 'Vimjas/vim-python-pep8-indent', { 'for':'python' }                        " python indentation style for vim
 "Plug 'lambdalisue/vim-pyenv'                                                   " python virtual env (if required)
+Plug 'Vimjas/vim-python-pep8-indent', { 'for':'python' }                        " python indentation style for vim
 Plug 'tell-k/vim-autopep8'                                                      " autopep8 plugin for python
 Plug 'python-rope/ropevim'                                                      " rope for python code assist
 
