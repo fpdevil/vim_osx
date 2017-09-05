@@ -1,0 +1,23 @@
+" {{{ for multiple cursors
+"     avoid ycm auto-complete suggestions in MultipleCursor mode also prevent
+"     neocomplete trigger function calls until we are finished with multiple
+"     cursors editing by locking and unlocking
+
+function! Multiple_cursors_before()
+    call youcompleteme#DisableCursorMovedAutocommands()
+    if exists(':NeoCompleteLock') == 2
+        exe 'NeoCompleteLock'
+    endif
+endfunction
+
+function! Multiple_cursors_after()
+    call youcompleteme#EnableCursorMovedAutocommands()
+    if exists('NeoCompleteLockUnlock') == 2
+        exe 'NeoCompleteLockUnlock'
+    endif
+endfunction
+
+" default highlighting (see help :highlight and help :highlight-link)
+highlight multiple_cursors_cursor term=reverse cterm=reverse gui=reverse
+highlight link multiple_cursors_visual Visual
+" }}}
