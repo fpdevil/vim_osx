@@ -1,5 +1,7 @@
 " JAVASCRIPT Completions Configuration
 
+autocmd Filetype javascript setlocal ts=4 sts=4 sw=4
+
 " {{{ for tern completions with omnifunc
 if !exists('g:neocomplete#omni#functions')
     let g:neocomplete#omni#functions = {}
