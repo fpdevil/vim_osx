@@ -23,8 +23,8 @@ set backspace=indent,eol,start                  " fix backspace indent
 set nocompatible
 set hidden
 
-set list
-set listchars=tab:\|\ ,
+"set list
+"set listchars=tab:\|\ ,                        " sets a | char at tab
 set grepformat=%f:%l:%c:%m,%f:%l:%m
 
 " highlight the current line and active column (shows crosshairs as +)
@@ -34,6 +34,7 @@ set grepformat=%f:%l:%c:%m,%f:%l:%m
 " show wildmenu
 set wildmenu
 
+" allow plugins by file type (required for plugins!)
 filetype plugin on
 filetype indent on
 
