@@ -25,7 +25,7 @@ call s:LoadConfig("rainbow_config.vim")
 call s:LoadConfig("airline_config.vim")
 
 " load vim-indent-guides
-call s:LoadConfig("vimindent_config.vim")
+"call s:LoadConfig("vimindent_config.vim")
 
 " laod vimshell
 call s:LoadConfig("vimshell_config.vim")
