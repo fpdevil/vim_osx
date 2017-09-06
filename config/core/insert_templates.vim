@@ -188,8 +188,8 @@ func SetTitle()
     endif
     if &filetype == 'python'
         " for python files
-        call setline(1, "\#!/usr/bin/python")
-        call setline(2, "\# -*- coding: utf-8 -*-")
+        call setline(1, "\#!/usr/bin/env python")
+        call setline(2, "\# -*- encoding:utf-8 -*-")
         call setline(3, "\# Copyright (C) ".strftime("%Y"))
         call setline(4, "")
         call setline(5, "\# @Author       : ". s:usrname)
