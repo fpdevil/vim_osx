@@ -36,7 +36,7 @@ call plug#begin('~/.vim/plugged')
     Plug 'bronson/vim-trailing-whitespace'                                          " remove trailing white spaces
     Plug 'mhinz/vim-startify'                                                       " fancy start screen for vim
     Plug 'easymotion/vim-easymotion'                                                " vim motions on speed
-    Plug 'Yggdroot/indentLine', { 'on': 'IndentLinesEnable' }                       " display the indention levels
+    Plug 'Yggdroot/indentLine'                                                      " display the indention levels
     Plug 'itchyny/calendar.vim'                                                     " calendar application
     Plug 'flazz/vim-colorschemes'                                                   " Color Schemes
     Plug 'morhetz/gruvbox'                                                          " Retro groove color scheme
