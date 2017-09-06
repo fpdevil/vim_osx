@@ -64,7 +64,7 @@ Plug 'benizi/vim-automkdir'                                                     
 Plug 'bronson/vim-trailing-whitespace'                                          " remove trailing white spaces
 Plug 'mhinz/vim-startify'                                                       " fancy start screen for vim
 Plug 'easymotion/vim-easymotion'                                                " vim motions on speed
-Plug 'Yggdroot/indentLine', { 'on': 'IndentLinesEnable' }                       " display the indention levels
+Plug 'Yggdroot/indentLine'                                                      " display the indention levels
 Plug 'itchyny/calendar.vim'                                                     " calendar application
 Plug 'xolox/vim-colorscheme-switcher'                                           " color scheme switcher
 Plug 'scrooloose/nerdcommenter'                                                 " intensely orgasmic commenting
@@ -146,11 +146,11 @@ Plug 'mhinz/vim-signify'                                                        
 " --- code alignment/completion, text manipulation sections {{{
 Plug 'junegunn/vim-easy-align', { 'on': ['<Plug>(EasyAlign)', 'EasyAlign']  }   " text and code alignment
 Plug 'godlygeek/tabular'                                                        " text filtering and alignment
-Plug 'nathanaelkane/vim-indent-guides'                                          " vim indentation display
 Plug 'ervandew/supertab'                                                        " use TAB for all insertions
 Plug 'Shougo/neco-syntax'                                                       " syntax source for neocomplete
 Plug 'ujihisa/neco-look'                                                        " english lookup for neo
 Plug 'tenfyzhong/CompleteParameter.vim'                                         " param completion after select
+Plug 'nathanaelkane/vim-indent-guides'                                          " vim indentation display
 " }}}
 
 
