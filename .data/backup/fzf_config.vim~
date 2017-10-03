@@ -9,10 +9,27 @@ if has_key(g:plugs, 'fzf.vim')
     command! -bang -nargs=? -complete=dir Files
       \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
 
+  " Customize fzf colors to match your color scheme
+    let g:fzf_colors = {
+                \ 'fg':      ['fg', 'Normal'],
+                \ 'bg':      ['bg', 'Normal'],
+                \ 'hl':      ['fg', 'Function'],
+                \ 'fg+':     ['fg', 'String', 'CursorColumn', 'Normal'],
+                \ 'bg+':     ['bg', 'Statusline', 'CursorColumn'],
+                \ 'hl+':     ['fg', 'Type'],
+                \ 'info':    ['fg', 'PreProc'],
+                \ 'prompt':  ['fg', 'Conditional'],
+                \ 'pointer': ['fg', 'Error'],
+                \ 'marker':  ['fg', 'String'],
+                \ 'spinner': ['fg', 'Label'],
+                \ 'header':  ['fg', 'Comment'],
+                \   }
+
     " nnoremap <silent> <Leader><Leader> :Files<CR>
     nnoremap <silent> <expr> <Leader><Leader> (expand('%') =~ 'NERD_tree' ? "\<c-w>\<c-w>" : '').":Files\<cr>"
     nnoremap <silent> <Leader>C        :Colors<CR>
     nnoremap <silent> <Leader><Enter>  :Buffers<CR>
+    nnoremap <silent> <Leader>,f       :FufFileWithCurrentBufferDir<CR>
     nnoremap <silent> <Leader>ag       :Ag <C-R><C-W><CR>
     nnoremap <silent> <Leader>AG       :Ag <C-R><C-A><CR>
     xnoremap <silent> <Leader>ag       y:Ag <C-R>"<CR>
@@ -20,7 +37,6 @@ if has_key(g:plugs, 'fzf.vim')
     " nnoremap <silent> q: :History:<CR>
     " nnoremap <silent> q/ :History/<CR>
 
-    inoremap <expr> <c-x><c-t> fzf#complete('tmuxwords.rb --all-but-current --scroll 500 --min 5')
     imap <c-x><c-k> <plug>(fzf-complete-word)
     imap <c-x><c-f> <plug>(fzf-complete-path)
     imap <c-x><c-j> <plug>(fzf-complete-file-ag)

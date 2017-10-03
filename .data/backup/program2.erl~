@@ -1,0 +1,113 @@
+%%%-----------------------------------------------------------------------------
+%%% @author Sampath Singamsetty <>
+%%% @copyright (C) 2017, Sampath Singamsetty
+%%% @doc
+%%%
+%%% @end
+%%% Created : 19 Mar 2017 by Sampath Singamsetty <>
+%%%-----------------------------------------------------------------------------
+-module(program2).
+-compile(export_all).
+
+-include_lib("eunit/include/eunit.hrl").
+
+-define(MAXVAL, 10).
+
+min([H | T]) ->
+  F = fun (X, Acc) ->
+          if X < Acc ->
+              X;
+             true ->
+              Acc
+          end
+      end,
+  lists:foldl(F, H, T).
+
+max([H | T]) ->
+  F = fun(X, Acc) ->
+          if X > Acc ->
+               X;
+             true ->
+               Acc
+          end
+      end,
+  lists:foldl(F, H, T).
+
+minmax([H | T]) ->
+  F = fun(X, {Min, Max}) ->
+          if X < Min, X < Max ->
+               {X, Max};
+             X > Min, X < Min ->
+               {Min, Max};
+             X > Min, X > Max ->
+               {Min, X}
+          end
+      end,
+  lists:foldl(F, {H, H}, T).
+
+%% Create N  processes and arrange  them in a ring.  Insert a token  in the
+%% first node  of the ring.  Every other  node receiving this  token will
+%% augment the value by 1 and sends  it to the next node. The process stops
+%% when the token reaches the MAXVAL
+create_ring(N) when is_integer(N), N > 1 ->
+  Nodes = [spawn(?MODULE, node, [Id, self()]) || Id <- lists:seq(1, N)],
+  connect_nodes(Nodes),
+  hd(Nodes) ! {token, 0},
+  get_exit_code(Nodes).
+
+%% get exit code messages from all nodes
+get_exit_code([]) ->
+  io:format("Node list exhausted! ~n"),
+  ok;
+get_exit_code(Nodes) ->
+  receive
+    {Node, snap} ->
+      case lists:member(Node, Nodes) of
+        true ->
+          get_exit_code(lists:delete(Node, Nodes));
+        _ ->
+          get_exit_code(Nodes)
+      end
+  end.
+
+%% connect the list of nodes circularly
+%% this function calls the auxilliary function with arguments as a list by
+%% appending the first element again at the end such that the list starts
+%% and ends with the same element.
+connect_nodes(N = [H | _]) ->
+  connect_nodes_helper(N ++ [H]).
+
+connect_nodes_helper([]) ->
+  connected;
+connect_nodes_helper([_]) ->
+  connected;
+connect_nodes_helper([N1, N2 | Nodes]) ->
+  N1 ! {self(), connect, N2},
+  connect_nodes_helper([N2 | Nodes]).
+
+node(Id, CurrPid) ->
+  receive
+    {CurrPid, connect, NextPid} ->
+      io:format("{token_id: ~p, current_pid: ~p, next_pid: ~p}~n",[Id, self(), NextPid]),
+      node(Id, CurrPid, NextPid)
+  end.
+
+node(Id, CurrPid, NextPid) ->
+  receive
+    {token, Val} ->
+      if
+       Val < ?MAXVAL ->
+          NextPid ! {token, Val + 1},
+          node(Id, CurrPid, NextPid);
+        true ->
+          io:format("{token_id, ~p, current_pid: ~p, token_value: ~p}~n",[Id, self(), Val]),
+          case erlang:is_process_alive(NextPid) of
+            true ->
+              NextPid ! {token, Val + 1};
+            _ ->
+              ok
+          end,
+          CurrPid ! {self(), snap},
+          done
+      end
+  end.

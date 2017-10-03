@@ -1,11 +1,11 @@
-" ####################################################################################
-" ############### All Vim plugins installed through Vim Plugin Manager ###############
-" ####################################################################################
+" ╔═══════════════════════════════════════════════════════════════════════════════════╗
+" ║ $$             All Vim plugins installed through Vim Plugin Manager            $$ ║
+" ╚═══════════════════════════════════════════════════════════════════════════════════╝
 
 scriptencoding utf-8
 
-" list of all the plugins to be installed through vimplug
-" thanks to https://github.com/junegunn/vim-plug
+"         list of all the plugins to be installed through vimplug
+"          thanks to https://github.com/junegunn/vim-plug
 
 " ######################## set rtp+=~/.vim/vundle/Vundle.vim/ ########################
 " set the runtime path to include Vundle and initialize
@@ -48,7 +48,6 @@ function! YCMBuilder(info)
     endif
 endfunction
 
-
 " --- syntax checkers section {{{
 Plug 'scrooloose/syntastic', { 'do': function('InstallJsHint') }                " realtime syntax checker
 Plug 'Chiel92/vim-autoformat'                                                   " easy code formatting in vim
@@ -59,7 +58,7 @@ Plug 'Shougo/neoinclude.vim'                                                    
 
 " --- utilities section {{{
 "     for vimproc you have to go to .vim/plugin/vimproc.vim and run a ./make
-Plug 'Shougo/vimproc.vim', { 'do': 'make' }                                     " vimproc asynchronous
+Plug 'Shougo/vimproc.vim', { 'do': 'make -j4' }                                 " vimproc asynchronous
 Plug 'benizi/vim-automkdir'                                                     " create dir as required
 Plug 'bronson/vim-trailing-whitespace'                                          " remove trailing white spaces
 Plug 'mhinz/vim-startify'                                                       " fancy start screen for vim
@@ -67,8 +66,14 @@ Plug 'easymotion/vim-easymotion'                                                
 Plug 'Yggdroot/indentLine'                                                      " display the indention levels
 Plug 'itchyny/calendar.vim'                                                     " calendar application
 Plug 'xolox/vim-colorscheme-switcher'                                           " color scheme switcher
-Plug 'scrooloose/nerdcommenter'                                                 " intensely orgasmic commenting
+Plug 'tpope/vim-sleuth'                                                         " heuristically set buffer options
+Plug 'Shougo/context_filetype.vim'                                              " context ft library for vim
 " }}}
+
+"{{{ --- vim code commenting
+Plug 'scrooloose/nerdcommenter'                                                 " intensely orgasmic commenting
+
+"}}}
 
 "{{{ --- finding tools
 Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] }      " helps to grep
@@ -88,7 +93,8 @@ Plug 'trusktr/seti.vim'                                                         
 Plug 'altercation/vim-colors-solarized'                                         " solarized color schemes
 Plug 'baeuml/summerfruit256.vim'                                                " 256 color scheme
 Plug 'jacoborus/tender.vim'                                                     " 24bit colorscheme for Vim, Airline
-Plug 'kabbamine/yowish.vim'                                                     " A dark & yellowish vim colorscheme
+Plug 'kabbamine/yowish.vim'                                                     " dark & yellowish colorscheme
+Plug 'tyrannicaltoucan/vim-quantum'                                             " material color scheme
 " }}}
 
 
@@ -120,6 +126,7 @@ Plug 'mattn/webapi-vim'                                                         
 Plug 'mattn/wwwrenderer-vim'                                                    " vim renderer
 Plug 'thinca/vim-openbuf'                                                       " open and manage buffers
 Plug 'choplin/unite-vim_hacks'                                                  " this needs above 3 plugins
+Plug 'osyo-manga/unite-option'                                                  " output vim options
 " }}}
 
 
@@ -149,7 +156,7 @@ Plug 'godlygeek/tabular'                                                        
 Plug 'ervandew/supertab'                                                        " use TAB for all insertions
 Plug 'Shougo/neco-syntax'                                                       " syntax source for neocomplete
 Plug 'ujihisa/neco-look'                                                        " english lookup for neo
-Plug 'tenfyzhong/CompleteParameter.vim'                                         " param completion after select
+"Plug 'tenfyzhong/CompleteParameter.vim'                                         " param completion after select
 Plug 'nathanaelkane/vim-indent-guides'                                          " vim indentation display
 " }}}
 
@@ -215,6 +222,7 @@ Plug 'kovisoft/paredit', { 'for': ['clojure', 'scheme'] }                       
 
 " --- GO language section {{{
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
+Plug 'tweekmonster/hl-goimport.vim', { 'for': 'go' }
 Plug 'nsf/gocode', { 'rtp': 'vim', 'do': '~/.vim/plugged/gocode/vim/symlink.sh' }
 " }}}
 
@@ -223,7 +231,6 @@ Plug 'nsf/gocode', { 'rtp': 'vim', 'do': '~/.vim/plugged/gocode/vim/symlink.sh' 
 Plug 'maksimr/vim-jsbeautify', { 'for': 'javascript' }                          " beautify js
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' }                         " js for vim
 Plug 'jelera/vim-javascript-syntax', { 'for': 'javascript' }                    " enhanced js syntax
-
 Plug 'othree/yajs.vim', { 'for': 'javascript' }                                 " yet another js
 Plug 'othree/es.next.syntax.vim', { 'for': 'javascript' }                       " syntax for ECMA
 
@@ -256,7 +263,8 @@ Plug 'mattn/jscomplete-vim', { 'for': 'javascript' }                            
 Plug 'vim-erlang/vim-erlang-runtime', { 'for': 'erlang' }                       " erlang indentation, syntax
 Plug 'vim-erlang/vim-erlang-omnicomplete', { 'for': 'erlang' }                  " erlang code auto completion
 Plug 'vim-erlang/vim-erlang-compiler', { 'for': 'erlang' }                      " erlang syntax checker, compiler
-Plug 'youthy/vimerl-complete', { 'for': 'erlang' }                              " erlang auto complete
+Plug 'oscarh/vimerl', { 'for': 'erlang' }                                       " erlang plugins
+Plug 'youthy/vimerl-complete'                                                   " erlang auto complete
 Plug 'vim-erlang/vim-erlang-skeletons', { 'for': 'erlang' }                     " erlang templates
 Plug 'akalyaev/vim-erlang-spec', { 'for': 'erlang' }                            " erlang generate specifications
 Plug 'vim-erlang/vim-erlang-tags'                                               " erlang tag generate for vim
@@ -278,16 +286,18 @@ Plug 'jimmay5469/vim-spacemacs'                                                 
 " --- scala language auto-complete, syntax and support {{{
 Plug 'derekwyatt/vim-scala', { 'for': 'scala'}                                  " scala support
 "Plug 'ensime/ensime-vim'                                                       " ensime for scala auto-complete
+"Plug 'megaannum/vimside'                                                       " vim scala ide
 " }}}
 
 " --- for html, xml ... syntax, validation etc. {{{
 Plug 'mattn/emmet-vim'                                                          " emmet for vim
 Plug 'othree/html5.vim'                                                         " html5 support
-Plug 'othree/xml.vim', { 'for': 'xml' }                                         " xml support
+Plug 'othree/xml.vim'                                                           " xml support
 Plug 'sukima/xmledit'                                                           " xml editor
 Plug 'vim-scripts/xslt'                                                         " xslt ftplugin
 Plug 'Valloric/MatchTagAlways'                                                  " highlight matching tags on markup's
-Plug 'lilydjwg/colorizer'                                                       " text colorizer #rrggbb or #rgb
+Plug 'gko/vim-coloresque'                                                       " color preview #rrggbb or #rgb
+"Plug 'lilydjwg/colorizer'                                                      " text colorizer #rrggbb or #rgb
 " }}}
 
 " --- for c/c++ language support (load on demand only) {{{
@@ -302,7 +312,7 @@ Plug 'rhysd/vim-clang-format', { 'on': 'ClangFormat' }                          
 Plug 'derekwyatt/vim-protodef', { 'for': 'cpp' }                                " pull c++ function prototypes
 Plug 'vim-jp/vim-cpp', { 'for': [ 'c', 'cpp' ] }                                " c/c++ syntax files
 "Plug 'vim-scripts/c.vim', { 'for': ['c','cpp'] }                               " c/cpp ide
-Plug 'wolfgangmehner/c-support', { 'for': [ 'c','cpp' ] }                       " same as above but updated
+Plug 'wolfgangmehner/c-support'                                                 " same as above but updated
 " }}}
 
 
@@ -312,7 +322,7 @@ Plug 'lervag/vimtex'                                                            
 
 
 " --- CtrlP Family plugins and extensions {{{
-Plug 'kien/ctrlp.vim'                                                           " fuzzy file, buffer, mru, tag etc
+Plug 'ctrlpvim/ctrlp.vim'                                                       " fuzzy file, buffer, mru, tag etc
 Plug 'tacahiroy/ctrlp-funky'                                                    " function navigator for ctrlp
 Plug 'voronkovich/ctrlp-nerdtree.vim'                                           " ctrlp for opening nerdtree
 Plug 'sgur/ctrlp-extensions.vim', { 'on': [
@@ -344,20 +354,20 @@ Plug 'edkolev/promptline.vim'                                                   
 Plug 'tyru/current-func-info.vim'                                               " get current function name
 Plug 'jiangmiao/auto-pairs'                                                     " parenthesis auto parentheses pairing
 Plug 'Raimondi/delimitMate'                                                     " auto quotes, parens, brackets, etc
-Plug 'editorconfig/editorconfig-vim'                                            " editorconfg
 Plug 'guns/vim-sexp'                                                            " vim expression support
 Plug 'tpope/vim-repeat'                                                         " vim repeat the last command on
 Plug 'tpope/vim-surround'                                                       " parenthesizing made simple
 Plug 'tpope/vim-unimpaired'                                                     " pairs of handy bracket mappings
 Plug 'gorkunov/smartpairs.vim'                                                  " fantastic selection for vim
-"     vim-fireplace dependencies
-"Plug 'tpope/vim-classpath'                                                     " vim classpath
-"Plug 'jpalardy/vim-slime'                                                      " slime for vim
 Plug 'beloglazov/vim-online-thesaurus'                                          " word lookup in online thesaurus (-K)
 Plug 'thinca/vim-ref'                                                           " integrated reference viewer
 Plug 'jceb/vim-hier'                                                            " hl quickfix errors
 Plug 'mattesgroeger/vim-bookmarks'                                              " vim bookmarks
 Plug 'jakedouglas/exuberant-ctags'                                              " ctags for multiple langs
+"     vim-fireplace dependencies
+"Plug 'tpope/vim-classpath'                                                     " vim classpath
+"Plug 'jpalardy/vim-slime'                                                      " slime for vim
+"Plug 'editorconfig/editorconfig-vim'                                            " editorconfg
 " }}}
 
 
@@ -368,6 +378,7 @@ Plug 'terryma/vim-multiple-cursors'                                             
 
 " --- Plugins for text visualization {{{
 Plug 'osyo-manga/vim-brightest'                                                 " highlight cursor word
+Plug 'osyo-manga/vim-over', { 'on': 'OverCommandLine' }                         " preview in commandline window
 Plug 't9md/vim-quickhl'                                                         " highlight selected word
 Plug 'valloric/vim-operator-highlight'                                          " highlight operator characters
 " }}}

@@ -1,5 +1,7 @@
 " JAVASCRIPT Completions Configuration
 
+autocmd Filetype javascript setlocal ts=4 sts=4 sw=4
+
 " {{{ for tern completions with omnifunc
 if !exists('g:neocomplete#omni#functions')
     let g:neocomplete#omni#functions = {}
@@ -38,28 +40,42 @@ endif
 "}}}
 
 
+"{{{ utility function for javascript Tern Definitions
+function! GoToDef()
+    if exists(':TernDef')
+        TernDef
+    endif
+endfunction
+"}}}
+
+
 " ------------------------------------------------------------------------------------
 " -----------      javascript code beautifying & character concealing      -----------
 " ------------------------------------------------------------------------------------
 autocmd FileType javascript noremap <buffer> <c-f> :call JsBeautify()<cr>
 autocmd FileType html noremap <buffer> <c-f> :call JsBeautify()<cr>
 autocmd FileType css noremap <buffer> <c-f> :call JsBeautify()<cr>
-" Character Concealing in the editor mode
-set conceallevel=1
-" https://github.com/pangloss/vim-javascript
-let g:javascript_conceal_function       = "ƒ"
-let g:javascript_conceal_null           = "ø"
-let g:javascript_conceal_this           = "@"
-let g:javascript_conceal_return         = "⇚"
-let g:javascript_conceal_undefined      = "¿"
-let g:javascript_conceal_NaN            = "ℕ"
-let g:javascript_conceal_prototype      = "¶"
-let g:javascript_conceal_static         = "•"
-let g:javascript_conceal_super          = "Ω"
-let g:javascript_conceal_arrow_function = "⇒"
 
-" for jsdocs
-let g:javascript_plugin_jsdoc = 1
+" Character Concealing enable in the editor mode
+set conceallevel=1
+
+" for jsdoc stntax highlight and character concealing
+" https://github.com/pangloss/vim-javascript
+if has_key(g:plugs,'vim-javascript')
+    let g:javascript_conceal_function       = "ƒ"
+    let g:javascript_conceal_null           = "ø"
+    let g:javascript_conceal_this           = "@"
+    let g:javascript_conceal_return         = "⇚"
+    let g:javascript_conceal_undefined      = "¿"
+    let g:javascript_conceal_NaN            = "ℕ"
+    let g:javascript_conceal_prototype      = "¶"
+    let g:javascript_conceal_static         = "•"
+    let g:javascript_conceal_super          = "Ω"
+    let g:javascript_conceal_arrow_function = "⇒"
+
+    let g:javascript_plugin_jsdoc = 1
+    let g:javascript_plugin_ngdoc = 1
+endif
 
 " javascript-libraries-syntax customization
 let g:used_javascript_libs = 'underscore,angularjs,jasmine,chai'
@@ -72,17 +88,6 @@ let g:syntastic_javascript_checkers = ['eslint', 'jshint']
 " show any javascript based linting errors immediately
 let g:syntastic_check_on_open = 0
 
-function! s:highlight_general_checkstyles()
-    "let w:m1=matchadd('Tab', '    ', -1)
-    let w:m1=matchadd('WideSpace', '　', -1)
-    let w:m2=matchadd('EOLSpace', '\s\+$', -1)
-    let w:m3=matchadd('WideEisuu', '[Ａ-Ｚａ-ｚ０-９]', -1)
-    "let w:m4=matchadd('SpaceAndComma', ' ,', -1)
-    "let w:m5=matchadd('CommaAndNonSpace', ',[^(\\n| )]', -1)
-    "let w:m6=matchadd('Tab', '\t', -1)
-endf
-
-call s:highlight_general_checkstyles()
 
 " settings for vim-js-context-coloring
 " let g:js_context_colors_colorize_comments        = 1    " colorize comments

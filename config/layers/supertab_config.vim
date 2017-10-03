@@ -1,9 +1,13 @@
 " ------------------------------------------------------------------------------------
 " ------           SuperTab TAB Completions and Color Customizations            ------
 " ------------------------------------------------------------------------------------
-let g:SuperTabDefaultCompletionType = '<c-x><c-o>'
+" let g:SuperTabDefaultCompletionType       = '<c-x><c-o>'
 " for working in tandem with OmniCompletion
-let g:SuperTabDefaultCompletionType = 'context'
+let g:SuperTabContextDefaultCompletionType  = '<c-n>'
+let g:SuperTabDefaultCompletionType         = 'context'
+let g:SuperTabContextTextMemberPatterns     = ['\.', '>\?::', '->', ':']
+let g:SuperTabContextTextOmniPrecedence     = ['&omnifunc', '&completefunc']
+let g:SuperTabContextDiscoverDiscovery      = ["&completefunc:<c-x><c-u>", "&omnifunc:<c-x><c-o>"]
 
 " set the required tab based on if running macvim in gui
 if has("gui_running")

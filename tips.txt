@@ -6,3 +6,28 @@
 2. To check from where the filetype configurations are loaded
     :verbose set formatoptions
     http://peox.net/articles/vimconfig.html
+
+3. For updating all the python packages installed
+   first get the list of packages
+   pip3 list --format=columns |egrep -v "Package|-----------------"|awk '{print $1}' > pylist.txt
+
+   now read and update the packages
+   for i in `cat pylist.txt | xargs`;do echo "**** checking ipackage $i ****\n"; pip3 install $i -U; done
+
+4. [[ vimrc structure ]]
+ 	.vimrc -- global settings
+	.vim/
+	  after/  -- files that are loaded after sourced system plugins. override
+	              system settings.
+	      ftplugin/
+	      plugin/
+	      syntax/
+	      ...
+	  autoload/ -- automatically loaded scripts.
+	  colors/   -- custom color schemes.
+	  doc/      -- plugin documentation.
+	  ftdetect/ -- filetype detection scripts.
+	  ftplugin/ -- filetype plugins (load before system files, override by system)
+	  indent/   -- indent scripts.
+	  plugin/   -- plugins.
+	  syntax/   -- syntax scripts.

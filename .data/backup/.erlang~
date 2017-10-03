@@ -1,0 +1,16 @@
+Home = os:getenv("HOME").
+case code:where_is_file("distel.beam") of
+     non_existing -> code:add_path(Home ++ "/usr/local/share/distel/ebin");
+     _            -> ok
+end.
+case c:l(user_default) of
+  {module, user_default} ->
+    ok;
+  {error, _} ->
+    Path = Home ++ "/aquamacs.d/personal/user_default.erl",
+    c:c(Path, [{outdir, Home ++ "/aquamacs.d/personal"}])
+end.
+
+code:add_pathsz(["/usr/local/share/distel/ebin"]).
+code:add_path("/usr/local/lib/erlang/lib/wrangler-1.2.0/ebin").
+code:add_path("/opt/erlang/yaws/ebin").

@@ -81,3 +81,16 @@ autocmd BufEnter *.fr :filetype haskell
 " pointfree form.Though quite often the resulting form is more
 " obfuscated than the original.
 autocmd BufEnter *.hs set formatprg=pointfree
+
+" -----------------------------------------------------------------------------------
+"  pointful conversion functions
+" -----------------------------------------------------------------------------------
+function! Pointfree()
+  call setline('.', split(system('pointfree '.shellescape(join(getline(a:firstline, a:lastline), "\n"))), "\n"))
+endfunction
+vnoremap <silent> <leader>h. :call Pointfree()<CR>
+
+function! Pointful()
+  call setline('.', split(system('pointful '.shellescape(join(getline(a:firstline, a:lastline), "\n"))), "\n"))
+endfunction
+vnoremap <silent> <leader>h> :call Pointful()<CR>

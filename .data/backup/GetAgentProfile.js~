@@ -1,0 +1,293 @@
+/**
+ *
+ * @file GetAgentProfile.js
+ * @copyright (C) United Airlines Inc. 2017
+ * @author Sampath Singamsetty (Middleware Engineering)
+ * @version 1.0
+ * @date 09-22-2017
+ *
+ * @description Datapower GetAgentProfile using SessionToken
+ *
+ * {@link https://unitedservicesstage.ual.com/6.0/Security/SineTableManager/GetAgentProfile}
+ *
+ * @module GetAgentProfile
+ */
+
+/**
+ * datapower service variable for header metadata
+ * @var {object} hm
+ */
+var hm = require('header-metadata');
+
+/**
+ * datapower service variable for fine grained metadata and
+ * service specific information
+ * @var {object} sm
+ */
+var sm = require('service-metadata');
+
+/**
+ * datapower api variable for invoking the urlopen operations over 3rd party
+ * services over http/https/mq protocols programmatically through this javascript
+ * @var {object} urlopen
+ */
+var urlopen = require('urlopen');
+
+/**
+ * Insert a custom http header to indicate that the call is made implicitly
+ * by  datapower for  validating the  token  rather than the user making an
+ * explicit call for token introspection. This value will be again referred
+ * during the id token  validation by the id-token-validate template within
+ * the MsgTransformer.xslt tranformation.
+ * @var {string} hdr
+ */
+var hdr = 'DatapowerGateway';
+
+/**
+ * get the initial total elapsed time from the service variable metadata
+ * @constant
+ * @var {number} tInit
+ */
+const tInit = sm.timeElapsed;
+
+/**
+ * calculate the time difference between the current timestamp and time elapsed
+ * this will give the total time taken for the preceding transaction till that
+ * particular moment
+ * @var {number} tDiff
+ */
+var tDiff;
+
+/**
+ * sslclient is a variable injected by the calling transformation AddOnOAuthProcessing.xslt
+ * and the variable holds the reference for an ssl client object configured in datapower
+ * @var {object} sslclient
+ */
+var sslclient = session.parameters.sslclient;
+
+/**
+ * getAgentProfileSvcUrl is a variable injected by the calling transformation AddOnOAuthProcessing.xslt
+ * and the variable holds the reference for the backend CSL service for getting Agent Profile information
+ * @var {object} getAgentProfileSvcUrl
+ */
+var getAgentProfileSvcUrl = session.parameters.getAgentProfileSvcUrl;
+
+/**
+ * content_type is a variable injected by the calling transformation AddOnOAuthProcessing.xslt
+ * and the variable holds the reference for the request payload mime type
+ * @var {object} content_type
+ */
+var content_type = session.parameters.content_type;
+
+/**
+ * css_token is a variable injected by the calling transformation AddOnOAuthProcessing.xslt
+ * and the variable holds the value of a valid CSS Anonymous token generated during the
+ * earlier stages in add-on oauth processing step.
+ * @var {object} css_token
+ */
+var css_token = session.parameters.css_token;
+
+/**
+ * json_request is a variable injected by the calling transformation AddOnOAuthProcessing.xslt
+ * and the variable holds the value of the json payload to be sent to the backend.
+ * @var {object} json_request
+ */
+var json_request = session.parameters.profile_request;
+
+/**
+ * lc is a variable injected by the calling transformation AddOnOAuthProcessing.xslt
+ * and the variable holds the value of the log category to which datapower will write events
+ * @var {object} lc
+ */
+var lc = session.parameters.lc;
+
+/**
+ * sharedCtx is a variable injected by the calling transformation AddOnOAuthProcessing.xslt
+ * and the variable holds the reference to a context variable created by datapower which can
+ * give the associcated values extended through the variable.
+ * @var {object} sharedCtx
+ */
+var sharedCtx = session.name('CSRApp');
+
+/**
+ * aaa is a variable injected by the calling transformation AddOnOAuthProcessing.xslt
+ * and the variable holds the value of the AAA metadata information created by datapower
+ * @var {object} aaa
+ */
+var aaa = typeof sharedCtx !== 'undefined' ? sharedCtx.getVariable('AAA') : '';
+
+/**
+ * agentSine is a variable injected by the calling transformation AddOnOAuthProcessing.xslt
+ * and the variable holds the value of the agent sine id as sent by the user
+ * @var {string} agentSine
+ */
+var agentSine = typeof sharedCtx !== 'undefined' ? sharedCtx.getVariable('AgentSine') : '';
+/**
+ * dutyCode is a variable injected by the calling transformation AddOnOAuthProcessing.xslt
+ * and the variable holds the value of the agent duty code value as sent by the user
+ * @var {string} dutyCode
+ */
+var dutyCode = typeof sharedCtx !== 'undefined' ? sharedCtx.getVariable('DutyCode') : '';
+/**
+ * sineNumber is a variable injected by the calling transformation AddOnOAuthProcessing.xslt
+ * and the variable holds the value of the agent sine number information as sent by the user.
+ * @var {string} sineNumber
+ */
+var sineNumber = typeof sharedCtx !== 'undefined' ? sharedCtx.getVariable('SineNumber') : '';
+
+/**
+ * Set  a log  prefix  inorder  to identify  this  script  in the  logger
+ * statements. The value ill be included in every log statement ritten by
+ * this gateway script.
+ * @var {object} lp
+ */
+var lp = "[CSRApp (GetAgentProfile)]";
+
+/**
+ * Define a custom log category configured in DataPower for logging
+ * the events to a custom log file of choice
+ * @var {object} logConsole
+ */
+var logConsole = console.options({
+    'category': lc
+});
+
+// a small error condition for handling the log category missing case
+try {
+    logConsole.debug("%s logging to %s", lp, logConsole);
+} catch (e) {
+    logConsole = console;
+    logConsole.warn("%s %s category does not exist. falling back to default log category", lp, logConsole);
+}
+
+/**
+ * The variable options define additional options for the outbound calls using the urlopen
+ * library for calling any 3rd party services. It takes in metadata information required for
+ * invokinf any http or rest calls.
+ * @var {object} options
+ */
+var options = {
+    target: getAgentProfileSvcUrl,
+    sslClientProfile: sslclient,
+    method: 'post',
+    contentType: content_type,
+    headers: {
+        'Authorization': css_token,
+        'Accept': 'application/json'
+    },
+    timeout: 30,
+    data: JSON.parse(json_request)
+};
+
+/**
+ * xmlOption is an optional variable defined for parsing the xml formatted response
+ * and it's here only for future placeholder if needed.
+ * @var {object} xmlOption
+ */
+var xmlOption = {
+    omitXmlDeclaration: false
+};
+
+/**
+ * vRes is a free variable defined here, which will be used during the request
+ * or response processing for holding and transforming buffer information
+ * @var {object} vRes
+ */
+var vRes;
+
+/**
+ * vpRes is a free variable defined here, which will be used during the request
+ * or response processing for holding and transforming buffer information
+ * @var {object} vpRes
+ */
+var vpRes;
+
+// open connection to the target introspection end-point and send data over
+urlopen.open(options, function (error, response) {
+    if (error) {
+        // an error occurred during request sending or response header parsing
+        tDiff = sm.timeElapsed - tInit;
+        sharedCtx.setVar('get_agent_profile_status', 'false');
+        logConsole.notice("%s time taken for the transaction error %d ms", lp, tDiff);
+        logConsole.error("%s error %s occurred while calling GetAgentProfile service", lp, error);
+        session.output.write("urlopen connection error: " + JSON.stringify(error));
+    } else {
+        // read response data and get the response status code
+        var responseStatusCode = response.statusCode;
+        var reasonPhrase = response.reasonPhrase;
+        logConsole.info("%s (GetAgentProfile) reason %s and status_code %s", lp, reasonPhrase, responseStatusCode);
+        // check if the response code is a 200 SUCCESS
+        if (responseStatusCode === 200) {
+            response.readAsJSON(function (readAsJSONErr, jsonData) {
+                if (readAsJSONErr) {
+                    logConsole.error("%s error %s while parsing json response from GetAgentProfile", lp, JSON.stringify(readAsJSONErr));
+                    response.readAsBuffers(function (readAsBuffersError, data) {
+                        if (readAsBuffersError) {
+                            sharedCtx.setVar('get_agent_profile_status', 'false');
+                            logConsole.error("%s error on readAsBuffers %s", lp, readAsBuffersError);
+                        } else {
+                            if (data.slice(0, 5).toString() === '<?xml' || data.slice(0, 4).toString() === '<Get') {
+                                logConsole.error("%s error parsing xml response %s from GetAgentProfile", lp, XML.strigify(data));
+                                sharedCtx.setVar('agentProfileXml', data);
+                            } else {
+                                sharedCtx.setVar('get_agent_profile_status', 'false');
+                                logConsole.error("%s error parsing binary response %s from GetAgentProfile", lp, data);
+                            }
+                        }
+                    })
+                } else {
+                    vRes = JSON.stringify(jsonData);
+                    vpRes = JSON.parse(vRes);
+
+                    var agentsArray = vpRes.Agents;
+                    var miscinfo = {};
+                    for (var agent = 0; agent < agentsArray.length; agent++) {
+                        var key = agentsArray[agent].EmployeeID;
+                        var gn = agentsArray[agent].GivenName;
+                        var sn = agentsArray[agent].Surname;
+                        // var val = gn + ', ' + sn;
+                        // miscinfo[key] = val;
+                        miscinfo.username = key;
+                        miscinfo.given_name = gn;
+                        miscinfo.family_name = sn;
+                        logConsole.debug("%s shares signin for employee id %s", lp, key);
+                    }
+
+                    logConsole.debug("%s shares signin response after parsing %s", lp, vpRes);
+                    logConsole.info("%s shares signin employee information %s", lp, JSON.stringify(miscinfo));
+
+                    // a variable to hold the profile activity status (compare the success case)
+                    // {'001', 'GET AGENT PROFILE SUCCESS'}
+                    // {'002', 'GET AGENT PROFILE FAILED'}
+
+                    var response = {};
+                    var msgArr = vpRes.Response.Message;
+                    var statusCheck;
+                    for (var msg = 0; msg < msgArr.length; msg++) {
+                        var k = msgArr[msg].Code;
+                        var v = msgArr[msg].Status;
+                        statusCheck = v.indexOf('SUCCESS');
+                        response[k] = v;
+                    }
+
+                    logConsole.debug("%s response statusCheck %s", lp, statusCheck);
+                    if (response.length !== 0 && statusCheck != -1) {
+                        logConsole.debug("%s shares signin status %s", lp, JSON.stringify(response));
+                        sharedCtx.setVar('get_agent_profile_status', 'true');
+                        sharedCtx.setVar('agent_profile_name', typeof miscinfo !== 'undefined' ? JSON.stringify(miscinfo) : '');
+                        sharedCtx.setVar('agent_profile_response', JSON.stringify(response));
+                    } else {
+                        sharedCtx.setVar('get_agent_profile_status', 'false');
+                        logConsole.warn("%s get agent profile error %s", lp, vRes);
+                        sharedCtx.setVar('agent_profile_error', vpRes);
+                    }
+                }
+            });
+        } else {
+            logConsole.error("%s get agent profile error", lp);
+            sharedCtx.setVar('get_agent_profile_status', 'false');
+        }
+        tDiff = sm.timeElapsed - tInit;
+        logConsole.notice("%s time taken for token validation transaction %d ms", lp, tDiff);
+    }
+}); // end of urlopen.open()

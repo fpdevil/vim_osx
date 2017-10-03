@@ -3,15 +3,16 @@
 " ------------------------------------------------------------------------------------
 "set wildmode=list:longest,list:full
 
-let g:ctrlp_clear_cache_on_exit = 0                             " speed up by not removing clearing cache evertime
-let g:ctrlp_max_files           = 0                             " no limit on files
+let g:ctrlp_clear_cache_on_exit = 0                             " speed up by not clearing cache evertime
+let g:ctrp_use_caching          = 500                           " enable caching
+let g:ctrlp_max_files           = 2000                          " if 0 then no limit on files
+let g:ctrlp_match_window        = 'bottom,order:btt,min:1,max:20,results:20'
 let g:ctrlp_follow_symlinks     = 1
 let g:ctrlp_mruf_relative       = 1
 let g:ctrlp_show_hidden         = 1
 let g:ctrlp_map                 = '<c-p>'
 let g:ctrlp_cmd                 = 'CtrlP'
 let g:ctrlp_working_path_mode   = 'ra'
-let g:ctrp_use_caching          = 500                           " enable caching
 let g:ctrlp_clear_cache_on_exit = 1
 let g:ctrlp_cache_dir           = $HOME . '/.cache/ctrlp'       " for speeding up ctrl
 let g:ctrlp_custom_ignore       = 'node_modules\|bower_components\|docs\|DS_Store\|^.git$\|_site'

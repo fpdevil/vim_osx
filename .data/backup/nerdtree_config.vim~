@@ -18,8 +18,8 @@ if has_key(g:plugs, 'nerdtree')
     let NERDTreeHighlightCursorline   = 1            " highlight current cursor line
     let NERDTreeShowHidden            = 1            " show hidden files
     let g:NERDTreeChDirMode           = 1            " change to cwd
-    let g:NERDTreeDirArrowExpandable  = '▷'          " horizontal arrow
-    let g:NERDTreeDirArrowCollapsible = '▼'          " vertical arrow
+    let g:NERDTreeDirArrowExpandable  = ''          " horizontal arrow
+    let g:NERDTreeDirArrowCollapsible = ''          " vertical arrow
 endif
 " }}}
 

@@ -1,0 +1,54 @@
+/*
+ * =====================================================================================
+ *
+ *       Filename:  mtable.cpp
+ *
+ *    Description:
+ *
+ *        Version:  1.0
+ *        Created:  09/12/2017 02:22:55
+ *       Revision:  none
+ *       Compiler:  gcc
+ *
+ *         Author:  Sampath Singamsetty (ssk), Singamsetty.Sampath@gmail.com
+ *   Organization:
+ *
+ * =====================================================================================
+ */
+#include <iostream>
+#include <iomanip>
+
+int main() {
+    int size;
+    std::cout << "enter size of table: ";
+    std::cin >> size;
+
+    std::cout << "    ";
+    int col = 1;
+    while (col <= size) {
+        std::cout << std::setw(4) << col;
+        col++;
+    }
+    std::cout << std::endl;
+
+    std::cout << "   +";
+    col = 1;
+    while (col <= size) {
+        std::cout << "----";
+        col++;
+    }
+    std::cout << std::endl;
+
+    int row = 1;
+    while (row <= size) {
+        std::cout << std::setw(2) << row << " |";
+        int col = 1;
+        while (col <= size) {
+            int p = row * col;
+            std::cout << std::setw(4) << p;
+            col++
+        }
+        row++;
+        std::cout << std::endl;
+    }
+}

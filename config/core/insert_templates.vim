@@ -71,7 +71,7 @@ endfunction
 
 function! s:HsHeader()
     let s:comment = "--"
-    let s:lcomment = "--|"
+    let s:lcomment = "-- |"
     let s:modname = ModuleName()
     let s:line = repeat('-', s:width)
     let s:filename = bufname("%")
@@ -79,7 +79,7 @@ function! s:HsHeader()
     let s:stmt = MkModuleHeader()
     if s:usrname != ''
         let s:module = s:comment     . " Module         : " . s:modname
-        let s:copyright = s:comment  . " Copyright      :  (C) Some description... " . strftime('%Y')
+        let s:copyright = s:comment  . " Copyright      :  (c) Some description... " . strftime('%Y')
         let s:license = s:comment    . " License        : MIT (change this as needed)"
         let s:author = s:comment     . " Author         : " . s:usrname
         let s:maintainer = s:comment . " Maintainer     : " . s:email
@@ -117,6 +117,11 @@ augroup END
 "}}}
 
 "{{{ template declarations for other languages
+"    currently the template header for c/c++ are being set by c-support vim
+"    plug and so we can exclude the support for *.cpp here. Instead of making
+"    change here in the filetype, a condition to check if c-support plugin is
+"    available or not is kept and if that plugin is available the template is
+"    inserted by plugin
 
 autocmd BufNewFile *.cpp,*.[ch],*.sh,*.java,*.tex,*.py,*.html exec ":call SetTitle()"
 
@@ -133,6 +138,7 @@ func SetTitle()
         call append(line(".")+6, "")
     endif
     if &filetype == 'cpp'
+      if !has_key(g:plugs,'c-support')
         " for cpp file type
         call setline(1, "/*************************************************************************")
         call append(line("."),   "    > File Name    : ".expand("%"))
@@ -145,8 +151,10 @@ func SetTitle()
         call append(line(".")+7, "")
         call append(line(".")+8, "using namespace std;")
         call append(line(".")+9, "")
+      endif
     endif
     if &filetype == 'c'
+      if !has_key(g:plugs,'c-support')
         " for c file type
         call setline(1, "/*************************************************************************")
         call append(line("."),   "    > File Name   : ".expand("%"))
@@ -156,6 +164,7 @@ func SetTitle()
         call append(line(".")+4, " ************************************************************************/")
         call append(line(".")+5, "#include <stdio.h>")
         call append(line(".")+6, "")
+      endif
     endif
     if expand("%:e") == 'h'
         " for c headers
@@ -203,18 +212,18 @@ func SetTitle()
         " for html files
         call setline(1, '<!DOCTYPE html>')
         call setline(2, '<html lang="en">')
-        call setline(3, '<head>')
-        call setline(4, '<meta charset="utf-8">')
-        call setline(5, '<title></title>')
+        call setline(3, '    <head>')
+        call setline(4, '        <meta charset="utf-8">')
+        call setline(5, '        <title></title>')
         call setline(6, '')
-        call setline(7, '<script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.6.1/lodash.min.js"></script>')
-        call setline(8, '<script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-2.2.1.min.js"></script>')
-        call setline(9, '</head>')
-        call setline(10, '<body>')
-        call setline(11, '<div class="container">')
+        call setline(7, '        <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.6.1/lodash.min.js"></script>')
+        call setline(8, '        <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-2.2.1.min.js"></script>')
+        call setline(9, '    </head>')
+        call setline(10, '   <body>')
+        call setline(11, '       <div class="container">')
         call setline(12, '')
-        call setline(13, '</div>')
-        call setline(14, '</body>')
+        call setline(13, '       </div>')
+        call setline(14, '   </body>')
         call setline(15, '</html>')
     endif
 endfunc

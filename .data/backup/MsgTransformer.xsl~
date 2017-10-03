@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--#####################################################################################-->
+<!--## Author		:	Sampath Singamsetty (Middleware Engineering)                   ##-->
+<!--## File			:	MessageTransformer.xsl                                         ##-->
+<!--## Application	:	CSR App                                                        ##-->
+<!--## Information	:	For customizing  the   payload  of  Token  request   or  Token ##-->
+<!--## 					validation                                                     ##-->
+<!--## Description	:	This XSLT is responsible for reformatting the incoming message ##-->
+<!--## 					payload for  either  the new  Access  Token Request  or Access ##-->
+<!--## 					Token Validation                                               ##-->
+<!--##                                                                                 ##-->
+<!--## 					This Transformation acts at the below 2 steps                  ##-->
+<!--##                                                                                 ##-->
+<!--## 					1.) During  the access_token request for filtering some of the ##-->
+<!--## 					parameters like device id, mp number, password etc. to be sent ##-->
+<!--## 					to the backend                                                 ##-->
+<!--##                                                                                 ##-->
+<!--## 					2.) During  the  validate_token  request   for   renaming  the ##-->
+<!--## 					vaildate_token to  IBM Proprietary urn:ibm:datapower:validate. ##-->
+<!--## 					The data used at this step  are  those transmitted in the user ##-->
+<!--## 					request body or as query parameters.                           ##-->
+<!--##                                                                                 ##-->
+<!--## Warning		:	Enabling debug  globally  in the  domain  for getting  verbose ##-->
+<!--## 					information will write heavy statements  from the  xsl  to the ##-->
+<!--## 					stdour (default.log)   which    may    significantly    hamper ##-->
+<!--## 					performance during high volume transactions. The service has a ##-->
+<!--## 					dedicated log  target which writes to its own log.  Change the ##-->
+<!--## 					level of that log  target to control the amount of information ##-->
+<!--## 					rather than global debug.                                      ##-->
+<!--##                                                                                 ##-->
+<!--##*********************************************************************************##-->
+<!--## Revision		:	1.0                                                            ##-->
+<!--##                                                                                 ##-->
+<!--## History		:	1.0 initial version                                            ##-->
+<!--#####################################################################################-->
+
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                              xmlns:dp="http://www.datapower.com/extensions"
+                              extension-element-prefixes="dp" exclude-result-prefixes="dp">
+    <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes" omit-xml-declaration="yes" />
+    <xsl:strip-space elements="*" />
+    <!--####################################################################-->
+    <!--## 7 Post Query Parameters are sent by the client when requesting ##-->
+    <!--## for an Acess Token for the first time                          ##-->
+    <!--## The following are the parameters (order does not matter)       ##-->
+    <!--## 1. grant_type                                                  ##-->
+    <!--## 2. client_secret                                               ##-->
+    <!--## 3. client_id                                                   ##-->
+    <!--## 4. scope                                                       ##-->
+    <!--## 5. AAA                                                         ##-->
+    <!--## 6. AgentSine                                                   ##-->
+    <!--## 7. DutyCode                                                    ##-->
+    <!--## 8. SineNumber                                                  ##-->
+    <!--## Some or all of these are catched and stored as context         ##-->
+    <!--## variables within datapower and will be accessed at later step  ##-->
+    <!--####################################################################-->
+    <xsl:variable name="grant_type" select="/request/args/arg[@name='grant_type']/text()" />
+    <xsl:variable name="uri" select="dp:variable('var://service/URI')" />
+
+    <!--****************************************************************-->
+    <!--** specify the root location of the datapower src code        **-->
+    <!--****************************************************************-->
+    <xsl:param name="root_location" select="local:///CSRApp/" />
+
+    <!--****************************************************************-->
+    <!--** Variable and Parameter Injection                           **-->
+    <!--** For portability across the appliances and also to keep the **-->
+    <!--** underlying transformation code as much clean as possible,  **-->
+    <!--** the variables and other parameters like the AES Encryption **-->
+    <!--** key, SSL Proxy Profile, IP, PORT, external end-points etc  **-->
+    <!--** are all referred from an external schema based XML file by **-->
+    <!--** which we can inject the parameters instead of defining and **-->
+    <!--** using them in each appliance                               **-->
+    <!--**                                                            **-->
+    <!--** The xml file inject-parameters.xml contains all required   **-->
+    <!--** information, which can be updated instead of the actual    **-->
+    <!--** service or code.                                           **-->
+    <!--****************************************************************-->
+    <xsl:param name="injection_configuration" select="concat($root_location, 'conf/injection-parameters.xml')" />
+    <xsl:param name="injection" select="document($injection_configuration)/injection-parameters" />
+
+    <!--############################################################-->
+    <!--## Datapower Log Category for logging the information     ##-->
+    <!--## Ensure that this category is created                   ##-->
+    <!--############################################################-->
+    <xsl:param name="dp-log-category">
+        <xsl:value-of select="$injection/common/token-log/text()" />
+      </xsl:param>
+
+    <!--############################################################-->
+    <!--## Transformation name for logging purposes               ##-->
+    <!--############################################################-->
+    <xsl:param name="xsl">
+        <xsl:value-of select="'[CSRApp MsgTransformer]'" />
+    </xsl:param>
+
+    <!-- Matching Template Element: root -->
+    <xsl:template match="/">
+        <dp:set-variable name="'var://context/CSRApp/dpLogCategory'" value="string($dp-log-category)" />
+        <dp:set-variable name="'var://context/CSRApp/rootLocation'" value="string($root_location)" />
+        <xsl:apply-templates select="node()|@*" />
+        <!--##########################################################################-->
+        <!--## If grant_type is password, the request is obviosuly for a new Access ##-->
+        <!--## Token request. So some of the parameters required for querying the   ##-->
+        <!--## the backend RESTful service will be stored within the Context        ##-->
+        <!--## variables of Datapower. If the grant type is for token validation,   ##-->
+        <!--## nothing will be captured.                                            ##-->
+        <!--##########################################################################-->
+        <dp:set-variable name="'var://context/CSRApp/grant_type'" value="string($grant_type)" />
+        <xsl:choose>
+            <xsl:when test="$grant_type='client_credentials'">
+                <xsl:variable name="client_id" select="/request/args/arg[@name='client_id']/text()" />
+                <xsl:variable name="scope" select="/request/args/arg[@name='scope']/text()" />
+                <xsl:variable name="AAA" select="/request/args/arg[@name='AAA']/text()" />
+                <xsl:variable name="AgentSine" select="/request/args/arg[@name='AgentSine']/text()" />
+                <xsl:variable name="DutyCode" select="/request/args/arg[@name='DutyCode']/text()" />
+                <xsl:variable name="SineNumber" select="/request/args/arg[@name='SineNumber']/text()" />
+
+                <xsl:message dp:priority="debug" dp:type="{$dp-log-category}">*<xsl:value-of select="$xsl" /> access_token issuance for <xsl:value-of select="$client_id" />*
+                </xsl:message>
+
+                <dp:set-variable name="'var://context/CSRApp/client_id'" value="string($client_id)" />
+                <dp:set-variable name="'var://context/CSRApp/scope'" value="string($scope)" />
+                <dp:set-variable name="'var://context/CSRApp/AAA'" value="string($AAA)" />
+                <dp:set-variable name="'var://context/CSRApp/AgentSine'" value="string($AgentSine)" />
+                <dp:set-variable name="'var://context/CSRApp/DutyCode'" value="string($DutyCode)" />
+                <dp:set-variable name="'var://context/CSRApp/SineNumber'" value="string($SineNumber)" />
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:variable name="token" select="/request/args/arg[@name='access_token']/text()" />
+                <dp:set-variable name="'var://context/CSRApp/token'" value="string($token)" />
+                <xsl:message dp:priority="debug" dp:type="{$dp-log-category}">*<xsl:value-of select="$xsl" /> request for grant <xsl:value-of select="$grant_type" />*
+                </xsl:message>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
+    <xsl:template match="/request/args/arg[@name='AAA']" />
+    <xsl:template match="/request/args/arg[@name='AgentSine']" />
+    <xsl:template match="/request/args/arg[@name='DutyCode']" />
+    <xsl:template match="/request/args/arg[@name='SineNumber']" />
+
+    <!-- Matching Template Element: /request/args/arg/grant_type -->
+    <xsl:template match="/request/args[@src='body']/arg[@name='grant_type']">
+        <xsl:choose>
+            <xsl:when test="$grant_type='validate_token'">
+                <xsl:message dp:priority="debug" dp:type="{$dp-log-category}">*<xsl:value-of select="$xsl" /> request type <xsl:value-of select="$grant_type" /> at <xsl:value-of select="$uri" />*
+                </xsl:message>
+                <arg name="grant_type">
+                    <xsl:value-of select="'urn:ibm:datapower:validate'" />
+                </arg>
+            </xsl:when>
+            <xsl:when test="$grant_type='revoke_token'">
+                <xsl:message dp:priority="debug" dp:type="{$dp-log-category}">*<xsl:value-of select="$xsl" /> request type <xsl:value-of select="$grant_type" /> at <xsl:value-of select="$uri" />*
+                </xsl:message>
+                <arg name="grant_type">
+                    <xsl:value-of select="'urn:ibm:datapower:client:revoke'" />
+                </arg>
+            </xsl:when>
+            <xsl:otherwise>
+                <arg name="grant_type">
+                    <xsl:value-of select="$grant_type" />
+                </arg>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
+    <!-- Identity Template -->
+    <xsl:template match="node()|@*">
+        <xsl:copy>
+            <xsl:apply-templates select="node()|@*" />
+        </xsl:copy>
+    </xsl:template>
+</xsl:stylesheet>

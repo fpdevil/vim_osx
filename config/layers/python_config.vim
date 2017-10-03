@@ -86,3 +86,9 @@ if !exists('g:formatters_python')
     let g:formatters_python = ['yapf']
 endif
 "}}}
+
+" ------------------------------------------------------------------------------
+"  for proper pep8 indentation
+" ------------------------------------------------------------------------------
+autocmd FileType python set tabstop=4|set shiftwidth=4|set shiftwidth=4|set textwidth=79|set expandtab|set autoindent
+au BufEnter *.py set ai sw=4 ts=4 sta et fo=croql

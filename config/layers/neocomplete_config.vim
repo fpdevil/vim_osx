@@ -3,10 +3,16 @@
 " ----------            NeoComplcache (advanced auto completion)            ----------
 " ----------       using neocomplete instead of the neocomplete cache       ----------
 " ------------------------------------------------------------------------------------
+let s:fts = ['c', 'cpp']
+
 
 if has_key(g:plugs, 'neocomplete.vim')
     let g:acp_enableAtStartup                            = 0             " for disabling the AutoComplPop
-    let g:neocomplete#enable_at_startup                  = 1             " use neocomplete at startup
+    if (has_key(g:plugs, 'youcompleteme') && index(s:fts, &filetype) != -1)
+        let g:neocomplete#enable_at_startup              = 0             " do not use neocomplete at startup for c/c++ & ycm
+    else
+        let g:neocomplete#enable_at_startup              = 1             " use neocomplete at startup
+    endif
     let g:neocomplete#enable_smart_case                  = 1             " use smart-case
     let g:neocomplete#enable_camel_case                  = 1
     let g:neocomplete#enable_fuzzy_completion            = 1

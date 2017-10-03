@@ -6,6 +6,16 @@
 " *******    For UNICODE support of symbols like ⚠                             *******
 " *******    note: set encoding BEFORE script encoding                         *******
 " ************************************************************************************
+scriptencoding utf-8
+
+" below 2 options to be loaded first
+if has('vim_starting')
+  if &compatible
+    set nocompatible
+  endif
+endif
+filetype off
+
 set encoding=utf-8                              " utf-8 encoding
 set fileencoding=utf-8                          " file utf-8 encode
 set fileencodings=utf-8                         " file utf-8 encode
@@ -16,11 +26,13 @@ set showmode                                    " show mode in status bar
 set showmatch                                   " show matching brackets
 
 " complete options
-set completeopt=menu,menuone,longest,preview
+" set completeopt=menu,menuone,longest,preview
+set completeopt+=menuone	                      " always show the completion menu
+set completeopt+=preview	                      " sometimes annoying window on the top
+set completeopt+=longest	                      " do not select the first variant by default
 
 set backspace=indent,eol,start                  " fix backspace indent
 
-set nocompatible
 set hidden
 
 "set list
@@ -35,7 +47,9 @@ set grepformat=%f:%l:%c:%m,%f:%l:%m
 set wildmenu
 
 " allow plugins by file type (required for plugins!)
+" filetype on
 filetype plugin on
+filetype plugin indent on
 filetype indent on
 
 " dont fold by default
@@ -62,8 +76,19 @@ if os == 'Darwin' || os == 'Mac'
     let s:sysos = 'osx'
 endif
 
-" set the default fontset for vim in gui mode
+" ------------------------------------------------------------------------------------
+" ----- set some options for the gui so that it can show toolbar, left and right -----
+" ----- scrollbars (for gvim amd macvim)                                         -----
+" ----- set the default fontset for vim in gui mode                              -----
+" ------------------------------------------------------------------------------------
 if has('gui_running')
+    set guioptions-=m " Hide menu bar.
+    set guioptions-=T " Hide toolbar
+    set guioptions-=L " Hide left-hand scrollbar
+    set guioptions-=r " Hide right-hand scrollbar
+    set guioptions-=b " Hide bottom scrollbar
+    set showtabline=0 " Hide tabline
+    set guioptions-=e " Hide tab
     if s:sysos == 'osx'
         set guifont=Monaco\ for\ Powerline:h12
     elseif s:sysos == 'linux'
@@ -77,7 +102,29 @@ set number
 
 " set fillchar
 hi VertSplit ctermbg=NONE guibg=NONE
-set fillchars+=vert:│
+"set fillchars+=vert:│
+
+" Tab and indentation management (May be overriten by autocmd rules)
+set tabstop=4                   " number of visual spaces per TAB
+set softtabstop=4               " number of spaces in tab when editing
+set expandtab                   " tabs are spaces
+set shiftwidth=4
+
+set autoindent                  " copy indent from current line
+set autoread                    " read open files again if changed outside vim
+set smartindent
+set cindent
+set cinoptions=(0,u0,U0
+
+" Text auto formatting options
+set formatoptions=c,q,r,t
+" | | | |
+" | | | +------- Auto-wrap text using textwidth.
+" | | +--------- Auto insert the current comment leader after
+" | |            hitting <Enter> in Insert mode.
+" | +----------- Allow formatting of comments with 'gq'.
+" +------------- Auto-wrap comments using textwidth, inserting
+"                the current comment leader automatically.
 
 " ************************************************************************************
 " ************                vim  Leader key mapping                     ************
@@ -95,17 +142,20 @@ endif
 set tm=2000
 
 
+" ------------------------------------------------------------------------------------
 " Use Vim settings, rather than Vi settings (much better!).
 " This must be first, because it changes other options as a side effect.
-set nocompatible
+" ------------------------------------------------------------------------------------
 set bs=2                                    " allow backspacing over everything in insert mode
 set viminfo='20,\"50                        " read/write a .viminfo file, don't store more
                                             " than 50 lines of registers
 set history=10000                           " keep 100000 lines of command line history
 set ruler                                   " show the cursor position all the time
 syntax on                                   " syntax highlighting
+
 set hlsearch                                " highlight searches
 set incsearch                               " incremental search highlights as you type
+
 set ignorecase                              " case insensitive search
 set smartcase                               " unless search contains uppercase letter
 set laststatus=2                            " always show the status line
@@ -134,17 +184,49 @@ hi! link Visual Search
 
 
 " Undo changes persistence for sequential changes in a session
-if has('persistent_undo')
-    " create directory if it does not exist
-    if isdirectory($HOME . '/.vim/undo') == 0
-        :silent !mkdir -p ~/.vim/undo > /dev/null 2>&1
-    endif
-    set undodir=~/.vim/undo                     " Location to store undo history
-    set undofile                                " Persistent undo
-    set undolevels=1000                         " Max number of changes
-    set undoreload=10000                        " Max lines to save for undo on a buffer reload
-endif
+"if has('persistent_undo')
+"    " create directory if it does not exist
+"    if isdirectory($HOME . '/.vim/undo') == 0
+"        :silent !mkdir -p ~/.vim/undo > /dev/null 2>&1
+"    endif
+"    set undodir=~/.vim/undo                     " Location to store undo history
+"    set undofile                                " Persistent undo
+"    set undolevels=1000                         " Max number of changes
+"    set undoreload=10000                        " Max lines to save for undo on a buffer reload
+"endif
 
+" backup and undo for tracking sequential changes in a session
+set backup
+set undofile
+set undolevels=1000
+let g:data_dir = $HOME . '/.vim/.data/'
+let g:backup_dir = g:data_dir . 'backup'
+let g:swap_dir = g:data_dir . 'swap'
+let g:undo_dir = g:data_dir . 'undofile'
+if finddir(g:data_dir) ==# ''
+  silent call mkdir(g:data_dir)
+endif
+if finddir(g:backup_dir) ==# ''
+  silent call mkdir(g:backup_dir)
+endif
+if finddir(g:swap_dir) ==# ''
+  silent call mkdir(g:swap_dir)
+endif
+if finddir(g:undo_dir) ==# ''
+  silent call mkdir(g:undo_dir)
+endif
+unlet g:backup_dir
+unlet g:swap_dir
+unlet g:data_dir
+unlet g:undo_dir
+set undodir=$HOME/.vim/.data/undofile
+set backupdir=$HOME/.vim/.data/backup
+set directory=$HOME/.vim/.data/swap
+
+" set current directory of file in current window
+if has("autocmd")
+  autocmd BufEnter * :lchdir %:p:h
+endif
 
 " keymapping to move between splits
 noremap <C-h> <C-w>h
@@ -162,40 +244,33 @@ set linebreak
 set ttimeout
 set ttimeoutlen=50
 
-" Tab and indentation management
-set tabstop=4
-set softtabstop=4
-set shiftwidth=4
-set expandtab
-set autoindent
-set smartindent
-set cindent
-set cinoptions=(0,u0,U0
 
-" Text auto formatting options
-set formatoptions=c,q,r,t
-                " | | | |
-                " | | | +------- Auto-wrap text using textwidth.
-                " | | +--------- Auto insert the current comment leader after
-                " | |            hitting <Enter> in Insert mode.
-                " | +----------- Allow formatting of comments with 'gq'.
-                " +------------- Auto-wrap comments using textwidth, inserting
-                "                the current comment leader automatically.
+" ------------------------------------------------------------------------------------
+" while editing a file, always jump to the last known cursor position. Don't
+" do that when the position is invalid or when inside an event handler.
+" ------------------------------------------------------------------------------------
+if has("autocmd")
+  autocmd BufReadPost *
+        \ if line("'\"") > 0 && line("'\"") <= line("$") |
+        \   exe "normal! g`\"" |
+        \ endif
+endif
 
-" ************************************************************************************
+" ------------------------------------------------------------------------------------
 " ***           custom color highlighting and alerts in common editing             ***
-" ************************************************************************************
+" ------------------------------------------------------------------------------------
 highlight Cursor guibg=black guifg=pink             " gui cursor color
 highlight Search guibg=peru guifg=wheat             " gui search highlight
 
-highlight CommaAndNonSpace      ctermbg=red guifg=white guibg=red
-highlight EOLSpace              ctermbg=red guifg=white guibg=red
-highlight HashRocketAndNonSpace ctermbg=red guifg=white guibg=red
-highlight NonSpaceAndHashRocket ctermbg=red guifg=white guibg=red
-highlight SpaceAndComma         ctermbg=red guifg=white guibg=red
-highlight Tab                   ctermbg=red guifg=white guibg=red
-highlight WideEisuu             ctermbg=red guifg=white guibg=red
-highlight WideSpace             ctermbg=red guifg=white guibg=red
+highlight CommaAndNonSpace      ctermbg=brown guifg=white guibg=brown
+highlight EOLSpace              ctermbg=brown guifg=white guibg=brown
+highlight HashRocketAndNonSpace ctermbg=brown guifg=white guibg=brown
+highlight NonSpaceAndHashRocket ctermbg=brown guifg=white guibg=brown
+highlight SpaceAndComma         ctermbg=brown guifg=white guibg=brown
+highlight Tab                   ctermbg=brown guifg=white guibg=brown
+highlight WideEisuu             ctermbg=brown guifg=white guibg=brown
+highlight WideSpace             ctermbg=brown guifg=white guibg=brown
+highlight BadWhitespace         ctermbg=brown guifg=white guibg=brown
 
 " Setting Italics for comments
 "highlight Comment cterm=italic
@@ -231,20 +306,6 @@ if has("spell") " if vim support spell checking
     endif
 endif
 
-" ------------------------------------------------------------------------------------
-" ----- set some options for the gui so that it can show toolbar, left and right -----
-" ----- scrollbars (for gvim amd macvim)                                         -----
-" ------------------------------------------------------------------------------------
-if has("gui_running")
-    set guioptions-=m " Hide menu bar.
-    set guioptions-=T " Hide toolbar
-    set guioptions-=L " Hide left-hand scrollbar
-    set guioptions-=r " Hide right-hand scrollbar
-    set guioptions-=b " Hide bottom scrollbar
-    set showtabline=0 " Hide tabline
-    set guioptions-=e " Hide tab
-endif
-
 " Easier anti-quote
 imap éé `
 
@@ -258,45 +319,6 @@ endif
 
 " if no .swp file for vim is needed
 " set noswapfile
-
-" *************************************************************************************
-" **********  ctags generated using exuverant ctags at /usr/local/bin/ctags  **********
-" **** /usr/local/bin/ctags -R --sort=yes --c++-kinds=+p --fields=+iaS --extra=+q  ****
-" **** --language-force=c++ -f opencv                                              ****
-" ****  /usr/local/Cellar/opencv3/HEAD-6328076_4/include/                          ****
-" **** system tags generated using the below command and added                     ****
-" **** ctags -R -f ~/.vim/tags/systags /usr/include /usr/local/include             ****
-" **** set erlang tags generated using the vim-erlang-tags plugin                  ****
-" **** cd /usr/local/lib/erlang/lib                                                ****
-" **** ~/.vim/plugged/vim-erlang-tags/bin/vim-erlang-tags.erl                      ****
-" *************************************************************************************
-"set tags+=~/.vim/tags/opencv
-set tags+=~/.vim/tags/systags
-
-set tags+=/usr/local/lib/erlang/lib/tags
-
-
-" set cpp includes in the path
-set path=.,/usr/include,/usr/local/include
-
-" additional path settings to include opencv
-set path+=/usr/local/opt/opencv3/include
-set path+=/usr/local/opt/opencv3/include/opencv
-set path+=/usr/local/opt/opencv3/include/opencv2
-
-" path for erlang
-set path+=/usr/local/opt/erlang/bin
-
-" for external path setup in macvim
-if has('gui_running')
-    set path+=/usr/local/lib/python3.6/site-packages
-    let $PYTHONPATH = "/usr/local/lib/python3.6/site-packages"
-    let $PYTHON3_INCLUDE_DIR = "/usr/local/opt/python3/Frameworks/Python.framework/Versions/3.6/include/python3.6m"
-    let $PYTHON3_LIBRARY = "/usr/local/opt/python3/Frameworks/Python.framework/Versions/3.6/lib/python3.6/config-3.6m-darwin"
-    let $GOPATH = $HOME . "/sw/programming/gocode/go"
-    let $PATH = $HOME . "/usr/local/opt/go/libexec/bin:" . $PATH
-endif
-
 
 " for MacVim specific settings
 " override macvim color scheme

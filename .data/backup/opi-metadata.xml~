@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--#===========================================================================================================#-->
+<!--#  Property of United Airlines                                                                              #-->
+<!--#  Copyright (c) United Airlines., 2017 All Rights Reserved.                                                #-->
+<!--#                                                                                                           #-->
+<!--#  File                 :      opi-metadata.xml                                                             #-->
+<!--#  Author               :      Sampath Singamsetty, Eruventi Venkat Ramana (Middleware Engineering)         #-->
+<!--#  Contact              :      Raj Damera, MW Engg for any changes or amendments                            #-->
+<!--#  Current Version      :      6.0 (Updated by moving the issuer url to individual environment section)     #-->
+<!--#  Description          :      This xml has all the required information for openid url's, ssl profiles if  #-->
+<!--#                              any, the log category used for log persistence and the CSS authentication    #-->
+<!--#                              information environment wise                                                 #-->
+<!--#                                                                                                           #-->
+<!--#  Documentation        :      TODO                                                                         #-->
+<!--#                                                                                                           #-->
+<!--#  Revision History     :      v5 updates (Updated with host and environment information for css)           #-->
+<!--#                              v6 updates (moved the issuer url to individual environment section)          #-->
+<!--#===========================================================================================================#-->
+<security-metadata>
+    <!--************************************************************************-->
+    <!--** this nodeset contains information about the jwt ver, the datapower **-->
+    <!--** mpg specific routing information, ssl and the log category         **-->
+    <!--************************************************************************-->
+    <oid>
+        <version>1.0</version>
+        <jwt-token-lifetime>60</jwt-token-lifetime>
+        <gateway>
+            <!-- this is the datapower fsh url ideally interface:port -->
+            <token-url>https://andcdevdpintra1p02.ual.com:3889</token-url>
+            <!-- the associated ssl profile of fsh -->
+            <ssl-client>DPOPENID_SSL_CLIENT</ssl-client>
+            <!-- log category object within datapower -->
+            <log-category>openid_log_category</log-category>
+        </gateway>
+    </oid>
+    <!--************************************************************************-->
+    <!--** this is the css specific node set containing information about the **-->
+    <!--** authentication session url's and some css service specific params  **-->
+    <!--** 1. domain specifies the css environment mapped to inbound url      **-->
+    <!--** 2. session is a boolean which decides if css call is needed or not **-->
+    <!--** 3. issuer-url would be the individual inbound F5                   **-->
+    <!--** 4. ssl-profile is the ssl handler which dp needs to connect css    **-->
+    <!--** 5. anonymous is the url for Unauthenticated session                **-->
+    <!--** 6. authenticated is the url for Authenticated session              **-->
+    <!--** 7. env-key is a css specific attribute for Authenticated call      **-->
+    <!--** 8. env-val is a css specific attribute for Authenticated call      **-->
+    <!--************************************************************************-->
+    <css>
+        <environment id="andcdevdpintra1p02.ual.com:3889">
+            <domain>dev</domain>
+            <session>true</session>
+            <issuer-url>https://andcdevdpintra1p02.ual.com:3889</issuer-url>
+            <ssl-profile>client:SSL_CLIENT_ROOT</ssl-profile>
+            <anonymous>https://stage.css.ual.com/v6/CssServiceA/AcquireAnonymousSession.aspx</anonymous>
+            <authenticated>https://stage.css.ual.com/v6/CssServiceA/AcquireAuthenticatedSession.aspx</authenticated>
+            <extendtoken>https://stage.css.ual.com/v6/CssServiceA/Extendtoken.aspx</extendtoken>
+            <signout>https://stage.css.ual.com/v6/CssServiceA/SignOutandexpireusetoken.aspx</signout>
+            <env-key>DBEnvironment</env-key>
+            <env-val>Stage</env-val>
+        </environment>
+        <environment id="andcdevdpintra1p02.ual.com:3989">
+            <domain>stage</domain>
+            <session>true</session>
+            <issuer-url>https://andcdevdpintra1p02.ual.com:3989</issuer-url>
+            <ssl-profile>client:SSL_CLIENT_ROOT</ssl-profile>
+            <anonymous>https://stage.css.ual.com/v6/CssServiceA/AcquireAnonymousSession.aspx</anonymous>
+            <authenticated>https://stage.css.ual.com/v6/CssServiceA/AcquireAuthenticatedSession.aspx</authenticated>
+            <extendtoken>https://stage.css.ual.com/v6/CssServiceA/Extendtoken.aspx</extendtoken>
+            <signout>https://stage.css.ual.com/v6/CssServiceA/SignOutandexpireusetoken.aspx</signout>
+            <env-key>DBEnvironment</env-key>
+            <env-val>Stage</env-val>
+        </environment>
+        <environment id="andcdevdpintra1p02.ual.com:3891">
+            <domain>prod</domain>
+            <session>true</session>
+            <issuer-url>https://andcdevdpintra1p02.ual.com:3891</issuer-url>
+            <ssl-profile>client:SSL_CLIENT_ROOT</ssl-profile>
+            <anonymous>https://stage.css.ual.com/v6/CssServiceA/AcquireAnonymousSession.aspx</anonymous>
+            <authenticated>https://stage.css.ual.com/v6/CssServiceA/AcquireAuthenticatedSession.aspx</authenticated>
+            <extendtoken>https://stage.css.ual.com/v6/CssServiceA/Extendtoken.aspx</extendtoken>
+            <signout>https://stage.css.ual.com/v6/CssServiceA/SignOutandexpireusetoken.aspx</signout>
+            <env-key>DBEnvironment</env-key>
+            <env-val>Stage</env-val>
+        </environment>
+    </css>
+    <!--************************************************************************-->
+    <!--** this is the user section node set which lists the pre-defined css  **-->
+    <!--** application id, application profile and authentication id based on **-->
+    <!--** the type of the user requesting css session                        **-->
+    <!--** It has 3 categories of users as defined below which corresponds to **-->
+    <!--** the value specified in the userType parameter sent in the request  **-->
+    <!--** which could be guest | employee | customer | external              **-->
+    <!--** 1. maybeGuest    - a user id created within datapower              **-->
+    <!--** 2. maybeEmployee - a user id with a valid employee profile in ldap **-->
+    <!--** 3. maybeCustomer - a user id with a valid MP Number                **-->
+    <!--************************************************************************-->
+    <users>
+        <usertype category="maybeGuest">
+            <app-id/>
+            <auth-id/>
+            <app-profile>D887F9CB-777A-4047-A412-D26962CF2960</app-profile>
+        </usertype>
+        <usertype category="maybeEmployee">
+            <app-id/>
+            <auth-id/>
+            <app-profile>775a01ea-f536-43b2-8f9f-e41cf7bbf8f0</app-profile>
+        </usertype>
+        <usertype category="maybeCustomer">
+            <app-id/>
+            <auth-id>B8C7389C-8976-4380-9CAF-7DE69E652550</auth-id>
+            <app-profile>b8c7389c-8976-4380-9caf-7de69e652550</app-profile>
+        </usertype>
+    </users>
+</security-metadata>

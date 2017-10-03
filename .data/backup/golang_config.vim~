@@ -3,7 +3,6 @@
 " ------------------------------------------------------------------------------------
 autocmd BufRead,BufNewFile *.go set filetype=go
 au BufRead,BufNewFile *.go setl filetype=go nolist noexpandtab syntax=go
-"autocmd FileType go setlocal completefunc=youcompleteme#Complete
 "setlocal omnifunc=go#complete#Complete
 
 augroup filetypedetect_go
@@ -25,12 +24,14 @@ if has_key(g:plugs, 'vim-go')
     let g:go_highlight_methods           = 1
     let g:go_highlight_fields            = 1
     let g:go_highlight_types             = 1
+    let g:go_highlight_extra_types       = 1
     let g:go_highlight_structs           = 1
     let g:go_highlight_operators         = 1
     let g:go_highlight_build_constraints = 1
     let g:go_fmt_command                 = "goimports"
     let g:go_def_mode                    = "godef"
     let g:go_play_open_browser           = 0
+    let g:go_auto_type_info              = 1
     " syntastic checking for go
     "let g:syntastic_go_chckers          = ['golint']
     let g:syntastic_go_checkers          = ['go', 'golint', 'errcheck']
@@ -79,6 +80,7 @@ let g:tagbar_type_go = {
 
 "{{{ for go code with youcompleteme
 if has_key(g:plugs,'youcompleteme')
+    autocmd FileType go setlocal completefunc=youcompleteme#Complete
     let g:ycm_gocode_binary_path = expand("$GOPATH/bin/gocode")
     let g:ycm_godef_binary_path  = expand("$GOPATH/bin/godef")
     " shortcut mappings for gocode

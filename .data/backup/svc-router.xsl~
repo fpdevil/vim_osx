@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--#####################################################################################-->
+<!--## Property of United Airlines                                                     ##-->
+<!--## Copyright (c) United Airlines. All Rights Reserved.                             ##-->
+<!--##                                                                                 ##-->
+<!--## File              : svc-router.xsl                                              ##-->
+<!--## Author            : Sampath  Singamsetty  (Middleware  Engineering)             ##-->
+<!--## Contact           : (X-50336)  for any changes or  amendments                   ##-->
+<!--##                                                                                 ##-->
+<!--## Description       : AUTHORIZATION/ENFORCEMENT ROUTING SYSTEM                    ##-->
+<!--##                                                                                 ##-->
+<!--## Request routing based on the incoming uri (resource indicator). The xslt reads  ##-->
+<!--## the dynamic routing  information from a static configuration file  which is in  ##-->
+<!--## standard  valid xml format. This file is named as config.xml and contains  all  ##-->
+<!--## the entries necessary required for the below set of services                    ##-->
+<!--##                                                                                 ##-->
+<!--## 1.  Authorization  Service  (token/code  issue)                                 ##-->
+<!--## 2.  Enforcement  or  Resource Service (policy enforcement)                      ##-->
+<!--##                                                                                 ##-->
+<!--## The actual services hosting the authorization and enforcement  logic  needs to  ##-->
+<!--## be configured as  seperate objects like MPG's and the interface name  and port  ##-->
+<!--## numbers need to be provided in the  config.xml. The inbound requests will then  ##-->
+<!--## be dynamically routed to the  respective objects based on the information read  ##-->
+<!--## from the config.xml.                                                            ##-->
+<!--##                                                                                 ##-->
+<!--## A 3 character application id  or code is required as a part of the application  ##-->
+<!--## root  uri/url  based  on   which  the  section  specific  to  that  particular  ##-->
+<!--## application will be selected. If  nothing is specified, we can either route to  ##-->
+<!--## a default object or reject back with some custom error message.                 ##-->
+<!--##                                                                                 ##-->
+<!--## For this specific  configuration if  nothing is  specified,  the default route  ##-->
+<!--## points to ivr which is for the 24X7's IVR Interaction and Customer Services.    ##-->
+<!--##                                                                                 ##-->
+<!--## Current  Version  :  4.0                                                        ##-->
+<!--## Release Notes     :                                                             ##-->
+<!--## Ver 1.0 Initial system for handling basic routing                               ##-->
+<!--## Ver 2.0 handle routing for a default app if nothing is specified                ##-->
+<!--## Ver 3.0 handled Content-Type and some other variables                           ##-->
+<!--## Ver 4.0 had fixes for datapower firmware 7.x                                    ##-->
+<!--#####################################################################################-->
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                            xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                            xmlns:fn="http://www.w3.org/2005/xpath-functions"
+                            xmlns:date="http://exslt.org/dates-and-times"
+                            xmlns:dp="http://www.datapower.com/extensions"
+                            xmlns:dpconfig="http://www.datapower.com/param/config"
+                            xmlns:dpquery="http://www.datapower.com/param/query"
+                            extension-element-prefixes="dp dpconfig dpquery date"
+                            exclude-result-prefixes="dp date">
+    <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes" omit-xml-declaration="yes"/>
+	<!--###########################################################################-->
+    <!--## Helpers for common case conversion for use in case insensitive search ##-->
+    <!--###########################################################################-->
+    <xsl:param name="lowercase" select="'abcdefghijklmnopqrstuvwxyz'" />
+    <xsl:param name="uppercase" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'" />
+
+    <!--
+    <dp:summary xmlns="">
+        <operation>xform</operation>
+        <description>>Check the inbound URI and route the request to the appropriate backend</description>
+    </dp:summary>
+    -->
+
+    <!--###########################################################################-->
+    <!--## specify the root location of the datapower src code and pick the xml  ##-->
+    <!--## configuration file from the relative location                         ##-->
+    <!--###########################################################################-->
+    <xsl:param name="root_location" select="'local:///CSRApp/'" />
+    <xsl:param name="config" select="concat($root_location,'conf/config.xml')">
+
+    <!--###########################################################################-->
+    <!--## Capture stylesheet parameter names                                    ##-->
+    <!--## Routing configuration file                                            ##-->
+    <!--###########################################################################-->
+    <xsl:param name="RoutingConfig" select="$config" />
+    <dp:param name="dpconfig:RoutingConfig" type="dmString" xmlns="">
+      <display>Routing Config File</display>
+      <description>
+            Provide a relative path for the Routing config file
+            which determines the location of downstream services.
+            The default value being route-config.xml
+      </description>
+      <default>config.xml</default>
+    </dp:param>
+
+    <!--###########################################################################-->
+    <!--## Routing Configuration Information                                     ##-->
+    <!--###########################################################################-->
+    <xsl:variable name="route-config">
+        <xsl:copy-of select="document($RoutingConfig)" />
+    </xsl:variable>
+
+    <!--###########################################################################-->
+    <!-- Datapower Service Handler(s) names - mpg and processing rule names      ##-->
+    <!--###########################################################################-->
+    <xsl:variable name="svc-handler">
+        <xsl:value-of select="dp:variable('var://service/processor-name')" />
+    </xsl:variable>
+    <xsl:variable name="rule-handler">
+		<xsl:value-of select="dp:variable('var://service/transaction-rule-name')" />
+    </xsl:variable>
+
+    <!--###########################################################################-->
+    <!--## Datapower domain name                                                 ##-->
+    <!--###########################################################################-->
+    <xsl:variable name="dp-domain">
+        <xsl:value-of select="dp:variable('var://service/domain-name')" />
+    </xsl:variable>
+
+	<!--############################################################-->
+	<!--## Transformation name for logging purposes               ##-->
+	<!--############################################################-->
+	<xsl:param name="xsl">
+		<xsl:value-of select="'[svc-router]'"/>
+	</xsl:param>
+
+    <!--****************************************************************-->
+    <!--** specify the root location of the datapower src code        **-->
+    <!--****************************************************************-->
+    <xsl:param name="root_location" select="local:///CSRApp/" />
+
+    <!--****************************************************************-->
+    <!--** Variable and Parameter Injection                           **-->
+    <!--** For portability across the appliances and also to keep the **-->
+    <!--** underlying transformation code as much clean as possible,  **-->
+    <!--** the variables and other parameters like the AES Encryption **-->
+    <!--** key, SSL Proxy Profile, IP, PORT, external end-points etc  **-->
+    <!--** are all referred from an external schema based XML file by **-->
+    <!--** which we can inject the parameters instead of defining and **-->
+    <!--** using them in each appliance                               **-->
+    <!--**                                                            **-->
+    <!--** The xml file inject-parameters.xml contains all required   **-->
+    <!--** information, which can be updated instead of the actual    **-->
+    <!--** service or code.                                           **-->
+    <!--****************************************************************-->
+    <xsl:param name="injection_configuration" select="concat($root_location, 'conf/injection-parameters.xml')" />
+    <xsl:param name="injection" select="document($injection_configuration)/injection-parameters" />
+
+    <!--############################################################-->
+    <!--## Datapower Log Category for logging the information     ##-->
+    <!--## Ensure that this category is created                   ##-->
+    <!--############################################################-->
+    <xsl:param name="dp-log-category">
+        <xsl:value-of select="$injection/common/svc-log/text()" />
+    </xsl:param>
+
+    <xsl:template match="/">
+        <!-- Inbound URI from Datapower Service Variable -->
+        <xsl:variable name="inbound-uri" select="dp:variable('var://service/URI')"/>
+        <!-- Time stamp from exslt date utils -->
+        <xsl:variable name="time-stamp" select="date:date-time()"/>
+        <!--#####################################################-->
+		<!--## grab in-bound Content-Type from request header  ##-->
+		<!--#####################################################-->
+		<xsl:variable name="inbound-mime">
+			<xsl:choose>
+				<xsl:when test="dp:variable('var://service/original-content-type') != 'var://service/original-content-type'">
+					<xsl:value-of select="dp:variable('var://service/original-content-type')"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text></xsl:text>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+        <!--################################################################-->
+		<!--## Pass the request headers as is without any modification to ##-->
+		<!--## the next mpg so that all the headers are available         ##-->
+		<!--################################################################-->
+		<xsl:variable name="HTTPHeaderManifest" select="dp:variable('var://service/header-manifest')"/>
+		<xsl:for-each select="$HTTPHeaderManifest/headers/header">
+			<xsl:variable name="hdrkey" select="concat('var://service/set-request-header/', normalize-space(.))"/>
+			<dp:set-variable name="$hdrkey" value="dp:request-header(normalize-space(.))"/>
+		</xsl:for-each>
+
+        <!--########################################################################################-->
+		<!--## Since Datapower does not include the Timestamp in the header by defualt within the ##-->
+		<!--## request we are building and inserting a timestamp in the HTTP header.              ##-->
+        <!--## This would be useful for auditing purposes.                                        ##-->
+        <!--## The timestamp is inserted as per the RFC 2616 HTTP/1.1                             ##-->
+        <!--## which specifies the following.                                                     ##-->
+        <!--##                                                                                    ##-->
+        <!--## HTTP applications have historically allowed three different formats                ##-->
+        <!--## for the representation of date/time stamps:                                        ##-->
+        <!--##                                                                                    ##-->
+        <!--## Sun, 06 Nov 1994 08:49:37 GMT  ; RFC 822, updated by RFC 1123                      ##-->
+        <!--## Sunday, 06-Nov-94 08:49:37 GMT ; RFC 850, obsoleted by RFC 1036                    ##-->
+        <!--## Sun Nov  6 08:49:37 1994       ; ANSI C's asctime() format                         ##-->
+        <!--##                                                                                    ##-->
+        <!--## Here we are following the RFC8222 specifications                                   ##-->
+        <!--########################################################################################-->
+
+        <!-- variable capture for time-stamp build -->
+        <xsl:variable name="CurrentMillis" select="dp:time-value()" />
+        <xsl:variable name="CurrentSeconds" select="$CurrentMillis div 1000" />
+        <xsl:variable name="CurrentDuration" select="date:duration($CurrentSeconds)" />
+        <!-- Get the Current TimeStamp since Jan 01 1970 -->
+        <xsl:variable name="CurrentLongDateTime"
+            select="date:add('1970-01-01T00:00:00Z',$CurrentDuration)" />
+        <!-- ZULU or GMT Time in ISO Format with seconds-->
+        <xsl:variable name="CurrentDateTimeGMT"
+            select="date:add($CurrentLongDateTime,'PT0H')" />
+        <!-- Variable conversion -->
+        <xsl:variable name="datex" select="substring-before($CurrentDateTimeGMT, 'T')" />
+        <xsl:variable name="day-name" select="substring(date:day-name($datex), 1, 3)"/>
+        <xsl:variable name="day" select="format-number(substring-after(substring-after($datex, '-'), '-'),'00')"/>
+        <xsl:variable name="monthx" select="format-number(substring-before(substring-after($datex, '-'), '-'),'00')"/>
+        <xsl:variable name="year" select="format-number(substring($CurrentDateTimeGMT, 1, 4),'####')"/>
+        <xsl:variable name="time" select="substring-before(substring-after($CurrentDateTimeGMT,'T'), '.')" />
+        <!-- Month Table conversion -->
+        <xsl:variable name="mon">
+            <xsl:choose>
+                <xsl:when test="$monthx = '01'">Jan</xsl:when>
+                <xsl:when test="$monthx = '02'">Feb</xsl:when>
+                <xsl:when test="$monthx = '03'">Mar</xsl:when>
+                <xsl:when test="$monthx = '04'">Apr</xsl:when>
+                <xsl:when test="$monthx = '05'">May</xsl:when>
+                <xsl:when test="$monthx = '06'">Jun</xsl:when>
+                <xsl:when test="$monthx = '07'">Jul</xsl:when>
+                <xsl:when test="$monthx = '08'">Aug</xsl:when>
+                <xsl:when test="$monthx = '09'">Sep</xsl:when>
+                <xsl:when test="$monthx = '10'">Oct</xsl:when>
+                <xsl:when test="$monthx = '11'">Nov</xsl:when>
+                <xsl:when test="$monthx = '12'">Dec</xsl:when>
+            </xsl:choose>
+        </xsl:variable>
+        <!-- Formulate the Date in RFC8222 format -->
+        <xsl:variable name="Date">
+            <xsl:value-of select="concat($day-name,
+                                    ', ',
+                                    $day,
+                                    ' ',
+                                    $mon,
+                                    ' ',
+                                    $year,
+                                    ' ',
+                                    $time,
+                                    ' ',
+                                    'GMT')"/>
+        </xsl:variable>
+
+        <!--###########################################-->
+        <!--# Extract the base uri from the full uri  #-->
+        <!--# only 3 character appid allowed          #-->
+        <!--###########################################-->
+        <xsl:variable name="base-uri">
+            <xsl:value-of select="substring(substring-before(substring-after($inbound-uri,'/'),'/'),1,3)" />
+            <!-- <xsl:value-of select="substring(substring-before(substring-after($inbound-uri, '/'), '/'),1,3)" /> -->
+        </xsl:variable>
+        <xsl:variable name="app" select="$base-uri"/>
+        <xsl:message dp:priority="debug" dp:type="{$dp-log-category}">*<xsl:value-of select="$xsl"/> inbound-uri: <xsl:value-of select="$inbound-uri" />, base-uri: <xsl:value-of select="$base-uri"/>*
+        </xsl:message>
+
+        <!--##################################################################-->
+        <!--## This infix variable will decide whether the request is going ##-->
+        <!--## to be routed to an Authorization End-Point or a Resource     ##-->
+        <!--## End-Point at the backend datapower service object            ##-->
+        <!--##################################################################-->
+        <xsl:variable name="infix">
+            <xsl:choose>
+                <!-- if mpg is mpg_AuthRouter or transaction rule contains authorization then authorization server -->
+                <xsl:when test="(($svc-handler='mpg_AuthRouter') or (contains($rule-handler,'authorization')))">
+                    <xsl:text>authorization</xsl:text>
+                </xsl:when>
+                <!-- if mpg is mpg_EnfRouter or transaction rule contains resource then resource server -->
+                <xsl:when test="(($svc-handler='mpg_EnfRouter') or (contains($rule-handler,'resource')))">
+                    <xsl:text>resource</xsl:text>
+                </xsl:when>
+                <xsl:otherwise/>
+            </xsl:choose>
+        </xsl:variable>
+
+        <!--################################################################################-->
+        <!--## Determine the Route to take based on the Inbound Service Handler and infix ##-->
+        <!--################################################################################-->
+        <xsl:choose>
+            <xsl:when test="document($RoutingConfig)//service[$base-uri=@uri]">
+                <xsl:variable name="data">
+                    <xsl:copy-of select="document($RoutingConfig)//service[@uri=$base-uri]"/>
+                </xsl:variable>
+                <!-- strip the 3 character app id from the uri before sending to backend -->
+                <xsl:variable name="dp-uri" select="concat('/',substring-after($inbound-uri, concat($base-uri, '/')))"/>
+                <xsl:variable name="ssl-client-profile" select="$data//service[@uri=$app]/proxy[@type=$infix]/sslProxy"/>
+
+                <xsl:variable name="call-protocol">
+                    <xsl:choose>
+                        <xsl:when test="string-length($ssl-client-profile) &gt; 0">
+                            <dp:set-variable name="'var://service/routing-url-sslprofile'" value="$ssl-client-profile"/>
+                            <xsl:text>https</xsl:text>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:text>http</xsl:text>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:variable>
+
+                <xsl:variable name="routing-url">
+                    <xsl:value-of select="concat($call-protocol,'://',
+                                                    $data//service[@uri=$base-uri]/proxy[@type=$infix]/proxyIface,
+                                                    ':',
+                                                    $data//service[@uri=$base-uri]/proxy[@type=$infix]/proxyPort,
+                                                    $dp-uri)"/>
+                </xsl:variable>
+                <xsl:message dp:priority="info" dp:type="{$dp-log-category}">*<xsl:value-of select="$xsl"/> routing url: <xsl:value-of select="$routing-url"/>, sslprofile: <xsl:value-of select="$ssl-client-profile" />, service: <xsl:value-of select="$infix"/>, info: <xsl:value-of select="document($RoutingConfig)//service[$base-uri=@uri]/proxy[@type=$infix]/name/text()" />*
+                </xsl:message>
+                <!--###################################################################-->
+                <!--## Set app id, time-stamp and content-type in the Request Header ##-->
+                <!--###################################################################-->
+                <dp:set-http-request-header name="'app'" value="$base-uri"/>
+                <dp:set-http-request-header name="'Date'" value="$Date"/>
+                <dp:set-http-request-header name="'X-Forwarded-Host'" value="dp:request-header('Host')"/>
+                <dp:set-http-request-header name="'X-Original-Host'" value="dp:request-header('Host')"/>
+				<xsl:if test="$inbound-mime != ''">
+					<dp:set-http-request-header name="'Content-Type'" value="$inbound-mime"/>
+				</xsl:if>
+                <dp:freeze-headers/>
+                <!--###################################################################-->
+                <!--## Set Routing URL For appropriate MPG Routing                   ##-->
+                <!--###################################################################-->
+                <dp:set-variable name="'var://service/routing-url'" value="$routing-url"/>
+                <xsl:copy-of select="."></xsl:copy-of>
+            </xsl:when>
+            <xsl:otherwise>
+				<!--###################################################################-->
+                <!--## default application is ivr                                    ##-->
+                <!--###################################################################-->
+                <xsl:variable name="app" select="'ivr'" />
+                <xsl:message dp:priority="debug" dp:type="{$dp-log-category}">### PASSING (Default request for 24|7) ###
+                </xsl:message>
+                <xsl:variable name="data">
+                    <xsl:copy-of select="document($RoutingConfig)//service[@uri=$app]"/>
+                </xsl:variable>
+                <xsl:variable name="routing-url">
+                    <xsl:value-of select="concat('https://',
+                                                    $data//service[@uri=$app]/proxy[@type=$infix]/proxyIface,
+                                                    ':',
+                                                    $data//service[@uri=$app]/proxy[@type=$infix]/proxyPort,
+                                                    $inbound-uri)"/>
+                </xsl:variable>
+                <xsl:variable name="ssl-client-profile" select="$data//service[@uri=$app]/proxy[@type=$infix]/sslProxy"/>
+                <xsl:message dp:priority="info" dp:type="{$dp-log-category}">*[Default Dynamic Routing]*[transform-action: <xsl:value-of select="$xsl"/>, url: <xsl:value-of select="$routing-url"/>, sslprofile: <xsl:value-of select="$ssl-client-profile" />, service: <xsl:value-of select="$infix"/>, info: <xsl:value-of select="document($RoutingConfig)//service[$app=@uri]/proxy[@type=$infix]/name/text()" />]*
+                </xsl:message>
+                <!--####################################################################-->
+                <!--## Set app id, time-stamp and content-type in the Reuquest Header ##-->
+                <!--####################################################################-->
+                <dp:set-http-request-header name="'app'" value="$app"/>
+                <dp:set-http-request-header name="'Date'" value="$Date"/>
+				<xsl:if test="$inbound-mime != ''">
+					<dp:set-http-request-header name="'Content-Type'" value="$inbound-mime"/>
+				</xsl:if>
+                <dp:freeze-headers/>
+                <!--###################################################################-->
+                <!--## Set Routing URL For appropriate MPG Routing                   ##-->
+                <!--###################################################################-->
+                <xsl:if test="string-length($ssl-client-profile) &gt; 0">
+                    <dp:set-variable name="'var://service/routing-url-sslprofile'" value="$ssl-client-profile"/>
+                </xsl:if>
+                <dp:set-variable name="'var://service/routing-url'" value="$routing-url"/>
+                <xsl:copy-of select="."></xsl:copy-of>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+</xsl:stylesheet>

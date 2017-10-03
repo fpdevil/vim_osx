@@ -10,7 +10,7 @@
 § =============================================================
 
 SetMacro( 'AUTHOR',       'Sampath Singamsetty' )
-SetMacro( 'AUTHORREF',    'SSK' )
+SetMacro( 'AUTHORREF',    'ssk' )
 SetMacro( 'EMAIL',        'Singamsetty.Sampath@gmail.com' )
 SetMacro( 'ORGANIZATION', '' )
 SetMacro( 'COMPANY',      '' )

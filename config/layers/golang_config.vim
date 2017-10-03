@@ -38,6 +38,10 @@ if has_key(g:plugs, 'vim-go')
     let g:go_list_type                   = "quickfix"
 endif
 
+" highlight go imports
+if has_key(g:plugs,'hl-goimport.vim')
+  highlight goImportedPkg ctermfg=1 guifg=#ff0000
+endif
 
 augroup go
   autocmd!

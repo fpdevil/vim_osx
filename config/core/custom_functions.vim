@@ -3,7 +3,9 @@
 " ####################################################################################
 
 
-" # define a function for customizing the vim-startify based on the working directory {{{
+" -----------------------------------------------------------------------------
+" define a function for customizing the vim-startify based on the working directory
+" -----------------------------------------------------------------------------
 function StartifyConfig()
     if getcwd() == $HOME
         let g:startify_list_order = [
@@ -21,11 +23,12 @@ function StartifyConfig()
                 \ ]
     endif
 endfunction
-"}}}
 
+
+" -----------------------------------------------------------------------------
 " # define function for switching between the source and header files using the
-"   ctags. this only supports .cpp and .h files {{{
-
+"   ctags. this only supports .cpp and .h files
+" -----------------------------------------------------------------------------
 function! SwitchHeader()
     if(expand("%:e") == "c" || expand("%:e") == "cpp")
         execute ":edit " . expand("%:r") . ".h"
@@ -36,12 +39,13 @@ function! SwitchHeader()
     endif
 endfunction
 nmap <silent> <Leader>fs :call SwitchHeader()<CR>
-"}}}
 
-" # define a function for highlighting the duplicate lines
-"   shamelessly copied from StackOverflow at the below link
-"   http://stackoverflow.com/questions/1268032/marking-duplicate-lines {{{
 
+" -----------------------------------------------------------------------------
+"   define a function for highlighting the duplicate lines
+"   copied from StackOverflow at the below link ->
+"   http://stackoverflow.com/questions/1268032/marking-duplicate-lines
+" -----------------------------------------------------------------------------
 function! HighlightRepeats() range
     let lineCounts={}
     let lineNum=a:firstline
@@ -60,11 +64,12 @@ function! HighlightRepeats() range
     endfor
 endfunction
 command! -range=% HighlightRepeats <line1>,<line2>call HighlightRepeats()
-"}}}
 
-" # define function for getting the Plug lists for vimawesome.com
-"   courtesy: junegunn {{{
-"
+
+" -----------------------------------------------------------------------------
+"   define function for getting the Plug lists for vimawesome.com
+"   courtesy: junegunn
+" -----------------------------------------------------------------------------
 function! VimAwesomeComplete() abort
   let prefix = matchstr(strpart(getline('.'), 0, col('.') - 1), '[.a-zA-Z0-9_/-]*$')
   echohl WarningMsg
@@ -108,18 +113,20 @@ augroup VimAwesomeComplete
     autocmd!
     autocmd FileType vim inoremap <c-x><c-v> <c-r>=VimAwesomeComplete()<cr>
 augroup END
-"}}}
 
 
-"{{{ for exuberant c tags
+" -----------------------------------------------------------------------------
+" for exuberant c tags
+" -----------------------------------------------------------------------------
 function! UpdateTags()
-  execute ":!ctags -R --languages=C++ --c++-kinds=+p --fields=+iaS --extra=+q ./"
-  echohl StatusLine | echo "C/C++ tag updated" | echohl None
+    execute ":!ctags -R --languages=C++ --c++-kinds=+p --fields=+iaS --extra=+q ./"
+    echohl StatusLine | echo "C/C++ tag updated" | echohl None
 endfunction
-"}}}
 
-" # define function for finding an appropriate .jshintrc file for javascript {{{
 
+" -----------------------------------------------------------------------------
+"  define function for finding an appropriate .jshintrc file for javascript
+" -----------------------------------------------------------------------------
 function s:locate_jshintrc(dir)
     let l:found = globpath(a:dir, '.jshintrc')
     if filereadable(l:found)
@@ -143,10 +150,11 @@ function UpdJsHintConf()
 endfunction
 
 au BufEnter * call UpdJsHintConf()
-"}}}
 
-" # function to toggle the background {{{
 
+" -----------------------------------------------------------------------------
+" a function to toggle the background
+" -----------------------------------------------------------------------------
 function! ToggleBG()
     let s:togglebg = &background
     if s:togglebg == "dark"
@@ -157,9 +165,11 @@ function! ToggleBG()
 endfunction
 
 noremap <Leader>bg :call ToggleBG()<CR>
-"}}}
 
-"{{{ function to toggle line numbers
+
+" -----------------------------------------------------------------------------
+" a function to toggle line numbers
+" -----------------------------------------------------------------------------
 function! ToggleNumber()
     let s:numberPresent = &nu
     let s:relativeNumberPresent = &relativenumber
@@ -173,10 +183,12 @@ function! ToggleNumber()
         set relativenumber
     endif
 endfunction
-"}}}
 
-"{{{ show current color scheme name
-"    usage :call ShowColorTheme()
+
+" -----------------------------------------------------------------------------
+" show current color scheme name
+" usage :call ShowColorTheme()
+" -----------------------------------------------------------------------------
 function! ShowColorTheme()
     try
         echo g:colors_name
@@ -186,7 +198,6 @@ function! ShowColorTheme()
 endfunction
 
 noremap <Leader>st :call ShowColorTheme()<CR>
-"}}}
 
 function! s:highlight_general_checkstyles()
     "let w:m1=matchadd('Tab', '    ', -1)
@@ -200,9 +211,11 @@ endf
 
 call s:highlight_general_checkstyles()
 
-"{{{ Custom functions for handling the Module name of Haskell
-"    The initial letter should be in upper case
 
+" -----------------------------------------------------------------------------
+" a custom functions for handling the Module name of Haskell
+" The initial letter should be in upper case
+" -----------------------------------------------------------------------------
 function! Split(path)
   if has("win32")
     return split(a:path, '[\/]\+')
@@ -212,28 +225,53 @@ function! Split(path)
 endfunction
 
 function! CapitalizedSuffix(ps)
-  let result=[]
-  for p in reverse(a:ps)
-    if p =~# '^[[:upper:]]'
-      let result=[p]+result
-    else
-      break
-    endif
-  endfor
-  return result
+    let result=[]
+    for p in reverse(a:ps)
+        if p =~# '^[[:upper:]]'
+            let result=[p]+result
+        else
+            break
+        endif
+    endfor
+    return result
 endfunction
 
 function! g:ModuleName()
-  let ps=CapitalizedSuffix(Split(expand('%:p')))
-  let n=len(ps)
-  if n==0
-    return ''
-  else
-    " strip the extension of the last component
-    let ps[n-1]=fnamemodify(ps[n-1], ":r:t")
-    return join(ps,'.')
-  endif
+    let ps=CapitalizedSuffix(Split(expand('%:p')))
+    let n=len(ps)
+    if n==0
+        return ''
+    else
+        " strip the extension of the last component
+        let ps[n-1]=fnamemodify(ps[n-1], ":r:t")
+        return join(ps,'.')
+    endif
 endfunction
-"}}}
+
+
+" -----------------------------------------------------------------------------
+" a function for compiling the src code...
+" -----------------------------------------------------------------------------
+function! CompileNRun()
+	exec "w"
+	if &filetype == 'c'
+		exec "!g++ % -o %<"
+		exec "!time ./%<"
+	elseif &filetype == 'cpp'
+		exec "!g++ % -o %<"
+		exec "!time ./%<"
+	elseif &filetype == 'java' 
+		exec "!javac %" 
+		exec "!time java %<"
+	elseif &filetype == 'sh'
+		:!time bash %
+	elseif &filetype == 'python'
+		exec "!time python3 %"
+    elseif &filetype == 'html'
+        exec "!firefox % &"
+    elseif &filetype == 'go'
+        "exec "!go build %<"
+        exec "!time go run %"
+endfunc
 
 " ------------------------------------------------------------------------------------

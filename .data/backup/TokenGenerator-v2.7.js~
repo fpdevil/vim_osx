@@ -1,0 +1,1309 @@
+/**
+ *
+ * @file TokenGenerator.js
+ * @copyright United Airlines Inc., 2017
+ * @author Sampath Singamsetty <Sampath.Singamsetty@united.com>
+ * @version 2.7
+ * @date 09-15-2017
+ *
+ * @description Customized JWT Token Generator <br>
+ *
+ * Post processing  of the OAuth  data after a successful  access_token /
+ * refresh_token and id_token generation <br>
+ *
+ * Based  on the  successfulness of  the AAA  output, this  GWScript will
+ * transform a  valid OAuth JSON  response by clubbing the  id_token with
+ * both the  access_token and refresh_token,  so that datapower  can have
+ * access to the original JWT whenever it receives either access_token or
+ * refresh_token. <br>
+ *
+ * The  information will  be  used for  establishing  a trusted  relation
+ * between the back-end app layer, the caller and the Datapower Gateway
+ * <br>
+ * <pre>
+ *   General structure of the JWT Token
+ *   {Header} . {Payload} . {Signature}
+ *   More specifically as below
+ *   {Base64(JOSE header)} . {Base64(Payload)} . {Base64(Signature)}
+ * <pre>
+ *
+ * Reference: {@link https:/tools.ietf.org/html/rfc7515}
+ * <br>
+ * Cleanup Tasks TODO
+ *
+ * @module TokenGenerator
+ */
+
+/**
+ * datapower service variable for header metadata
+ * @var {object} hm
+ */
+var hm = require('header-metadata');
+
+/**
+ * datapower service variable for fine grained metadata and
+ * service specific information
+ * @var {object} sm
+ */
+var sm = require('service-metadata');
+
+/**
+ * datapower api variable for accessing the file system
+ * @var {object} fs
+ */
+var fs = require('fs');
+
+/**
+ * datapower api variable for providing some general-purpose utilities
+ * @var {object} util
+ */
+var util = require('util');
+
+/**
+ * Import any commonly used functions  defined in the module dpcommons to
+ * be used in the generation of token.
+ * @var {object} common
+ */
+var common = require('../lib/dpcommons.js');
+
+/**
+ * datapower api variable useful for writing unit tests for applications.
+ * @var {object} assert
+ */
+var assert = require('assert');
+
+/**
+ * get the initial total elapsed time from the service variable metadata
+ * @constant
+ * @var {number} tInit
+ */
+const tInit = sm.timeElapsed;
+
+/**
+ * calculate the time difference between the current timestamp and time elapsed
+ * this will give the total time taken for the preceding transaction till that
+ * particular moment
+ * @var {number} tDiff
+ */
+var tDiff;
+
+/**
+ * the datapower crypto module offers a set of APIs for cryptographic usage.
+ * It provides the hash, HMAC, cipher, decipher, sign, and verify methods.
+ * @var {object} crypto
+ */
+var crypto = require('crypto');
+
+/**
+ * a uuid value generator
+ * @constant
+ * @var {object}
+ */
+const uuidV4 = require('./v4'); // uuid modules
+
+/**
+ * for at_hash generation
+ * @constant
+ * @var {object}
+ */
+const accessTokenHash = require('./token-hash');
+
+/**
+ * Get the base  context session of oauth if defined.  There are multiple
+ * custom context  variables built from  this base context and  all those
+ * can be retrieved if first the base context is available
+ * @var {string} oauthSession
+ */
+var oauthSession = session.name('oauth');
+
+/**
+ * set a log prefix to identify this script in the logger statements.
+ * @var {object} lp
+ */
+var lp = "OpenID (TokenGenerator):";
+
+/**
+ * Define lc  variable which  contains the  log target  object configured
+ * within datapower. The value is originally set as a context variable by
+ * the tokenPocessing.js.
+ * @var {string} lc
+ */
+var lc = typeof oauthSession !== "undefined" ? oauthSession.getVariable('dpLogCategory') : 'openid_log_category';
+
+/**
+ * define a custom log category configured in datapower for logging
+ * the events to a custom log file
+ * @var {object} logConsole
+ */
+var logConsole = console.options({
+  'category': lc
+});
+
+/**
+ * Setup an individual log target and category and refer the same
+ * here under the name of `logCategory`. All log events and statements
+ * from this gateway script are written to a static log file through
+ * this log category variable
+ */
+try {
+  logConsole.debug("%s logging to %s", lp, logConsole);
+} catch ( e ) {
+  logConsole = console;
+  logConsole.warn("%s %s category does not exist. falling back to default log", lp, logConsole);
+}
+
+//**********************************************************//
+//--- Datapower gateway script API's for the JWT Support ---//
+//**********************************************************//
+
+/**
+ * The jose module  provides APIs to encrypt  and decrypt messages and  to sign and
+ * verify  messages.  Encryption  and  decryption use  JSON  Web  Encryption  (JWE)
+ * specifications.  Signing and  verifying messages  use JSON  Web Signature  (JWS)
+ * specifications.
+ * @var {object} jose
+ */
+var jose = require('jose');
+
+/**
+ * The jwt module offers a set of APIs to create and validate a JSON Web Token (JWT).
+ * @var {object} jwt
+ */
+var jwt = require('jwt');
+
+/**
+  * The  urlopen  module  provides   APIs  to  establish  a  non-streaming
+  * connection with target servers by HTTP, HTTPS, or IBM® MQ protocol and
+  * open files  in the DataPower® Gateway  file system. The APIs  can also
+  * send and receive IBM MQ messages within a GatewayScript action.
+  * @var {object} urlopen
+  */
+var urlopen = require('urlopen');
+
+// service and metadata variable information for data access and logging
+
+/**
+ * The contentType get the request mime type as sent
+ * @var {string} contentType
+ */
+var contentType = sm.getVar('var://service/original-content-type');
+
+/**
+ * The protocol gets the request protocol type (http|https)
+ * @var {string} protocol
+ */
+var protocol = sm.getVar('var://service/protocol');
+
+/**
+ * The host gets the Host domain name as the url is accessed by user
+ * @var {string} host
+ */
+var host = hm.current.get('Host');
+
+/**
+ * get the AAA error output if any captured from service variable
+ * @var {string} aaaErrXmlStr
+ */
+var aaaErrXmlStr = sm.getVar('var://service/aaa-error-logs');
+
+/**
+ * Grab the URI, Domain and Cookie values etc.,
+ * @var {string} domain_name
+ */
+var domain_name;
+if (sm) {
+  domain_name = sm.domainName;
+} else {
+  logConsole.warn("%s service-metadata not available for domain domain name", lp);
+}
+
+/**
+ * define a free variable for path before allocating the value
+ * @var {string} path
+ */
+var path = '';
+if (sm) {
+  path = sm.getVar('var://service/URI');
+} else {
+  logConsole.warn("%s service-metadata not available for path", lp);
+}
+
+/**
+ * grab the cookie domain if one exists in the incoming request
+ * @var {string} cookie_domain
+ */
+var cookie_domain = '';
+if (session.parameters.CookieDomain) {
+  cookie_domain = session.parameters.CookieDomain;
+} else {
+  logConsole.info("%s using default cookie domain %s", lp, cookie_domain);
+}
+
+/**
+ * grab the cookie name if one exists in the incoming request
+ * @var {string} cookie_name
+ */
+var cookie_name = "JWT";
+if (session.parameters.JwtCookieName) {
+  cookie_name = session.parameters.JwtCookieName;
+  logConsole.info("%s JWT cookie name configured to be: %s", lp, cookie_name);
+} else {
+  logConsole.notice("%s JWT cookie name is not available.  Default name: %s", lp, cookie_name);
+}
+
+// ******************************************************************** //
+// get and assign the values of context variables if they are defined   //
+// ******************************************************************** //
+
+/**
+ * get the OAuth client identifier from the context variable
+ * this is currently left as a free variable as it's not used
+ * @var {string} oauthClientId
+ */
+var oauthClientId = typeof oauthSession !== "undefined" ? oauthSession.getVariable('client_id') : '';
+
+/**
+ * AuthType context variable is set by the gwscript tokenProcessing.js
+ * @var {string} authType
+ */
+var authType = typeof session.name('ctx') !== 'undefined' ? session.name('ctx').getVariable('AuthType') : '';
+
+/**
+ * get the token request type which indicates what kind of request it is like
+ * access, refresh, validate or revoke
+ * @var {string} tokenType
+ */
+var tokenType = typeof oauthSession !== "undefined" ? oauthSession.getVariable('token_request') : '';
+
+/**
+ * The json-request  context variable is  set by the  XSLT Transformation
+ * MessageTransformer.xslt  and it  contains all  the request  parameters
+ * originally  sent  by the  client  except  a  few sensitive  ones  like
+ * password. These values available as a json string will be filtered and
+ * reused across the request processing phase.
+ * @var {string} reqJson
+ */
+var reqJson = typeof oauthSession !== "undefined" ? oauthSession.getVariable('json-request') : '';
+
+
+/**
+  * The variable  css_session_revocation is  a combination of  the boolean
+  * predicate  of session  from  the opi  metadata  configuration and  the
+  * access  token  validity value.  The  same  is  injected as  a  context
+  * variable by the MsgTransformer transformation.   The value can be used
+  * to check  if css  call is required  or is already  made at  some point
+  * during the transaction lifetime.
+  * @var {string} css_session_revocation
+  */
+var css_session_revocation = typeof oauthSession !== "undefined" ? oauthSession.getVariable('css_session_revocation') : '';
+
+/**
+ * During  AAA  Authentication  phase,  based on  the  session  predicate
+ * specified in  the metadata configuration  a call  will be made  to CSS
+ * Security Framework for  getting token and session. If the  call to the
+ * external  css service  is successful,  then a  value of  true will  be
+ * assigned       to      the       datapower      context       variable
+ * <b>var://context/oauth/misc-result</b>  otherwise  a   false  will  be
+ * assigned to  the same.  The value  will be used  to decide  whether to
+ * proceed further with the id token generation or fail the call.
+ * @var {string} miscResult
+ */
+var miscResult = typeof oauthSession !== "undefined" ? oauthSession.getVariable('misc-result') : '';
+
+/**
+ * The  css-token context  variable  is set  by  the xslt  transformation
+ * AddOnOAuthProcessing.xslt and  it contains  a valid  CSS Authorization
+ * token generated for an application id and application profile
+ * @var {string} cssToken
+ */
+var cssToken = typeof oauthSession !== "undefined" ? oauthSession.getVariable('css-token') : '';
+
+/**
+ * The css-session  context variable  is set  by the  xslt transformation
+ * AddOnOAuthProcessing.xslt  and it  contains a  valid CSS  User Session
+ * generated  for   a  valid  application  id   and  application  profile
+ * combination
+ * @var {string} cssSession
+ */
+var cssSession = typeof oauthSession !== "undefined" ? oauthSession.getVariable('css-session') : '';
+
+/**
+ * The  auxiliary-attributes   context  variable  is  set   by  the  XSLT
+ * Transformation  AddOnOAuthProcessing.xslt  and  it contains  the  LDAP
+ * search results retrieved from the user  data in ldap after a successful
+ * user  authentication.   This  is  built   only  if  the   authTyoe  is
+ * maybeEmployee.
+ * @var {object} auxData
+ */
+var auxData = typeof oauthSession !== "undefined" ? oauthSession.getVariable('auxiliary-attributes') : '';
+
+/**
+ * The  context variable  issuer contains  the  main url  used for  token
+ * generation and it's  picked up from the static  xml configuration file
+ * opi-metadata.xml    and   set    by   the    AddOnOAuthProcessing.xslt
+ * transformation
+ * @var {string} issuer
+ */
+var issuer = typeof oauthSession !== "undefined" ? oauthSession.getVariable('issuer') : '';
+
+/**
+ * The context variable version is the current service version and is
+ * picked from opi-metadata.xml
+ * @var {number} version
+ */
+var version = typeof oauthSession !== "undefined" ? oauthSession.getVariable('version') : '';
+
+/**
+ * Get the backend service environment as  set in the context variable by
+ * the gateway script tokenProcessing.js
+ * @var {string} environment
+ */
+var environment = typeof oauthContext !== "undefined" ? oauthContext.getVariable('environment') : '';
+
+/**
+ * The  context variable  id-token-lifetime is  the JWT  token expiration
+ * time period  in minutes  captured from  static xml  configuration file
+ * opi-metadata.xml    read    and   parsed    by    AddOnOAuthProcessing
+ * transformation. This value  multiplied by 60 and added  to the current
+ * timestamp in seconds will give the  absolute id token expiry period in
+ * seconds
+ * @var {number} idTokenLifetime
+ */
+var idTokenLifetime = typeof oauthSession !== "undefined" ? oauthSession.getVariable('id-token-lifetime') : '60';
+
+
+// The context variable appid is picked up and set from oauth-clients.xml
+// var appid = session.name('oauth') ? session.name('oauth').getVariable('app_id') : '';
+// var appid = typeof oauthSession !== "undefined" ? oauthSession.getVariable('app_id') : '';
+
+/**
+ * The  context  variable  doUserType  is   set  by  the  gateway  script
+ * tokenProcessing.js as a measure of indicating the type of User
+ * @var {string} doUserType
+ */
+var dpUserType = typeof oauthSession !== "undefined" ? oauthSession.getVariable('dpUserType') : '';
+
+/**
+ *  Get the old JWT id_token value if one is previously available from the
+ *  access_token  or refresh_token.  Check  if  the request  is for a  new
+ *  access_token/refresh_token pair or for  an access_token by exchange of
+ *  the old refresh_token.  In any case if token has  an attached id_token
+ *  grab  the   same.  Again   this  context  variable   is  set   by  the
+ *  MessageTransfomer.xslt.
+ *  @var {string} preIDToken
+ */
+var preIDToken = typeof oauthSession !== "undefined" ? oauthSession.getVariable('jwtPreToken') : '';
+
+/**
+ * Similar to above, check for an existing jwt header of an id_token from
+ * previous attempt
+ * @var {string} preJwtHeader
+ */
+var preJwtHeader = typeof oauthSession !== "undefined" ? oauthSession.getVariable('jwtHeader') : '';
+
+/**
+ * Similar to above check for an existing jwt payload of an id_token from
+ * previous attempt
+ * @var {string} preJwtClaims
+ */
+var preJwtClaims = typeof oauthSession !== "undefined" ? oauthSession.getVariable('jwtPayload') : '';
+
+/**
+ * Get the OAuth request grant_type from the pre-defined custom datapower
+ * context  variable.  This variable  is  set  during the  initial  token
+ * request  phase by  the  MessageTransformer.xslt transformation.   This
+ * variable acts as a key to  identify whether the refresh_token is being
+ * issued the  first time along  with a  new access_token or  an existing
+ * refresh_token is being exchanged for a new access_token
+ * v@var {string} grantType
+ */
+var grantType = typeof oauthSession !== "undefined" ? oauthSession.getVariable('grant_type') : '';
+
+/**
+ * root location  of the configuration  files to get required  metadata
+ * information which includes data like issuer, version, css url's timeout's etc
+ * @var {string} conf_location
+ */
+var conf_location = "local:///OpenID/conf/";
+
+/**
+ * specify the json file location which holds key information
+ * grab the configuration data containing the private key information
+ * @var {object} generator_keys
+ */
+var generator_keys = conf_location + "generator-keys.json";
+
+// xml parser options for dealing with xml data
+var option = {
+  omitXmlDeclaration: true
+};
+
+
+/**
+ * This function returns a base64 encoded value of a random number
+ * @param {integer} len is the input string length
+ * @returns {string} a random base64 encoded string value
+ */
+function randomValueBase64(len) {
+  return crypto.randomBytes(Math.ceil(len * 3 / 4)).toString('base64')
+    .slice(0, len) // return required number of characters
+    .replace(/\+/g, '0') // replace '+' with '0'
+    .replace(/\//g, '0'); // replace '/' with '0'
+}
+
+
+/**
+ * This function checks whether a string is empty or not
+ * @param {string} str is the input string to check for
+ * @returns {boolean} returns a boolean true or false according to
+ * whether the input string is null or not
+ */
+function isEmpty(str) {
+  if (typeof str == 'undefined' || !str || str.length === 0 || str === "" ||
+    !/[^\s]/.test(str) || /^\s*$/.test(str) ||
+    str.replace(/\s/g, "") === "") {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+/**
+ * Function for testing whether the `userType` attribute sent in the
+ * token request is a valid string. It can be only valid if it belongs
+ * to any of the below 3 values set by DataPower
+ * <br>
+ * <pre>
+ *    i. maybeGuest
+ *   ii. maybeEmployee
+ *  iii. maybeCustomer
+ * </pre>
+ * @param {string} user - user type value
+ * @returns {boolean} returns true or false
+ */
+function isValidUserType(user) {
+  if (isEmpty(user) || user === 'maybeExternal') {
+    return false;
+  } else {
+    return true;
+  }
+}
+
+/**
+ * Function for checking the request `grant_type`. The `grant_type` can
+ * be any of the below valid OAuth grant types <br>
+ * <pre>
+ *   i. client_credentials
+ *  ii. authorization_code
+ * iii. password
+ * </pre>
+ * @param {string} grant - standard oauth grant types
+ * @returns {boolean} returns boolean true or false
+ */
+function isAuthenticatedGrant(grant) {
+  if (grant === 'client_credentials' ||
+    grant === 'password' ||
+    grant === 'authorization_code') {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+/**
+ * Function for performing Caeser Cipher Encryption on a String
+ * @param {string} s is the input string to be encrypted by rot13
+ * @returns {string} returns a rot13 encrypted string
+ */
+function rot13(s) {
+  return s.replace(/[A-Za-z]/g, function(c) {
+    return String.fromCharCode(c.charCodeAt(0) + (c.toUpperCase() <= "M" ? 13 : -13));
+  });
+}
+
+
+/**
+ * Function for logging the jwt token size and details
+ * @param {string} token
+ * @param {string} prefix
+ * @param {object} logger
+ */
+function tokenAuditLogger(token, prefix, logger) {
+  if (token.length < 3000) {
+    logger.notice("%s JWT token size = %d", prefix, token.length);
+  } else if (token.length < 4000) {
+    logger.notice("%s JWT token size = %d", prefix, token.length);
+  } else {
+    logger.notice("%s JWT token size = %d", prefix, token.length);
+  }
+  if (token.length > 5000) {
+    logger.warn("%s warning: Browsers don't handle large HTTP headers consistently.  curl will truncate Set-Cookie values larger than 5,000", prefix);
+  }
+}
+
+/**
+ * Function for calculating and writing the time taken for the
+ * transaction in milli-seconds to the configured log target or object
+ * @param {number} tInitial
+ * @param {number} tFinal
+ * @param {string} prefix
+ * @param {string} client
+ * @param {object} logger
+ */
+function logTimer(tInitial, tFinal, prefix, client, logger) {
+  var timeDiff = tFinal - tInitial;
+  logger.info("%s %s time taken for the transaction %d ms", prefix, client, timeDiff);
+}
+
+/**
+ * parse the request data parameters and grab any required values
+ * @var {object} jsobj
+ */
+var jsobj = typeof reqJson !== "undefined" ? JSON.parse(reqJson) : '';
+
+/**
+ * extract the input scope from above parsed data
+ * @var {string} input_scope
+ */
+var input_scope = typeof jsobj !== "undefined" ? jsobj.scope : '';
+
+/**
+ * Perform a case insensitive search for the openid scope within the user
+ * specified scopes. This  is a check to  verify if the request  is for a
+ * normal access_token or for an openid connect specific access_token and
+ * id_token
+ * @var {number} scope_openid
+ */
+var scope_openid = typeof input_scope !== "undefined" ? input_scope.search(new RegExp('openid', 'i')) : -1;
+
+// TODO: cleanup this logger statement
+logConsole.debug("%s checking scope for the presence of openid %d", lp, scope_openid);
+
+/**
+ * define a custom function for handling the input data transformation
+ * continue first by assuming that the INPUT data is a json packet
+ */
+session.input.readAsJSON(function(error, data) {
+  'use strict';
+  // TODO: disable the below additional logger statements later
+  logConsole.debug("%s %s Content-Type %s with protocol %s %s", lp, oauthClientId, contentType, protocol, path);
+
+  // this is a self serving loop back mpg service configured with in
+  // datapower, so should not go to any designated back-end(s)
+  sm.mpgw.skipBackside = true;
+
+  // in case of any error while reading or parsing the
+  // previous json input, handle the same and report here
+  if (error) {
+    hm.response.set('Content-Type', 'application/json');
+    hm.current.statusCode = "500 Server Error";
+    hm.response.statusCode = "500 Server Error";
+    logConsole.error("%s %s error reading the token data %s", lp, oauthClientId, JSON.stringify(error));
+    tDiff = sm.timeElapsed - tInit;
+    logConsole.notice("%s %s time taken for the transaction %d ms", lp, oauthClientId, tDiff);
+    session.output.write("error: " + JSON.stringify(error));
+  } else {
+    // check if authentication is successful and an access_token is generated
+    logConsole.info("%s %s id_token request for grant_type %s", lp, oauthClientId, grantType);
+    logConsole.info("%s %s user type %s and %s", lp, oauthClientId, typeof dpUserType, dpUserType);
+    if (aaaErrXmlStr.indexOf('<error') == -1) {
+      fs.readAsJSON(generator_keys, function(json_error, json_data) {
+        if (json_error) {
+          /**
+           * in case of any standard oauth error during earlier stages,
+           * do no proceed further and send the same error as response
+           */
+          hm.response.set('Content-Type', 'application/json');
+          hm.current.statusCode = "500 Server Error";
+          hm.response.statusCode = "500 Server Error";
+          logConsole.error("%s %s error reading keys configuration %s", lp, oauthClientId, JSON.stringify(json_error));
+          tDiff = sm.timeElapsed - tInit;
+          logConsole.notice("%s %s time taken for the transaction %d ms", lp, oauthClientId, tDiff);
+          session.output.write(JSON.stringify(json_error));
+        } else {
+          if (grantType === 'validate_token') {
+            /**
+              * If the  token request is  for validation  then do not  proceed further
+              * with  the  id token  generation  process  and  send the  current  data
+              * unchanged  as   response.  In   case  if   the  token   contains  some
+              * miscellaneous information in the form of  a css user token then do not
+              * include the same  in the response as it's not  permitted to expose the
+              * css token to the external caller.
+              */
+            var miscinfo = typeof data.miscinfo !== "undefined" ? data.miscinfo : '';
+            data.miscinfo = miscinfo.length !== 0 ? "embedded css info" : '';
+            hm.response.set('Content-Type', 'application/json');
+            logConsole.debug("%s %s token request for grant_type %s and type %s", lp, oauthClientId, grantType, tokenType);
+            logConsole.debug("%s %s miscellaneous information if any from token %s", lp, oauthClientId, miscinfo);
+            tDiff = sm.timeElapsed - tInit;
+            logConsole.notice("%s %s time taken for the transaction %d ms", lp, oauthClientId, tDiff);
+            session.output.write(JSON.stringify(data));
+          } else if (grantType === 'revoke_token') {
+            /**
+             * If  the token  request is  for revocation  or validation  then do  not
+             * proceed  further with  the id  token generation  process and  send the
+             * current data unchanged as response.
+             * <br>
+             * However  if the  access  token  to be  revoked  contains previous  css
+             * session token embedded into it, then  the same needs to be invalidated
+             * by  making an  asynchronous call  to the  css expiration  service. The
+             * decision to make such a call is  decided based on the css session flag
+             * defined in the opi metadata configuration.  This boolean predicate can
+             * be read from either context variable or configuration.
+             */
+            hm.response.set('Content-Type', 'application/json');
+            if (!isEmpty(css_session_revocation) && css_session_revocation === 'true') {
+              var expire_token_request = oauthSession.getVariable('expire_token_request');
+              var expire_token_url = oauthSession.getVariable('expire_token_url');
+              var expire_token_ssl = oauthSession.getVariable('expire_token_ssl');
+              var session_request = XML.stringify(option, expire_token_request);
+              logConsole.debug("%s %s request for session expiry %s", lp, oauthClientId, session_request);
+
+              /**
+                * The variable call_options holds the request metadata as well as the actual
+                * payload required for making a POST call to the css expiration service for
+                * invalidating the css session if present.
+                * @var {object} call_options
+                */
+              var call_options = {
+                target: expire_token_url,
+                sslClientProfile: expire_token_ssl,
+                method: 'post',
+                contentType: 'text/xml',
+                timeout: 30,
+                data: session_request
+              };
+
+              urlopen.open(call_options, function(error, response) {
+                if (error) {
+                  logConsole.error("%s %s error occurred invalidating the css token %s", lp, oauthClientId, error);
+                  data.status = 'false';
+                  data.session_expiry = 'unable to expire session';
+                  logTimer(tInit, sm.timeElapsed, lp, oauthClientId, logConsole);
+                  session.output.write(JSON.stringify(data));
+                } else {
+                  response.readAsXML(function(error, cssResponse) {
+                    if (error) {
+                      logConsole.error("%s %s error parsing css session expiry as xml %s", lp, oauthClientId, error);
+                      data.session_expiry = 'true';
+                      logTimer(tInit, sm.timeElapsed, lp, oauthClientId, logConsole);
+                      session.output.write(JSON.stringify(data));
+                    } else {
+                      logConsole.debug("%s %s css session expiry data %s", lp, oauthClientId, XML.stringify(cssResponse));
+                      data.session_expiry = 'true';
+                      logTimer(tInit, sm.timeElapsed, lp, oauthClientId, logConsole);
+                      session.output.write(JSON.stringify(data));
+                    }
+                  });
+                }
+              });
+            } else {
+              logConsole.debug("%s %s token request for grant_type %s and type %s", lp, oauthClientId, grantType, tokenType);
+              logTimer(tInit, sm.timeElapsed, lp, oauthClientId, logConsole);
+              session.output.write(JSON.stringify(data));
+            }
+          } else if (scope_openid === -1) {
+            /**
+             * if the  scope does  not contain  openid as one  of the  value(s), then
+             * treat it as a normal OAuth 2.0 access/refresh token request and do not
+             * generate an id_token as the user  might need only standard OAuth based
+             * authentication and and OpenID
+             */
+            hm.response.set('Content-Type', 'application/json');
+            logConsole.notice("%s %s scope does not contain openid, processing as oauth 2.0", lp, oauthClientId, JSON.stringify(data));
+            tDiff = sm.timeElapsed - tInit;
+            logConsole.notice("%s %s time taken for the transaction %d ms", lp, oauthClientId, tDiff);
+            session.output.write(JSON.stringify(data));
+          } else if (isAuthenticatedGrant(grantType) && !isValidUserType(dpUserType)) {
+            /**
+             * If the user either sends the userType value as external or
+             * miss it altogether, consider the same as a failure case as
+             * it's not possible to find the category to which the user
+             * belongs to and build the claims. This comes into picture if
+             * the request is for a new access token and is not applicable
+             * during refresh/revoke/validation token phase
+             */
+            data = {};
+            data.error = "invalid_grant";
+            data.error_description = "resource owner failed to authenticate";
+            logConsole.error("%s %s unknown user type %s unable to generate the id_token", lp, oauthClientId, dpUserType);
+            hm.response.set('Content-Type', 'application/json');
+            hm.response.set('WWW-Authenticate', 'Basic');
+            hm.current.statusCode = "401 Unauthorized";
+            hm.response.statusCode = "401 Unauthorized";
+            tDiff = sm.timeElapsed - tInit;
+            logConsole.notice("%s %s time taken for the transaction %d ms", lp, oauthClientId, tDiff);
+            session.output.write(JSON.stringify(data));
+          } else if (miscResult === "false") {
+            /**
+             * This section is triggered when there is an issue while connecting to the backend
+             * css service  during the anonymous session  generation by the xslt transformation
+             * AddOnOAuthProcessing and a valid css session was not generated, the case will be
+             * identified based  on the context variable  var://context/misc-result set by xslt.
+             * If the context variable is false  then css call is failed and the gateway script
+             * should respond with a 503 Service Unavailable error.
+             */
+            data = {};
+            data.error = "service_unavailable";
+            data.error_description = "an error occurred with the backend service";
+            logConsole.error("%s %s unknown user type %s unable to generate the id_token as css response is %s", lp, oauthClientId, dpUserType, miscResult);
+            hm.response.set('Content-Type', 'application/json');
+            // hm.response.set('WWW-Authenticate', 'Basic');
+            hm.current.statusCode = "503 Service Unavailable";
+            hm.response.statusCode = "503 Service Unavailable";
+            tDiff = sm.timeElapsed - tInit;
+            logConsole.notice("%s %s time taken for the transaction %d ms", lp, oauthClientId, tDiff);
+            session.output.write(JSON.stringify(data));
+          } else {
+            /**
+             * From the  configuration file generator-keys.json, select  a random kid
+             * and private key values. These will  be used for the id_tken generation
+             * A  random number  is first  generated and  then it's  contained to  be
+             * within  the  length of  the  array  which  is  holding the  key  value
+             * pairs. This number is  used as an index in picking  a random key value
+             * pair which is used for signing the token.
+             */
+            var propertyArray = Object.keys(json_data);
+            var randomNumber = Math.random();
+            var propertyIndex = Math.floor(randomNumber * propertyArray.length);
+            logConsole.debug("%s for environment %s reading the configuration file %s", lp, generator_keys, environment);
+
+
+            /**
+             * free  variable declaration  for holding  a shared  secret key  object,
+             * @var {object} jwsSharedSecretKey
+             */
+            var jwsSharedSecretKey;
+
+            /**
+             * free variable declaration for holding a public cryptography key  object
+             * which will be useful for validating the id token claims and signature
+             * @var {object} jwsPublicKey
+             */
+            var jwsPublicKey;
+
+            /**
+             * free variable declaration for holding the JOSE kid value, which  is a
+             * unique v4 uuid/guid value  generated on the fly
+             * @var {object} jwsKid
+             */
+            var jwsKid;
+
+            /**
+             * check if there is a previous jwt header value available in the request
+             * or not  and if available  the same will  be decrypted for  getting kid
+             * value
+             */
+            if (typeof preJwtHeader === "undefined") {
+              /**
+               * there  is no  previous  jwt  value available,  so  proceed first  with
+               * selecting a  random kid and an  associated public key values  from the
+               * json file repository  consisting of the shared  key and public/private
+               * key pairs
+               */
+              jwsSharedSecretKey = propertyArray[propertyIndex];
+              var propertyValues = json_data[jwsSharedSecretKey];
+              jwsPublicKey = propertyValues.public_key;
+              jwsKid = propertyValues.kid;
+              logConsole.info("%s %s no pre-existing jwt info available signing fresh", lp, oauthClientId);
+              logConsole.info("%s %s random Jws Secret Key %s and kid %s", lp, oauthClientId, jwsSharedSecretKey, jwsKid);
+            } else {
+              /**
+               * since there  is a previous id  token value available we  have to first
+               * select the private  key which was originally used to  sign and provide
+               * the signature information  of the token, which can be  done by doing a
+               * reverse lookup with the kid value
+               */
+              var previous_jwt_header = new Buffer(preJwtHeader, 'base64').toString();
+              var previous_jwt_json = JSON.parse(previous_jwt_header);
+              var previous_kid = previous_jwt_json.kid;
+              jwsKid = previous_kid;
+              // pick a matching shared secret key for the kid value
+              for (var k in json_data) {
+                if (json_data.hasOwnProperty(k)) {
+                  var jval = json_data[k];
+                  if (jval.kid === previous_kid) {
+                    jwsSharedSecretKey = k;
+                  // var jwsKid = previous_kid;
+                  }
+                }
+              }
+              logConsole.info("%s %s using Jws Secret Key %s and kid %s from previous jwt info", lp, oauthClientId, jwsSharedSecretKey, jwsKid);
+            }
+            /**
+             * define free variables for holding the below cases <br>
+             * <pre>
+             *    previous jwt claims if available from the id_token
+             *    previous claims parsed as a JSON object
+             * </pre>
+             */
+            var previous_claims;
+            var previous_claims_json;
+
+            /**
+             * check if there are any previously generated claims available
+             * from the earlier generated id_token
+             */
+            if (typeof preJwtClaims !== "undefined") {
+              previous_claims = new Buffer(preJwtClaims, 'base64').toString();
+              previous_claims_json = JSON.parse(previous_claims);
+            }
+
+            /**
+             * Generate a random  base64 identifier  useful for calculating the
+             * at_hash claim value of an access token
+             * @var {string} randomString
+             */
+            var randomString = randomValueBase64(12);
+
+            /**
+             * a unique v4 identifier generated dynamically (guid)
+             * @var {object} uuid
+             */
+            var uuid = uuidV4();
+
+            var access_token_value = data.access_token;
+
+            /**
+             * at_hash value calculation for the access_token which will be
+             * included as one of the claims in the id_token
+             * @var {string} at_hash
+             */
+            var at_hash = accessTokenHash.generate(access_token_value);
+
+            // manual fallback issuer value build
+            var fallback_issuer = protocol + '://' + host;
+
+            /**
+             * xml dom variables and standard claims for Employee and Customer <br>
+             * user specific free variable declaration for various user type cases
+             * like employee or customer or other (guest, local user...)
+             */
+            if (dpUserType === "maybeEmployee") {
+              // xml dom variables
+              var ldapXML;
+              var ldapDoc;
+              var ldapElement;
+              // claims and helper variables
+              var ldapTitleNode;
+              var title;
+              var snNode;
+              var sn;
+              var givenNameNode;
+              var givenName;
+              var displayNameNode;
+              var fullName;
+              var mailNode;
+              var email;
+              var emailVerified;
+              var empIDNode;
+              var employeeId;
+              var deptNode;
+              var department;
+              var companyNode;
+              var company;
+              var empStatusNode;
+              var employeeStatus;
+              var telNumberNode;
+              var telephoneNumber;
+            } else if (dpUserType === "maybeCustomer") {
+              var firstName;
+              var lastName;
+            } else {
+            }
+
+            /**
+             * using the  Date modules  calculate the current  time stamp  to nearest
+             * rounded value, generate  the expiry time for id token  using the value
+             * of  token  lifetime  from the  opi-metadata.xml  metadata  information
+             * injected    earlier   during    the   OAuth    processing   step    by
+             * AddOnOAuthProcessing.xsl
+             */
+            var now = new Date();
+            var expiry = new Date(now.getTime() + 60 * parseInt(idTokenLifetime) * 1000);
+            // const currStamp = new Date() / 1000;
+
+            /**
+             * capture css session id if available from the context variables
+             * and assign the same to jti and sub
+             * @var {string} csession
+             */
+            var csession = typeof cssSession !== "undefined" ? cssSession : uuid;
+
+            /**
+              * add the jti value to context variable for pushing to the logger
+              */
+            oauthSession.setVar('jwt_jti_value', csession);
+
+            /**
+             * define an empty json object for holding the custom jwt claims
+             * @var {object} claims
+             */
+            var claims = {};
+
+            /**
+             * now build and populate the standard jwt claims as per the specification
+             */
+            claims.ver = typeof version !== "undefined" ? version : "1.0";
+            claims.jti = csession;
+            claims.sub = typeof jsobj.username === "undefined" ? csession : jsobj.username + '_' + csession;
+            claims.iss = typeof issuer !== "undefined" ? issuer : fallback_issuer;
+            claims.aud = oauthClientId;
+            claims.iat = typeof preJwtClaims === "undefined" ? Math.floor(now.getTime() / 1000) : previous_claims_json.iat;
+            claims.exp = Math.floor(expiry.getTime() / 1000);
+            claims.amr = ["pwd"];
+            claims.auth_time = Math.floor(now.getTime() / 1000);
+
+            /**
+             * select nonce if available in the input request or previous claims
+             * if none is available, then the same will be generated afresh
+             */
+            if (typeof jsobj.nonce === "undefined" && typeof preJwtClaims === "undefined") {
+              claims.nonce = randomString;
+            } else if (typeof jsobj.nonce === "undefined" && typeof preJwtClaims !== "undefined") {
+              claims.nonce = previous_claims_json.nonce;
+            } else if (typeof jsobj.nonce !== "undefined" && typeof preJwtClaims === "undefined") {
+              claims.nonce = jsobj.nonce;
+            }
+
+            claims.at_hash = at_hash;
+            claims.updated_at = typeof previous_claims_json === "undefined" ? Math.floor(now.getTime() / 1000) : previous_claims_json.updated_at;
+            claims.client_application_id = oauthClientId;
+            claims.userType = '';
+
+            /**
+             * build the custom claims as required by the user type
+             * check if the previous claims from an earlier jwt token are available
+             */
+            if (typeof preJwtClaims === "undefined") {
+              // check if the LDAP Auxiliary data from LDAP search is available or not
+              if (dpUserType === 'maybeGuest' && typeof auxData == 'undefined') {
+                logConsole.info("%s %s custom claim build and lookup for user type: %s", lp, oauthClientId, dpUserType);
+                // userType claim will be populated by the same mandatory token param
+                // claims.userType = "guest";
+                // TODO: clear this logger later
+                logConsole.debug("%s %s building the custom claims %s for %s from guest information", lp, oauthClientId, JSON.stringify(claims), dpUserType);
+              } else if (dpUserType === 'maybeEmployee') {
+                // parse the data from LDAP Auxiliary attributes node.
+                logConsole.info("%s %s custom claim build and lookup for user type: %s", lp, oauthClientId, dpUserType);
+
+                ldapXML = XML.stringify(option, auxData);
+                ldapDoc = XML.parse(ldapXML);
+                ldapElement = ldapDoc.documentElement;
+
+                ldapTitleNode = ldapElement.getElementsByTagName('title');
+                title = ldapTitleNode.length != 0 ? ldapTitleNode.item(0).textContent : '';
+                snNode = ldapElement.getElementsByTagName('sn');
+                sn = snNode.length != 0 ? snNode.item(0).textContent : '';
+                givenNameNode = ldapElement.getElementsByTagName('givenName');
+                givenName = givenNameNode.length != 0 ? givenNameNode.item(0).textContent : '';
+                displayNameNode = ldapElement.getElementsByTagName('displayName');
+                fullName = displayNameNode.length != 0 ? displayNameNode.item(0).textContent : '';
+
+                // below parameters are volatile from the response
+                mailNode = ldapElement.getElementsByTagName('mail');
+                email = mailNode.length > 0 ? mailNode.item(0).textContent : '';
+                empIDNode = ldapElement.getElementsByTagName('employeeID');
+                employeeId = empIDNode.length > 0 ? empIDNode.item(0).textContent : '';
+                deptNode = ldapElement.getElementsByTagName('department');
+                department = deptNode.length > 0 ? deptNode.item(0).textContent : '';
+                companyNode = ldapElement.getElementsByTagName('company');
+                company = companyNode.length > 0 ? companyNode.item(0).textContent : '';
+                empStatusNode = ldapElement.getElementsByTagName('EmployeeStatus');
+                employeeStatus = empStatusNode.length > 0 ? empStatusNode.item(0).textContent : '';
+                telNumberNode = ldapElement.getElementsByTagName('telephoneNumber');
+                telephoneNumber = telNumberNode > 0 ? telNumberNode.item(0).textContent : '';
+                emailVerified = isEmpty(email); // if email is null just return true
+
+                // claims.userType = "Employee";
+                claims.employeeId = employeeId;
+                claims.name = fullName;
+                claims.given_name = givenName;
+                claims.middle_name = sn;
+                claims.family_name = sn;
+                claims.email = email;
+                claims.email_verified = !emailVerified;
+                claims.phone_number = telephoneNumber;
+                claims.employeeStatus = employeeStatus;
+                claims.company = company;
+                claims.title = title;
+                claims.department = department;
+
+                logConsole.debug("%s %s building the custom claims %s for %s from Employee LDAP lookup", lp, oauthClientId, JSON.stringify(claims), dpUserType);
+              } else if (dpUserType === 'maybeCustomer') {
+                logConsole.info("%s %s custom claim build and lookup for user type: %s", lp, oauthClientId, dpUserType);
+
+                if (typeof oauthSession !== 'undefined') {
+                  firstName = oauthSession.getVariable('customer-firstname');
+                  lastName = oauthSession.getVariable('customer-lastname');
+
+                  // claims.userType = session.name('oauth').getVariable('customer-usertype');
+                  claims.customerType = oauthSession.getVariable('customer-type');
+                  claims.customerId = oauthSession.getVariable('customer-id');
+                  claims.customerLoyaltyId = oauthSession.getVariable('customer-loyaltyid');
+                  claims.customerLoginId = oauthSession.getVariable('customer-userid');
+                  claims.name = firstName + ' ' + lastName;
+                  claims.given_name = firstName;
+                  claims.family_name = lastName;
+                  claims.isCorporateCustomer = oauthSession.getVariable('customer-iscorpcst');
+                } else {
+                  claims.customerType = '';
+                  claims.customerId = '';
+                  claims.customerLoyaltyId = '';
+                  claims.customerLoginId = '';
+                  claims.name = '';
+                  claims.isCorporateCustomer = '';
+                }
+
+                logConsole.debug("%s %s building the custom claims %s for %s from cidb", lp, oauthClientId, JSON.stringify(claims), dpUserType);
+              } else {
+                hm.response.set('Content-Type', 'application/json');
+                var err = {};
+                err.error = "unknown_user";
+                err.error_description = "unknown userType unable to generate the id_token";
+                logConsole.error("%s %s error identifying user type %s unable to generate token", lp, oauthClientId, JSON.stringify(err));
+                tDiff = sm.timeElapsed - tInit;
+                logConsole.notice("%s %s time taken for the transaction %d ms", lp, oauthClientId, tDiff);
+                session.output.write(JSON.stringify(err));
+              }
+            } else {
+              /**
+               * there are some previous claims available from an earlier id_token
+               * we will exclude creating new ones in favor of existing claims
+               */
+              for (var key in previous_claims_json) {
+                if (previous_claims_json.hasOwnProperty(key) &&
+                  key !== "updated_at" &&
+                  key !== "exp" &&
+                  key !== "auth_time" &&
+                  key !== "at_hash" &&
+                  key !== "sub" &&
+                  key !== "nonce") {
+                  var pval = previous_claims_json[key];
+                  claims[key] = pval;
+                }
+              }
+              ;
+
+              /**
+               * update the claim updated_at with the current time-stamp
+               */
+              claims.updated_at = Math.floor(now.getTime() / 1000);
+              /**
+               * if the user type is an Employee,check if the LDAP Auxilliary data is present or not
+               */
+              if (dpUserType === 'maybeGuest' && typeof auxData === "undefined") {
+                logConsole.info("%s %s custom claims build and lookup for user type %s", lp, oauthClientId, dpUserType);
+                // claims.userType = "guest";
+                logConsole.debug("%s %s custom claim build %s for %s from guest information", lp, oauthClientId, JSON.stringify(claims), dpUserType);
+              } else if (dpUserType === 'maybeEmployee') {
+                /**
+                 * parse the xml data obtained from Employee LDAP Authentication
+                 * stored under the Auxiliary attributes node.
+                 */
+                logConsole.info("%s %s custom claims build and lookup for user type %s", lp, oauthClientId, dpUserType);
+
+                ldapXML = XML.stringify(option, auxData);
+                ldapDoc = XML.parse(ldapXML);
+                ldapElement = ldapDoc.documentElement;
+
+                ldapTitleNode = ldapElement.getElementsByTagName('title');
+                title = ldapTitleNode.length != 0 ? ldapTitleNode.item(0).textContent : '';
+                snNode = ldapElement.getElementsByTagName('sn');
+                sn = snNode.length != 0 ? snNode.item(0).textContent : '';
+                givenNameNode = ldapElement.getElementsByTagName('givenName');
+                givenName = givenNameNode.length != 0 ? givenNameNode.item(0).textContent : '';
+                displayNameNode = ldapElement.getElementsByTagName('displayName');
+                fullName = displayNameNode.length != 0 ? displayNameNode.item(0).textContent : '';
+
+                // below parameters are volatile from the response
+                mailNode = ldapElement.getElementsByTagName('mail');
+                email = mailNode.length != 0 ? mailNode.item(0).textContent : '';
+                empIDNode = ldapElement.getElementsByTagName('employeeID');
+                employeeId = empIDNode.length != 0 ? empIDNode.item(0).textContent : '';
+                deptNode = ldapElement.getElementsByTagName('department');
+                department = deptNode.length != 0 ? deptNode.item(0).textContent : '';
+                companyNode = ldapElement.getElementsByTagName('company');
+                company = companyNode.length != 0 ? companyNode.item(0).textContent : '';
+                empStatusNode = ldapElement.getElementsByTagName('EmployeeStatus');
+                employeeStatus = empStatusNode.length != 0 ? empStatusNode.item(0).textContent : '';
+                telNumberNode = ldapElement.getElementsByTagName('telephoneNumber');
+                telephoneNumber = telNumberNode != 0 ? telNumberNode.item(0).textContent : '';
+                // if email is null return true
+                emailVerified = isEmpty(email);
+
+                // claims.userType = "Employee";
+                claims.employeeId = employeeId;
+                claims.name = fullName;
+                claims.given_name = givenName;
+                claims.middle_name = sn;
+                claims.family_name = sn;
+                claims.email = email;
+                claims.email_verified = !emailVerified;
+                claims.phone_number = telephoneNumber;
+                claims.employeeStatus = employeeStatus;
+                claims.company = company;
+                claims.title = title;
+                claims.department = department;
+
+                logConsole.debug("%s %s custom claim build %s for %s from Employee LDAP lookup", lp, oauthClientId, JSON.stringify(claims), dpUserType);
+              } else if (dpUserType === 'maybeCustomer') {
+                logConsole.info("%s %s custom claims build and lookup for user type %s", lp, oauthClientId, dpUserType);
+
+                firstName = session.name('oauth').getVariable('customer-firstname');
+                lastName = session.name('oauth').getVariable('customer-lastname');
+
+                // claims.userType = session.name('oauth').getVariable('customer-usertype');
+                claims.customerType = session.name('oauth').getVariable('customer-type');
+                claims.customerId = session.name('oauth').getVariable('customer-id');
+                claims.customerLoyaltyId = session.name('oauth').getVariable('customer-loyaltyid');
+                claims.customerLoginId = session.name('oauth').getVariable('customer-userid');
+                claims.name = firstName + ' ' + lastName;
+                claims.given_name = firstName;
+                claims.family_name = lastName;
+                claims.isCorporateCustomer = session.name('oauth').getVariable('customer-iscorpcst');
+
+                logConsole.debug("%s %s custom claim build %s for %s from cidb", lp, oauthClientId, JSON.stringify(claims), dpUserType);
+              } else if ((typeof dpUserType === "undefined" || dpUserType === "maybeExternal") && tokenType !== 'refresh_token') {
+                hm.response.set('Content-Type', 'application/json');
+                /**
+                 * json error response build <br>
+                 * create an empty json object for error & error_description which will
+                 * hold enough information to indicate the error conditions in case  of
+                 * any unforeseen event happening or error
+                 * @var {object} jerr
+                 */
+                var jerr = {};
+                jerr.error = "unknown_user";
+                jerr.error_description = "unknown userType, unable to generate the id_token";
+                logConsole.error("%s %s error building claims %s as user type is %s", lp, oauthClientId, JSON.stringify(jerr), dpUserType);
+                tDiff = sm.timeElapsed - tInit;
+                logConsole.notice("%s %s time taken for the transaction %d ms", lp, oauthClientId, tDiff);
+                session.output.write(JSON.stringify(jerr));
+              }
+            }
+
+            /**
+             * Parse the original user request parameters now available as a
+             * part of the context variable and loop through the key, value
+             * pairs to populate the same as additional claims in id token
+             */
+            for (var ukey in jsobj) {
+              if (jsobj.hasOwnProperty(ukey)) {
+                if (ukey !== 'grant_type' && ukey !== 'scope' && ukey != 'username') {
+                  var juval = jsobj[ukey];
+                  claims[ukey] = juval;
+                }
+              }
+            }
+            ;
+
+            // TODO: clean this logger statement
+            // logConsole.debug("%s %s jwt token claims generated: %s", lp, oauthClientId, JSON.stringify(claims));
+            session.output.write(JSON.stringify(claims));
+
+            // for signing the JWT token, define and create a JWS Header
+            var jwsHeader = jose.createJWSHeader(jwsSharedSecretKey, 'RS256');
+
+            /**
+             * The "typ" (type)  Header Parameter defined by [JWS] and  [JWE] is used
+             * by  JWT  applications to  declare  the  media  type of  this  complete
+             * JWT.       Use      of       this       Header      Parameter       is
+             * OPTIONAL. (https://tools.ietf.org/html/rfc7519#page-11)
+             */
+            jwsHeader.setProtected('kid', jwsKid);
+            // jwsHeader.setProtected('typ', 'JWT');
+
+            // create a new JWT Encoder for token resigning process
+            var encoder = new jwt.Encoder(claims);
+
+            /**
+             * define   free  variables   to   hold  the   items  like   access_token
+             * refresh_token, resigned  id_token and for tokenized  components of the
+             * jwt token generated.
+             */
+            var updated_access_token;
+            var updated_refresh_token;
+            var idToken;
+            var token_segments;
+
+            // set the response content-type to application/json
+            hm.response.set('Content-Type', 'application/json');
+            /**
+             * add a sign or encrypt operation to the JWT creation process
+             * the following can be considered as equations for jwt generation
+             * unsignedToken = base64url(header) + "." + base64url(data)
+             * JWT = unsignedToken + "." + base64url(RSA256(unsignedToken, secret))
+             */
+            encoder.addOperation('sign', jwsHeader);
+            encoder.encode(function(error, resigned_id_token) {
+              if (error) {
+                assert.fail('JWT encode re-signing using JWK failed');
+                logConsole.critical("%s %s jwt encoding failure %s", lp, oauthClientId, JSON.stringify(error));
+              } else {
+                // log the details about jwt id_token
+                tokenAuditLogger(resigned_id_token, lp, logConsole);
+                // setting up of the cookie headers
+                var cookie = util.format("%s : %s", cookie_name, resigned_id_token);
+                if (typeof cookie_domain !== "undefined") {
+                  cookie += ' ;Domain=' + cookie_domain;
+                } else {
+                  logConsole.debug("%s %s cookie domain is not available", lp, oauthClientId);
+                }
+                logConsole.debug("%s %s cookie=%s", lp, oauthClientId, cookie);
+                hm.response.set('Set-Cookie', cookie);
+
+                // assign the resigned token to jwt id token
+                data.id_token = resigned_id_token;
+
+                /**
+                 * if refresh_token is available, include id_token in both
+                 * the access_token as well as in the refresh_token
+                 * the structure of the combined tokens is jumbled encrypted
+                 * using Caesar cipher rot13 algorithm
+                 */
+                if (typeof data.refresh_token !== "undefined" && typeof data.access_token !== "undefined") {
+                  logConsole.debug("%s %s processing with both access and refresh tokens %s", lp, oauthClientId, JSON.stringify(data));
+                  idToken = resigned_id_token;
+                  token_segments = idToken.split(".");
+                  updated_access_token = token_segments[0] + '.' + data.access_token + '.' + token_segments[2] + '.' + token_segments[1];
+                  updated_refresh_token = token_segments[0] + '.' + data.refresh_token + '.' + token_segments[2] + '.' + token_segments[1];
+                  data.access_token = rot13(updated_access_token);
+                  data.refresh_token = rot13(updated_refresh_token);
+                  // logConsole.debug("ROT13 access_token %s", rot13(updated_access_token));
+                  // logConsole.debug("ROT13 refresh_token %s", rot13(updated_refresh_token));
+                  tDiff = sm.timeElapsed - tInit;
+                  logConsole.notice("%s %s time taken for the transaction %d ms", lp, oauthClientId, tDiff);
+                  session.output.write(data);
+                } else if (typeof data.access_token !== "undefined" && typeof data.refresh_token === "undefined") {
+                  logConsole.debug("%s %s processing with only access_token %s", lp, oauthClientId, JSON.stringify(data));
+                  idToken = resigned_id_token;
+                  token_segments = idToken.split(".");
+                  updated_access_token = token_segments[0] + '.' + data.access_token + '.' + token_segments[2] + '.' + token_segments[1];
+                  data.access_token = rot13(updated_access_token);
+                  // logConsole.debug("ROT13 access_token %s", rot13(updated_access_token));
+                  tDiff = sm.timeElapsed - tInit;
+                  logConsole.notice("%s %s time taken for the transaction %d ms", lp, oauthClientId, tDiff);
+                  session.output.write(data);
+                } else {
+                  logConsole.warn("%s %s processing with no tokens generated %s", lp, oauthClientId, JSON.stringify(data));
+                  tDiff = sm.timeElapsed - tInit;
+                  logConsole.notice("%s %s time taken for the transaction %d ms", lp, oauthClientId, tDiff);
+                  session.output.write(data);
+                }
+              }
+            });
+          }
+        }
+      });
+    } else {
+      // if no identity token or AAA errors do not touch the output
+      hm.response.set('Content-Type', 'application/json');
+      logConsole.error("%s %s oauth error occurred %s", lp, oauthClientId, data.error);
+      logConsole.error("%s %s oauth error description %s and details %s", lp, oauthClientId, data.error_description, aaaErrXmlStr);
+      tDiff = sm.timeElapsed - tInit;
+      logConsole.notice("%s %s time taken for the transaction %d ms", lp, oauthClientId, tDiff);
+      session.output.write(data);
+    }
+  }
+}); // end of the json read function

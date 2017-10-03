@@ -1,6 +1,10 @@
-" JAVASCRIPT Completions Configuration
+" ------------------------------------------------------------------------------
+" -------        JAVASCRIPT Syntax and Completions Configuration          ------
+" ------------------------------------------------------------------------------
 
-autocmd Filetype javascript setlocal ts=4 sts=4 sw=4
+"  for proper javascript indentation
+autocmd FileType javascript set tabstop=4|set shiftwidth=4|set shiftwidth=4|set expandtab|set autoindent
+au BufEnter *.js set ai sw=4 ts=4 sts=4
 
 " {{{ for tern completions with omnifunc
 if !exists('g:neocomplete#omni#functions')

@@ -1,10 +1,21 @@
 "------------------------------------------------------------------------------------
 "-----                      for tab alignment configuration                     -----
 "------------------------------------------------------------------------------------
-let g:haskell_tabular = 1
-vmap a= :Tabularize /=<CR>
-vmap a; :Tabularize /::<CR>
-vmap ac :Tabularize /:<CR>
-vmap as :Tabularize /;<CR>
-vmap a> :Tabularize /-><CR>
-vmap a< :Tabularize /<-<CR>
+if has_key(g:plugs, 'tabular')
+    let g:haskell_tabular = 1
+    vmap <leader>a= :Tabularize /=<CR>
+    vmap <leader>a: :Tabularize /::<CR>
+    vmap <leader>ac :Tabularize /:<CR>
+    vmap <leader>as :Tabularize /;<CR>
+    vmap <leader>a> :Tabularize /-><CR>
+    vmap <leader>a< :Tabularize /<-<CR>
+    vmap <leader>a, :Tabularize /,<CR>
+    vmap <leader>a. :Tabularize /.<CR>
+    vmap <leader>a& :Tabularize /&<CR>
+    vmap <leader>a( :Tabularize /(<CR>
+    vmap <leader>a) :Tabularize /)<CR>
+    vmap <leader>a{ :Tabularize /{<CR>
+    vmap <leader>a} :Tabularize /}<CR>
+    vmap <leader>a[ :Tabularize /[<CR>
+    vmap <leader>a] :Tabularize /]<CR>
+endif

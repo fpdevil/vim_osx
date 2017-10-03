@@ -1,0 +1,24 @@
+<xsl:stylesheet version="1.0"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:dp="http://www.datapower.com/extensions"
+  extension-element-prefixes="dp"
+>
+  <xsl:output omit-xml-declaration="yes" />
+
+  <xsl:variable name="ctxsVar" select=" 'var://service/multistep/contexts' "/>
+  <xsl:variable name="ctxs" select="dp:variable($ctxsVar)"/>
+  <xsl:variable name="ctx" select=" 'var://context/' "/>
+  <xsl:variable name="ev" select=" '/_extension/variables' "/>
+  <xsl:template match="/">
+    <result>
+      <xsl:apply-templates select="$ctxs/contextList/contextName"/>
+    </result>
+  </xsl:template>
+
+  <xsl:template match="contextName">
+    <context name="{.}">
+      <xsl:copy-of select="dp:variable(concat($ctx, ., $ev))"/>
+    </context>
+  </xsl:template>
+
+</xsl:stylesheet>

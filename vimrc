@@ -1,38 +1,43 @@
-"
-"   ██╗   ██╗ ██╗ ███╗   ███╗ ██████╗   ██████╗
-"   ██║   ██║ ██║ ████╗ ████║ ██╔══██╗ ██╔════╝
-"   ██║   ██║ ██║ ██╔████╔██║ ██████╔╝ ██║
-"   ╚██╗ ██╔╝ ██║ ██║╚██╔╝██║ ██╔══██╗ ██║
-" ██╗╚████╔╝  ██║ ██║ ╚═╝ ██║ ██║  ██║ ╚██████╗
-" ╚═╝ ╚═══╝   ╚═╝ ╚═╝     ╚═╝ ╚═╝  ╚═╝  ╚═════╝
+" vim: set foldmethod=marker foldlevel=0 nomodeline:
 "
 "
-" Sampath Singamsetty (Singamsetty.Sampath@gmail.com)
-" Last Updated Date: 27 August 2017
+"                 ██╗   ██╗ ██╗ ███╗   ███╗ ██████╗   ██████╗
+"                 ██║   ██║ ██║ ████╗ ████║ ██╔══██╗ ██╔════╝
+"                 ██║   ██║ ██║ ██╔████╔██║ ██████╔╝ ██║
+"                 ╚██╗ ██╔╝ ██║ ██║╚██╔╝██║ ██╔══██╗ ██║
+"               ██╗╚████╔╝  ██║ ██║ ╚═╝ ██║ ██║  ██║ ╚██████╗
+"               ╚═╝ ╚═══╝   ╚═╝ ╚═╝     ╚═╝ ╚═╝  ╚═╝  ╚═════╝
 "
-" Plugin Manager: Minimalist Vim Plugin Manager
-"                 By Junegunn (Thanks)
+"                ╔══════════════════════════════════════════╗
+"                ║           ⎋  WELCOME TO VIM  ⎋           ║
+"                ╚══════════════════════════════════════════╝
 "
-" Customized .vimrc configuration file
-" supports for some of the major languages...
 "
-" Haskell
-" Erlang
-" JavaScript ... flavors
-" Python 3 (via jedi) and YouCompleteMe in gui mode
-" C/C++  clang based autocompletion (via ycmd for MacVim)
-" Scala
-" Clojure
-" GO
+"  ╔════════════════════════════════════════════════════════════════════════╗
+"  ║          Sampath Singamsetty (Singamsetty.Sampath@gmail.com)           ║
+"  ╠════════════════════════════════════════════════════════════════════════╣
+"  ║     Last Updated Date: 20 September 2017                               ║
+"  ║                                                                        ║
+"  ║     Plugin Manager: Minimalist Vim Plugin Manager (Thanks to Junegunn) ║
+"  ║     Customized .vimrc configuration file                               ║
+"  ║     supports for some of the major languages...                        ║
+"  ║     Haskell Erlang Scala Clojure                                       ║
+"  ║     JavaScript ... flavors                                             ║
+"  ║     Python 3 (via jedi) and YouCompleteMe in gui mode                  ║
+"  ║     C/C++  clang based autocompletion (via ycmd for MacVim)            ║
+"  ║     GO lang                                                            ║
+"  ╚════════════════════════════════════════════════════════════════════════╝
 
-" ============================= VERY IMPORTANT ============================
-" ====        To install plugin the first time:                        ====
-" ====        > vim +BundleInstall +qall                               ====
-" ====        cd ~/.vim/bundle/vimproc.vim && make                     ====
-" =========================================================================
+"  ============================= VERY IMPORTANT ============================
+"  ====        To install plugin the first time:                        ====
+"  ====        > vim +BundleInstall +qall                               ====
+"  ====        cd ~/.vim/bundle/vimproc.vim && make                     ====
+"  =========================================================================
 
-"{{{ Installing the vim-plug directly for the first time
+" =============================================================================
+"    installing the vim-plug directly for the first time usage
 "    define local script variables
+" =============================================================================
 let s:is_vim_plug_already_installed = 0
 let s:vim_plug_manager = expand('~/.vim/autoload/plug.vim')
 let s:vim_plug_url='https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
@@ -45,7 +50,8 @@ if empty(glob(s:vim_plug_manager))
     let s:is_vim_plug_already_installed = 1
     augroup vimplug
         autocmd!
-        autocmd VimEnter * PlugInstall
+        autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+        "autocmd VimEnter * PlugInstall
     augroup END
 endif
 
@@ -104,6 +110,6 @@ call s:LoadVimConfigs("core", "insert_templates.vim")
 call s:LoadVimConfigs("core", "custom_settings.vim")
 
 
-" ========================================================================
-" ============      End of the main .vimrc configuration     =============
-" ========================================================================
+" ╔══════════════════════════════════════════════════════════════════════╗
+" ║                  End of the main .vimrc configuration                ║
+" ╚══════════════════════════════════════════════════════════════════════╝

@@ -1,0 +1,5 @@
+setlocal ai ts=4 sw=4 st=4
+setlocal tabstop=4
+setlocal softtabstop=4
+setlocal shiftwidth=4
+setlocal showtabline=2

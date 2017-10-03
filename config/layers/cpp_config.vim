@@ -1,15 +1,19 @@
-" ------------------------------------------------------------------------------------
+" ====================================================================================
 " ---------        customizations and settings for vim-clang and cpp         ---------
-" ------------------------------------------------------------------------------------
+" ====================================================================================
+
 
 "{{{ syntastic checker for cpp
 " syntastic checker settings for c and c++
 "let g:syntastic_c_compiler                = 'gcc'
 "let g:syntastic_cpp_compiler              = 'g++'
+
 let g:syntastic_c_compiler                = '/usr/bin/clang'
 let g:syntastic_cpp_compiler              = '/usr/bin/clang++'
 let g:syntastic_cpp_compiler_options      = '-std=c++11 -stdlib=libstdc++ -Wall -Wextra -Weverything'
 let g:syntastic_cpp_cpplint_exec          = 'cpplint'
+let g:syntastic_c_checkers                = ['gcc', 'make']
+let g:syntastic_cpp_checkers              = ['cppcheck', 'cpplint', 'gcc']
 let g:syntastic_cpp_check_header          = 1
 let g:syntastic_cpp_remove_include_errors = 1
 let g:syntastic_cpp_include_dirs          = [
@@ -26,12 +30,15 @@ let g:syntastic_cpp_include_dirs          = [
 " vim-clang supports relative include path in .clang configuration file
 " contents of .clang -I.
 if has_key(g:plugs, 'vim-clang')
-    let g:clang_c_options            = '-std=gnu11'
-    let g:clang_cpp_options          = '-std=c++11 -stdlib=libc++'
+    let g:clang_c_options                   = '-std=gnu11'
+    let g:clang_cpp_options                 = '-std=c++11 -stdlib=libc++'
+    autocmd FileType c,cpp setlocal omnifunc=ClangComplete
     "let g:clang_compilation_database = './build'
 endif
 
-" vim clang-format setup
+" =============================================================================
+" ---                         vim clang-format setup                        ---
+" =============================================================================
 let g:clang_format#command       = "/usr/local/bin/clang-format"
 let g:clang_format#style_options = {
             \ "Standard": "C++11",
@@ -66,45 +73,49 @@ let g:color_coded_filetypes = ['c', 'cpp', 'objc', 'python', 'haskell']
 "let s:xcode_usr_path      = '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/'
 "let s:clang_library_path = s:xcode_usr_path . 'lib/'
 
-let g:clang_exec          = "/usr/bin/clang"
-let s:clang_library_path  = '/Library/Developer/CommandLineTools/usr/lib'
-if isdirectory(s:clang_library_path)
-    let g:clang_library_path=s:clang_library_path
+if has_key(g:plugs,'clang-complete')
+    let g:clang_exec          = "/usr/bin/clang"
+    let s:clang_library_path  = '/Library/Developer/CommandLineTools/usr/lib'
+    if isdirectory(s:clang_library_path)
+        let g:clang_library_path=s:clang_library_path
+    endif
+
+    " user options for clang
+    let g:clang_user_options =
+                \ '-std=c++11' .
+                \ '-stdlib=libc++' .
+                \ '-I/usr/include' .
+                \ '-I/usr/local/include' .
+                \ '-I/usr/local/opt/opencv3/include' .
+                \ '-I/usr/local/Cellar/opencv3/HEAD-a4db983_4/include'
+    let g:clang_sort_algo       = "priority"
+    let g:clang_snippets_engine = "ultisnips"
+
+    let g:clang_complete_auto  = 0
+    let g:clang_auto_select    = 0
+    let g:clang_use_library    = 1
+    let g:clang_snippets       = 1
+    let g:clang_complete_copen = 1
+    let g:clang_hl_errors      = 1
+
+    " let g:clang_user_options = '-std=c++1y -I ' . s:xcode_usr_path . 'include/c++/v1 -I /usr/local/include'
 endif
-
-" user options for clang
-let g:clang_user_options =
-            \ '-std=c++11' .
-            \ '-stdlib=libc++' .
-            \ '-I/usr/include' .
-            \ '-I/usr/local/include' .
-            \ '-I/usr/local/opt/opencv3/include' .
-            \ '-I/usr/local/Cellar/opencv3/HEAD-a4db983_4/include'
-let g:clang_sort_algo       = "priority"
-let g:clang_snippets_engine = "ultisnips"
-
-let g:clang_complete_auto = 0
-let g:clang_auto_select   = 0
-let g:clang_use_library   = 1
-let g:clang_snippets      = 1
-
-" let g:clang_user_options = '-std=c++1y -I ' . s:xcode_usr_path . 'include/c++/v1 -I /usr/local/include'
 
 " Doxygen for CPP and Python Documentation settings
 autocmd Filetype c,cpp set comments^=:///
 let g:DoxygenToolkit_commentType = "C++"
 
-" ------------------------------------------------------------------------------------
+" ====================================================================================
 " -----               vim-cpp-enhanced-highlight custom settings                 -----
-" ------------------------------------------------------------------------------------
+" ====================================================================================
 let g:cpp_class_scope_highlight           = 1        " highlight class scope
 let g:cpp_experimental_template_highlight = 1        " highlight template functions
 let g:cpp_concepts_highlight              = 1        " highlight library concepts
 let g:cpp_member_variable_highlight       = 1        " highlight member variables
 
-" ------------------------------------------------------------------------------------
+" ====================================================================================
 " --- async clang code completion (https://github.com/osyo-manga/vim-marching)    ----
-" ------------------------------------------------------------------------------------
+" ====================================================================================
 if has_key(g:plugs, 'vim-marching')
     let g:marching_clang_command         = "/usr/bin/clang"
     let g:marching#clang_command#options = {
@@ -123,19 +134,35 @@ if has_key(g:plugs, 'vim-marching')
 endif
 
 "{{{ insert c template header and enable tools
+"    http://www.thegeekstuff.com/2009/01/tutorial-make-vim-as-your-cc-ide-using-cvim-plugin
 let g:C_CustomTemplateFile = '~/.vim/templates/c.templates'
-let  g:C_UseTool_cmake     = 'yes'
-let  g:C_UseTool_doxygen   = 'yes'
+let g:C_UseTool_cmake      = 'yes'
+let g:C_UseTool_doxygen    = 'yes'
 "}}}
 
-"{{{ OmniCppComplete completion engine
+" ====================================================================================
+"                       OmniCppComplete completion engine
+" ====================================================================================
 if has_key(g:plugs, 'OmniCppComplete')
     set omnifunc=syntaxcomplete#Complete  "override built-in C omnicomplete with C++ OmniCppComplete plugin
+    let OmniCpp_NamespaceSearch     = 1
     let OmniCpp_GlobalScopeSearch   = 1
     let OmniCpp_DisplayMode         = 1
-    let OmniCpp_ShowScopeInAbbr     = 0 "do not show namespace in pop-up
-    let OmniCpp_ShowPrototypeInAbbr = 1 "show prototype in pop-up
-    let OmniCpp_ShowAccess          = 1 "show access in pop-up
-    let OmniCpp_SelectFirstItem     = 1 "select first item in pop-up
+    let OmniCpp_ShowScopeInAbbr     = 0   " do not show namespace in pop-up
+    let OmniCpp_ShowPrototypeInAbbr = 1   " show function parameters
+    let OmniCpp_ShowAccess          = 1   " show access in pop-up
+    let OmniCpp_SelectFirstItem     = 0   " if 1 select first item in pop-up
+    let OmniCpp_MayCompleteDot      = 1   " autocomplete after .
+    let OmniCpp_MayCompleteArrow    = 1   " autocomplete after ->
+    let OmniCpp_MayCompleteScope    = 1   " autocomplete after ::
+    let OmniCpp_DefaultNamespaces   = ["std", "_GLIBCXX_STD"]
+    "au BufNewFile,BufRead,BufEnter *.cpp,*.hpp set omnifunc=omni#cpp#complete#Main
 endif
-"}}}
+
+" ====================================================================================
+"             automatically open and close the popup menu / preview window
+" ====================================================================================
+au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
+autocmd FileType cpp set completeopt=menuone,menu,longest,preview
+autocmd FileType c set completeopt=menuone,menu,longest,preview
+
