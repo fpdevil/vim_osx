@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--#################################################################################################### ##-->
-<!--## 	          Property of United Airlines                                            				 ##-->
-<!--##	          Copyright (c) United Airlines. All Rights Reserved.                    				 ##-->
-<!--##                                                                                   				 ##-->
-<!--## Author         :                                                                   				 ##-->
-<!--## File           : jsonx2form.xslt                                          				         ##-->
-<!--## Information    : OAuth Token Customization                                        				 ##-->
-<!--## Version        : 1.0                                                              				 ##-->
-<!--## Release Notes  : Version 1.0 is the Initial commit                                				 ##-->
-<!--##                                                                                   				 ##-->
-<!--## Description    : This XSLT transforms the JSON request payload to an xml data structure           ##-->
-<!--##                                                                                  				 ##-->
-<!--##                  The default way of handling the incoming requests for OAuth 2.0 access_token is  ##-->
-<!--##                  to parse the form parameters or the POST query parameters. These parameters      ##-->
-<!--##                  will be parsed as a first step of the request processing within datapower.       ##-->
-<!--##                  Depending on the request type and the parameters, the request will be pruned to  ##-->
-<!--##                  to fit the AAA policy for successful token generation. But here, the client      ##-->
-<!--##                  being a mobile application, all the requests including the one for a new         ##-->
-<!--##                  access_token will be in the form of a JSON payload. This transformation will     ##-->
-<!--##                  parse the incoming json payload and convert it into a form based request to      ##-->
-<!--##                  be handled at the later stages in the standard way                               ##-->
-<!--#################################################################################################### ##-->
+<!--######################################################################################################-->
+<!--## 	          Property of United Airlines                                            				        ##-->
+<!--##	          Copyright (c) United Airlines. All Rights Reserved.                    				        ##-->
+<!--##                                                                                   				        ##-->
+<!--## Author         : Sampath Singamsetty (Middleware Engineering)                         			      ##-->
+<!--## File           : jsonx2form.xslt                                          				                ##-->
+<!--## Information    : OAuth Token Customization                                        				        ##-->
+<!--## Version        : 1.0                                                              				        ##-->
+<!--## Release Notes  : Version 1.0 is the Initial commit                                				        ##-->
+<!--##                                                                                   				        ##-->
+<!--## Description    : This XSLT transforms the JSON request payload to an xml data structure          ##-->
+<!--##                                                                                  				        ##-->
+<!--##                  The default way of handling the incoming requests for OAuth 2.0 access_token is ##-->
+<!--##                  to parse the form parameters or the POST query parameters. These parameters     ##-->
+<!--##                  will be parsed as a first step of the request processing within datapower.      ##-->
+<!--##                  Depending on the request type and the parameters, the request will be pruned to ##-->
+<!--##                  to fit the AAA policy for successful token generation. But here, the client     ##-->
+<!--##                  being a mobile application, all the requests including the one for a new        ##-->
+<!--##                  access_token will be in the form of a JSON payload. This transformation will    ##-->
+<!--##                  parse the incoming json payload and convert it into a form based request to     ##-->
+<!--##                  be handled at the later stages in the standard way                              ##-->
+<!--######################################################################################################-->
 <xsl:stylesheet version="2.0" xsi:schemaLocation="http://www.datapower.com/schemas/json jsonx.xsd"
 							  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 							  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -46,7 +46,7 @@
 					</xsl:attribute>
 					<xsl:value-of select="."/>
 				</arg>
-			</xsl:for-each>		
+			</xsl:for-each>
 		</args>
 	</request>
 	</xsl:template>

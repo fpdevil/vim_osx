@@ -11,6 +11,31 @@
 ;;;
 ;;; Author    : Sampath Singamsetty <Singansetty.Sampath@gmail.com>
 ;;; URL       : https://github.com/fpdevil/myemacs
+;;;
+;;;
+;;; The MIT License:
+;;
+;; http://en.wikipedia.org/wiki/MIT_License
+;;
+;; Permission is hereby granted, free of charge, to any person obtaining
+;; a copy of this software and associated documentation files (the
+;; "Software"), to deal in the Software without restriction, including
+;; without limitation the rights to use, copy, modify, merge, publish,
+;; distribute, sublicense, and/or sell copies of the Software, and to
+;; permit persons to whom the Software is furnished to do so, subject to
+;; the following conditions:
+;;
+;; The above copyright notice and this permission notice shall be
+;; included in all copies or substantial portions of the Software.
+;;
+;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+;; EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+;; MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+;; IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+;; CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+;; TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+;; SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+;;;
 ;;; Commentary:
 ;;;
 ;;; filename   : init.el
@@ -18,57 +43,44 @@
 ;;;
 ;;; Code:
 ;;        This sets up the load path so that we can override it
-;;        Update Note    : 01 Sep 2017
+;;        Update Note    : 13 Nov 2017
 ;;;=============================================================================
+(eval-when-compile (require 'cl))
 
-;; utf-8 character set encoding and Locale
-(prefer-coding-system         'utf-8)
-(set-default-coding-systems   'utf-8)
+;;; -- get the Emacs initialization time
+(lexical-let ((emacs-start-time (current-time)))
+  (add-hook 'emacs-startup-hook
+            (lambda ()
+              (let ((elapsed (float-time (time-subtract (current-time) emacs-start-time))))
+                (message "[Emacs Initialization]  %.3fs" elapsed)))))
 
-;; language setup
-(setq current-language-environment "English")
+;;; -- gc threshold setting
+(setq gc-cons-threshold (* 256 1024 1024))
 
-;; a variable for holding if system is mac os x
-(defconst *is-a-mac* (eq system-type 'darwin))
-(message "Emacs Version: %d%s%d"
-         emacs-major-version
-         version-separator
-         emacs-minor-version)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;                          custom user settings                              ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(setq user-full-name "Sampath Singamsetty")
-(setq user-mail-address "Singamsetty.Sampath@gmail.com")
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; define a custom group for .emacs                                           ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; -- define a custom group for .emacs
 (defgroup dotemacs nil
  "Customized configuration for .emacs."
  :group 'local)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; load the newest byte code every time                                       ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; -- load the newest byte code every time
 (setq load-prefer-newer t)
+;; (byte-recompile-init-files)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; adding location for required lisp files and libraries to the path        ;;;
-;; (setq user-emacs-directory (concat (getenv "HOME") "/.emacs.d"))          ;;;
-;; (add-to-list 'load-path (concat (getenv "HOME") "/.emacs.d"))             ;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; -- finalizers (for debugging and recompiling)
+;; (setq debug-on-error t)
+;; (setq debug-on-signal t)
+;; (setq-default message-log-max 1000)
+
+;;; -- adding location for required lisp files and libraries to the path
 (setq user-emacs-directory  "~/.emacs.d")
-(add-to-list 'load-path user-emacs-directory)
 
-
-;;----------------------------------------------------------------------------;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Define custom directories for the packages                               ;;;
 ;;; packages/elpa will contain the standard packages installed by Emacs      ;;;
 ;;; modules dir will contain the custom built and lang specific modules      ;;;
 ;;; vendor dir will contain 3rd party or unavailable packages                ;;;
 ;;; Define a top-level, vendor and custom files                              ;;;
-;;----------------------------------------------------------------------------;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defconst home-dir "~")
 
 (defvar emacs-dir (file-name-directory load-file-name)
@@ -77,98 +89,87 @@
 (defvar emacs-dir (file-name-directory (concat (getenv "HOME") "/.emacs.d"))
   "Top level Emacs dir.")
 
-(defvar core-dir (expand-file-name "core" emacs-dir)
-  "Contains core components like the package repository information etc.")
+(defcustom core-dir (expand-file-name "core" user-emacs-directory)
+  "Contains core components, which has Emacs/Aquamacs specific information like the packages list, settings etc."
+  :group 'dotemacs)
 
-(defvar vendor-dir (expand-file-name "vendor" emacs-dir)
-  "Packages not yet available in ELPA.")
+(defcustom vendor-dir (expand-file-name "vendor" user-emacs-directory)
+  "Packages not yet available in ELPA."
+  :group 'dotemacs)
 
-(defvar module-dir (expand-file-name "modules" emacs-dir)
-  "Personal stuff.")
+(defcustom module-dir (expand-file-name "modules" user-emacs-directory)
+  "Personal stuff."
+  :group 'dotemacs)
 
-(defvar personal-dir (expand-file-name "personal" emacs-dir)
-  "All personal configuration settings like theme names etc.")
+(defcustom personal-dir (expand-file-name "personal" user-emacs-directory)
+  "All personal configuration settings like theme names etc."
+  :group 'dotemacs)
 
-(defvar cache-dir (expand-file-name "cache" emacs-dir)
-  "Common directory for automatically generated save/history/files/etc.")
+(defcustom cache-dir (expand-file-name "cache" user-emacs-directory)
+  "Common directory for automatically generated save/history/files/etc."
+  :group 'dotemacs)
 
-(defvar pkg-dir (expand-file-name "packages" emacs-dir)
-  "Package installation directory for all Emacs packages.")
+(defcustom pkg-dir (expand-file-name "packages" user-emacs-directory)
+  "Base package installation directory for all Emacs packages.
+Under this the elpa directory will be present which houses all the .el packages."
+  :group 'dotemacs)
 
-(unless (file-exists-p cache-dir)
-  (make-directory cache-dir))
-
-;;----------------------------------------------------------------------------;;
-;;;;;;;;;;          end of custom directory declaration.              ;;;;;;;;;;
-;;----------------------------------------------------------------------------;;
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;   load core package, custom methods and internal settings for Aquamacs   ;;;
-;;;   aqua-packages.el
-;;;   aqua-methods.el
-;;;   aqua-internals.el
-;;;   aqua-ui.el
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(add-to-list 'load-path core-dir)             ;; load the core dir first
-(message "Loading the aquamacs core...")
-
-(require 'aqua-packages)
-(require 'aqua-methods)
-(require 'aqua-internals)
-(require 'aqua-ui)
-(require 'aqua-customizations)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; add the Emacs package installation directory to load path                  ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(add-to-list 'load-path pkg-dir)
 (defconst package-user-dir (expand-file-name "elpa" pkg-dir)
   "Which directory elpa packages is installed in. Defined in package.el.")
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;   aqua-package-repos.el will load the package repository settings        ;;;
-;;;   (load (concat (getenv "HOME") "/.emacs.d/aqua-package-repos.el"))      ;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; -- specify which auto completion engine to use
+(defcustom dotemacs-completion-engine
+ 'sml
+ "The default Auto Completion engine to be used for all prog modes."
+ :type '(radio
+         (const :tag "company-mode" company)
+         (const :tag "auto-complete-mode" auto-complete))
+ :group 'dotemacs)
+
+;;; -- specify which mode line to use
+(defcustom dotemacs-mode-line
+ 'company
+ "The default mode line display to be used for all prog modes."
+ :type '(radio
+         (const :tag "airline-mode-line" airline)
+         (const :tag "sml-mode-line" sml))
+ :group 'dotemacs)
+
+;;; --  load core package, custom methods and internal settings for Aquamacs
+;;;   == aqua-packages.el
+;;;   == aqua-packages-init.el
+;;;   == aqua-methods.el
+;;;   == aqua-internals.el
+;;;   == aqua-ui.el
+;;; (add-to-list 'load-path core-dir)             ;; load the core dir first
+(require 'aqua-internals (concat core-dir "/aqua-internals.el"))
+(require 'aqua-packages (concat core-dir "/aqua-packages.el"))
+(require 'aqua-packages-init (concat core-dir "/aqua-packages-init.el"))
+(require 'aqua-methods (concat core-dir "/aqua-methods.el"))
+(require 'aqua-ui (concat core-dir "/aqua-ui.el"))
+(require 'aqua-customizations (concat core-dir "/aqua-customizations.el"))
+
+;;; --  aqua-package-repos.el will load the package repository settings      ;
 (setq aqua-pkg-repos
       (expand-file-name "aqua-package-repos.el" user-emacs-directory))
 (when (file-exists-p aqua-pkg-repos)
   (message "Loading the aquqmacs packages from the repo...")
   (load aqua-pkg-repos))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;   byte recompiling everything during bootstrap (comment | un-comment)    ;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; --  byte recompiling everything during bootstrap (comment | un-comment)
 (defun byte-recompile-init-files ()
   "Recompile all of the startup files."
   (interactive)
   (byte-recompile-directory (concat user-emacs-directory "/packages") 0))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; finalizers (for debugging and recompiling)                               ;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; (setq debug-on-error t)
-;; (setq debug-on-signal t)
-(byte-recompile-init-files)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;   custom.el will store any custom settings made on Emacs                 ;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; --  custom.el will store any custom settings made on Emacs
 (setq custom-file
       (expand-file-name "custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
-  (load custom-file))
+  (load custom-file 'noerror))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;   Make Emacs use the $PATH set up by the user's shell                    ;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(when (memq window-system '(mac ns))
-  (exec-path-from-shell-initialize))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;   set SHELL and pull PATH variables from the .zshrc                      ;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; set shell
+;;; --  set SHELL and pull PATH variables from the .zshrc
+;;;   == first set the shell
 (setenv "SHELL" "/bin/zsh")
 (defun set-exec-path-from-shellpath ()
   "Get the PATH variables from the .zshrc environment file."
@@ -183,7 +184,7 @@
 
 (if window-system (set-exec-path-from-shellpath))
 
-;; path variables
+;;; == system path variables
 (dolist (dir '("/sbin"
                "/usr/sbin"
                "/bin"
@@ -192,20 +193,19 @@
   (setenv "PATH" (concat dir ":" (getenv "PATH")))
   (add-to-list 'exec-path dir))
 
- ;; environment
+;;; == environment
   (setq exec-path-from-shell-arguments '("-l"))
   (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
   (setq exec-path (append exec-path '("/usr/local/bin")))
 
-;;; custom init settings completed
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;; custom init settings completed ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (provide 'init)
 
 ;; Local Variables:
 ;; coding: utf-8
 ;; mode: emacs-lisp
+;; no-byte-compile t
 ;; End:
 
 ;;; init.el ends here

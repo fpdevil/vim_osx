@@ -45,6 +45,7 @@ function! YCMBuilder(info)
                     \ . '/opt/software/clang+llvm-3.9.0-x86_64-apple-darwin/lib/libclang.dylib'
                     "\ . '/Library/Developer/CommandLineTools/usr/lib/libclang.dylib'
         !python3 install.py --clang-completer --system-libclang --gocode-completer --tern-completer
+        !cd ./third_party/tern_runtime && npm install
     endif
 endfunction
 
@@ -68,6 +69,7 @@ Plug 'itchyny/calendar.vim'                                                     
 Plug 'xolox/vim-colorscheme-switcher'                                           " color scheme switcher
 Plug 'tpope/vim-sleuth'                                                         " heuristically set buffer options
 Plug 'Shougo/context_filetype.vim'                                              " context ft library for vim
+Plug 'conradirwin/vim-bracketed-paste'                                          " handle auto set paste
 " }}}
 
 "{{{ --- vim code commenting
@@ -205,6 +207,7 @@ Plug 'osyo-manga/unite-airline_themes'                                          
 Plug 'majutsushi/tagbar'                                                        " tagbar support
 Plug 'kien/rainbow_parentheses.vim'                                             " rainbow parenthesis color brackets
 Plug 'jaxbot/semantic-highlight.vim'                                            " semantic highlighting
+Plug 'rakr/vim-two-firewatch'                                                   " duotone light and firewatch for atom
 "Plug 'bling/vim-bufferline'                                                    " show number of buffers
 "Plug 'bling/vim-airline'                                                       " using vim-airline repo
 " }}}
@@ -253,9 +256,12 @@ Plug 'marijnh/tern_for_vim', { 'do': function('BuildTern') }                    
 Plug 'shutnik/jshint2.vim', { 'for': 'javascript' }                             " JSHint integration
 Plug 'heavenshell/vim-jsdoc', { 'for': 'javascript' }                           " Generate JSDoc to your JavaScript code
 Plug 'moll/vim-node', { 'for': 'javascript' }                                   " Tools & Env for node.js
-Plug 'ahayman/vim-nodejs-complete', { 'for': 'javascript' }                     " nodejs omnifunc
+Plug 'myhere/vim-nodejs-complete', { 'for': 'javascript' }                      " nodejs omnifunc
 Plug 'mattn/jscomplete-vim', { 'for': 'javascript' }                            " vim omnifunc for JavaScript
 "Plug 'bigfish/vim-js-context-coloring', { 'for': 'javascript' }                " js highlight, context & coloring
+
+Plug 'jbgutierrez/vim-babel'                                                    " wrapper around babel.js
+Plug 'mattn/webapi-vim'                                                         " vim interface to Web API
 " }}}
 
 
@@ -305,14 +311,14 @@ Plug 'vim-scripts/OmniCppComplete'                                              
 Plug 'justmao945/vim-clang', { 'for': ['cpp','c'] }                             " clang completion plugin for vim
 Plug 'octol/vim-cpp-enhanced-highlight', { 'for': 'cpp' }                       " additional vim syntax highlighting
 Plug 'vim-scripts/DoxygenToolkit.vim', { 'for': 'cpp' }                         " doxygen documentation
-Plug 'myint/clang-complete', { 'for': ['cpp','c']}                              " using fork for python3 support
-"Plug 'Rip-Rip/clang_complete', { 'for': ['c', 'cpp'] }                         " clang based auto complete
+"Plug 'myint/clang-complete', { 'for': ['cpp','c']}                             " using fork for python3 support
+Plug 'Rip-Rip/clang_complete', { 'for': ['c', 'cpp'] }                          " clang based auto complete
 Plug 'osyo-manga/vim-marching'                                                  " async clang code completion
 Plug 'rhysd/vim-clang-format', { 'on': 'ClangFormat' }                          " a formatter for C, C++, Obj-C, Java, JS and TypeScript
 Plug 'derekwyatt/vim-protodef', { 'for': 'cpp' }                                " pull c++ function prototypes
 Plug 'vim-jp/vim-cpp', { 'for': [ 'c', 'cpp' ] }                                " c/c++ syntax files
-"Plug 'vim-scripts/c.vim', { 'for': ['c','cpp'] }                               " c/cpp ide
 Plug 'wolfgangmehner/c-support'                                                 " same as above but updated
+"Plug 'vim-scripts/c.vim', { 'for': ['c','cpp'] }                               " c/cpp ide
 " }}}
 
 
@@ -401,8 +407,8 @@ Plug 'xolox/vim-notes' | Plug 'xolox/vim-misc'                                  
 " --- syntax checking, highlighting and more
 Plug 'vim-scripts/python.vim--Vasiliev'                                         " enhanced python syntax highlighting
 Plug 'davidhalter/jedi-vim'                                                     " python jedi auto-completion (the best)
-Plug 'Vimjas/vim-python-pep8-indent', { 'for':'python' }                        " python indentation style for vim
-Plug 'tell-k/vim-autopep8'                                                      " autopep8 plugin for python
+Plug 'Vimjas/vim-python-pep8-indent', { 'for': 'python' }                       " python indentation style for vim
+Plug 'tell-k/vim-autopep8', { 'for': 'python' }                                 " autopep8 plugin for python
 Plug 'python-rope/ropevim'                                                      " rope for python code assist
 "Plug 'lambdalisue/vim-pyenv'                                                   " python virtual env (if required)
 " }}}

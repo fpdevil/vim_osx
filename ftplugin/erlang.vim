@@ -9,3 +9,5 @@ setlocal complete=.,w,b,u,t,i,k
 setlocal commentstring=%%s
 
 setlocal makeprg=erlc\ %
+
+set completeopt+=preview

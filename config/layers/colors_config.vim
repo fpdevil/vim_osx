@@ -4,7 +4,8 @@ if has("gui_running")
     colorscheme solarized
 else " has no gui
     if has("unix")
-        "colorscheme PaperColor
+        set background=dark
+        colorscheme PaperColor
         "colorscheme seoul256-light
         "let g:airline_theme = 'zenburn'
     endif

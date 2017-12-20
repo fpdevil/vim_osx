@@ -8,21 +8,22 @@
 ;;; elisp code for customizing the undo-tree
 ;;; undo-tree: undo (C-/) behaves just like normal editor.  To redo, C-_
 ;;; To open the undo tree, C-x u
-;;===========================================================================
-(require 'undo-tree)
 ;;;
 ;;; Code:
 ;;;
+;;===========================================================================
+(require 'undo-tree)
+
 ;;----------------------------------------------------------------------------
 ;; auto save the undo-tree history
 ;;----------------------------------------------------------------------------
 (with-eval-after-load "undo-tree-autoloads"
-  (global-undo-tree-mode t)                         ;; enable undo-tree globally
-  (setq undo-tree-history-directory-alist
-        `((".*" . ,temporary-file-directory)))
   (setq undo-tree-auto-save-history t)
-  (setq undo-tree-visualizer-relative-timestamps t)
-  (setq undo-tree-visualizer-timestamps t))
+  (setq undo-tree-history-directory-alist
+        `(("." . ,(expand-file-name "undo" cache-dir))))
+  (setq undo-tree-visualizer-timestamps t)
+  (setq undo-tree-visualizer-diff t)
+  (global-undo-tree-mode))
 
 (provide 'undo-tree-config)
 

@@ -4,12 +4,36 @@
 ;;;
 ;;; filename.  : aqua-customizations.el
 ;;; description: Contains general Aquamacs custom options
-;;;              This is the place where Aquqmacs default preferences are
+;;;              This is the place where Aquamacs default preferences are
 ;;;              changed or altered.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Code:
 ;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; utf-8 character set encoding and Locale
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(prefer-coding-system         'utf-8)
+(set-default-coding-systems   'utf-8)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; language setup
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(setq current-language-environment "English")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; user settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(setq user-full-name "Sampath Singamsetty")
+(setq user-mail-address "Singamsetty.Sampath@gmail.com")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; disable startup, splash screen and startup message
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(setq inhibit-startup-screen t)
+;; (setq inhibit-startup-message t)
+;; (setq initial-scratch-message nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Visually indicate buffer boundaries and scrolling in the fringe
@@ -21,17 +45,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (setq abbrev-file-name
       (expand-file-name "abbrev_defs" cache-dir))
-(setq save-abbrevs t)
-(setq-default abbrev-mode t)
-
-(if (file-exists-p abbrev-file-name)
-      (quietly-read-abbrev-file))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; CEDET ede custom save directory settings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(setq ede-simple-save-directory (expand-file-name "EDE" cache-dir)
-      ede-project-placeholder-cache-file (expand-file-name "ede-projects.el" cache-dir))
+(setq ede-simple-save-directory
+      (expand-file-name "EDE" cache-dir))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; escape save question during exit for custom settings
@@ -41,10 +60,16 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; save and load mini buffer history
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(setq savehist-file
-      (expand-file-name "minibuffer-history.el" cache-dir))
-(when (file-exists-p savehist-file)
-  (load savehist-file))
+(savehist-mode 1)
+(setq savehist-file (expand-file-name "minibuffer-history.el" cache-dir))
+;; (when (file-exists-p savehist-file)
+;;   (load savehist-file))
+
+(setq history-length 100)
+(setq savehist-additional-variables '(search-ring regexp-search-ring kill-ring))
+(put 'minibuffer-history 'history-length 50)
+(put 'evil-ex-history 'history-length 50)
+(put 'kill-ring 'history-length 25)
 
 (setq aquamacs-scratch-file
     (expand-file-name "scratch buffer" "~/.emacs.d/preferences"))
@@ -56,14 +81,23 @@
     (expand-file-name "places.el" "~/.emacs.d/preferences"))
 
 (setq desktop-path (quote ("~/aquamacs.d" "." "~")))
-;-------------------------------------------------------------------------------
+
+;; save-list-file customizations
+;; (defvar auto-save-list-location (expand-file-name "auto-save-list" cache-dir)
+;;   "Location of auto save files.")
+;; (setq auto-save-list-file-prefix (expand-file-name ".saves-" auto-save-list-location))
+;; (setq auto-save-file-name-transforms `((".*" ,(concat dir "save-") t)))
+;; (setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
+(let ((dir (expand-file-name (concat dotemacs-cache-directory "auto-save-list/"))))
+  (setq auto-save-list-file-prefix (concat dir "saves-"))
+  (setq auto-save-file-name-transforms `((".*" ,(concat dir "save-") t))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Enable emoji, and stop the UI from freezing when trying to display them.
-;-------------------------------------------------------------------------------
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (if (fboundp 'set-fontset-font)
     (set-fontset-font t 'unicode "Apple Color Emoji" nil 'prepend))
 
-
-(message "Loaded the aquq-customizations...")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'aqua-customizations)
 

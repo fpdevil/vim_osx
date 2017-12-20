@@ -73,7 +73,7 @@ let g:color_coded_filetypes = ['c', 'cpp', 'objc', 'python', 'haskell']
 "let s:xcode_usr_path      = '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/'
 "let s:clang_library_path = s:xcode_usr_path . 'lib/'
 
-if has_key(g:plugs,'clang-complete')
+if has_key(g:plugs,'clang-complete') || has_key(g:plugs,'clang_complete')
     let g:clang_exec          = "/usr/bin/clang"
     let s:clang_library_path  = '/Library/Developer/CommandLineTools/usr/lib'
     if isdirectory(s:clang_library_path)
@@ -92,12 +92,11 @@ if has_key(g:plugs,'clang-complete')
     let g:clang_snippets_engine = "ultisnips"
 
     let g:clang_complete_auto  = 0
-    let g:clang_auto_select    = 0
+    let g:clang_auto_select    = 1
     let g:clang_use_library    = 1
     let g:clang_snippets       = 1
     let g:clang_complete_copen = 1
     let g:clang_hl_errors      = 1
-
     " let g:clang_user_options = '-std=c++1y -I ' . s:xcode_usr_path . 'include/c++/v1 -I /usr/local/include'
 endif
 
@@ -108,10 +107,12 @@ let g:DoxygenToolkit_commentType = "C++"
 " ====================================================================================
 " -----               vim-cpp-enhanced-highlight custom settings                 -----
 " ====================================================================================
-let g:cpp_class_scope_highlight           = 1        " highlight class scope
-let g:cpp_experimental_template_highlight = 1        " highlight template functions
-let g:cpp_concepts_highlight              = 1        " highlight library concepts
-let g:cpp_member_variable_highlight       = 1        " highlight member variables
+if has_key(g:plugs,'vim-cpp-enhanced-highlight')
+    let g:cpp_class_scope_highlight           = 1        " highlight class scope
+    let g:cpp_experimental_template_highlight = 1        " highlight template functions
+    let g:cpp_concepts_highlight              = 1        " highlight library concepts
+    let g:cpp_member_variable_highlight       = 1        " highlight member variables
+endif
 
 " ====================================================================================
 " --- async clang code completion (https://github.com/osyo-manga/vim-marching)    ----

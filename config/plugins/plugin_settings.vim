@@ -50,6 +50,7 @@ call s:LoadConfig("ctrlspace_config.vim")          " Ctrl-Space configuration
 call s:LoadConfig("vcs_config.vim")                " VCS/GIT Repo configuration
 call s:LoadConfig("vim_signify_config.vim")        " configuration for vim signify (diff)
 call s:LoadConfig("unite_config.vim")              " UNITE plugin(s) configuration
+call s:LoadConfig("neomru_config.vim")             " neomru settings
 call s:LoadConfig("pandoc_config.vim")             " pandoc configuration
 call s:LoadConfig("slime_config.vim")              " slime related configuration
 call s:LoadConfig("tagbar_config.vim")             " TagBar configuration
@@ -76,6 +77,7 @@ call s:LoadConfig("vim_lookup_config.vim")         " configuration settings for 
 call s:LoadConfig("operator_highlight_config.vim") " configuration settings for vim-operator-highlight
 call s:LoadConfig("vimref_config.vim")             " configuration settings for vim-ref
 call s:LoadConfig('xml_config.vim')                " configuration settings for xml
+call s:LoadConfig('autoformat_config.vim')         " configuration settings for vim-autoformat
 " disabled had some problems with erlang
 "call s:LoadConfig("hier_config.vim")              " vim hier configuration for highlighting errors
 

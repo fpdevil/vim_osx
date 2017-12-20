@@ -3,4 +3,5 @@ plugged/
 hoogle
 haskellmode.config
 .netrwhist
+.data
 tags/

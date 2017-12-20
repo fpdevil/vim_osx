@@ -1,3 +1,5 @@
+" https://github.com/mhinz/vim-galore
+
 1. Change a word at multiple locations within the same file
     search the required string with /str
     then type cgn and type the word to be changed
@@ -17,17 +19,57 @@
 4. [[ vimrc structure ]]
  	.vimrc -- global settings
 	.vim/
-	  after/  -- files that are loaded after sourced system plugins. override
-	              system settings.
-	      ftplugin/
-	      plugin/
-	      syntax/
+	    after/  -- files that are loaded after sourced system plugins. override
+		  system settings.
+	    ftplugin/
+	    plugin/
+	    syntax/
 	      ...
-	  autoload/ -- automatically loaded scripts.
-	  colors/   -- custom color schemes.
-	  doc/      -- plugin documentation.
-	  ftdetect/ -- filetype detection scripts.
-	  ftplugin/ -- filetype plugins (load before system files, override by system)
-	  indent/   -- indent scripts.
-	  plugin/   -- plugins.
-	  syntax/   -- syntax scripts.
+	 autoload/ -- automatically loaded scripts.
+	 colors/   -- custom color schemes.
+	 doc/      -- plugin documentation.
+	 ftdetect/ -- filetype detection scripts.
+	 ftplugin/ -- filetype plugins (load before system files, override by system)
+	 indent/   -- indent scripts.
+	 plugin/   -- plugins.
+	 syntax/   -- syntax scripts.
+
+5. For generating the .clang_complete, put the below entries into a shell script of choice
+      #!/bin/bash
+
+      # generate .clang_complete file using vim clang_complete plugin
+      make CC="${HOME}/.vim/plugged/clang_complete/cc_args.py g++"
+
+6. How to insert Tab character when expandtab option is ON in VIM
+
+   You can use <CTRL-V><Tab> in "insert mode". In insert mode <CTRL-V> inserts a literal copy of your next character.
+   If you find you need to do this often, setting Shift+Tab to insert a real tab by
+
+   :inoremap <S-Tab> <C-V><Tab>
+
+7. vim-surround plugin shortcuts
+
+   =============================================================================
+   ds"		"Hello World"		Hello world
+   ds(	    	(Hello World)		Hello World
+   ds)	    	(Hello World)		Hello World
+   dst	    	<p>Hello World</p>	Hello World
+   cs"'	    	"Hello World"		'Hello World'
+   cs([	    	(Hello World)		[ Hello World ]
+   cs(]	    	(Hello World)		[Hello World]
+   cs)[	    	(Hello World)		[ Hello World ]
+   cs)]	    	(Hello World)		[Hello World]
+   cst<b>	<p>Hello World</p>	<b>Hello World</b>
+   ys$"		Hello World Now		Hello W"orld Now"
+   ysw'		Hello World Now		Hello W'orld' Now
+   ysiw)	Hello World Now		Hello (World) Now
+   yss"		Hello World Now		"Hello World Now"
+   =============================================================================
+   Visual mode surrond:
+   Enter visual mode by pressing v. Now if you type S(, the word will be surrounded
+   by spaces. However if you use the closing ) instead S) it will not be surrounded
+   by spaces.
+   This applies to all the bracket pair surroundings, <> [] {} (), not merely to ().
+   The behavior of S< is such that it expects a tag enclosure, so only S> is able to
+   surround as  <>.
+   =============================================================================

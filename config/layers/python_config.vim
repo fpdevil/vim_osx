@@ -70,23 +70,6 @@ else
     let g:UltiSnipsUsePythonVersion = 3
 endif
 
-" ------------------------------------------------------------------------------------
-" -----                         Auto formatting options                          -----
-" ------------------------------------------------------------------------------------
-"{{{
-nnoremap <silent> <Leader>f :Autoformat<CR>
-let g:autoformat_verbosemode=1
-if !exists('g:formatter_yapf_style')
-    let g:formatter_yapf_style = 'pep8'
-endif
-if !exists('g:formatdef_yapf')
-    let g:formatdef_yapf = "'yapf --style =\"{based_on_style:'.g:formatter_yapf_style.',indent_width:'.&shiftwidth.',column_limit:'.&text  width.'}\" -l '.a:firstline.'-'.a:lastline"
-endif
-if !exists('g:formatters_python')
-    let g:formatters_python = ['yapf']
-endif
-"}}}
-
 " ------------------------------------------------------------------------------
 "  for proper pep8 indentation
 " ------------------------------------------------------------------------------

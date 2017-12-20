@@ -116,5 +116,4 @@ if has('gui_running') && has_key(g:plugs, 'ultisnips') && has_key(g:plugs, 'supe
     let g:UltiSnipsJumpBackwardTrigger               = "<s-tab>"
 endif
 
-
 " =============================================================================

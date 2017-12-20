@@ -34,10 +34,24 @@
 "  ====        cd ~/.vim/bundle/vimproc.vim && make                     ====
 "  =========================================================================
 
-" =============================================================================
+
+" == == == == == == == == == == == == == == == == == == == == == == == == == ==
+" get the initial startup time details
+" == == == == == == == == == == == == == == == == == == == == == == == == == ==
+if !v:vim_did_enter && has('reltime')
+    let g:startup_time = reltime()
+    augroup vimrc_startup_time
+        autocmd! VimEnter * let g:startup_time = reltime(g:startup_time)
+                    \     | redraw
+                    \     | echomsg 'startup_time: ' . reltimestr(g:startup_time)
+    augroup END
+endif
+
+
+" == == == == == == == == == == == == == == == == == == == == == == == == == ==
 "    installing the vim-plug directly for the first time usage
 "    define local script variables
-" =============================================================================
+" == == == == == == == == == == == == == == == == == == == == == == == == == ==
 let s:is_vim_plug_already_installed = 0
 let s:vim_plug_manager = expand('~/.vim/autoload/plug.vim')
 let s:vim_plug_url='https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
@@ -55,7 +69,7 @@ if empty(glob(s:vim_plug_manager))
     augroup END
 endif
 
-" load the vim-plug for the first time manually
+"{{{ load the vim-plug for the first time manually
 if s:is_vim_plug_already_installed
     :execute 'source '.fnameescape(s:vim_plug_manager)
 endif
@@ -96,11 +110,11 @@ if s:is_vim_plug_already_installed
 endif
 "}}}
 
-" =========================================================================
-" #  define a global variable for holding the vim plugin configuration    #
-" #  settings location and load the plugin settings, vim core editor      #
-" #  settings and custom functions                                        #
-" =========================================================================
+" == == == == == == == == == == == == == == == == == == == == == == == == == ==
+" #  define a global variable for holding the vim plugin configuration        #
+" #  settings location and load the plugin settings, vim core editor          #
+" #  settings and custom functions                                            #
+" == == == == == == == == == == == == == == == == == == == == == == == == == ==
 let g:plugins_config = "~/.vim/config/layers/"
 
 call s:LoadVimConfigs("core", "core_settings.vim")
@@ -110,6 +124,6 @@ call s:LoadVimConfigs("core", "insert_templates.vim")
 call s:LoadVimConfigs("core", "custom_settings.vim")
 
 
-" ╔══════════════════════════════════════════════════════════════════════╗
-" ║                  End of the main .vimrc configuration                ║
-" ╚══════════════════════════════════════════════════════════════════════╝
+"   ╔══════════════════════════════════════════════════════════════════════╗
+"   ║                  End of the main .vimrc configuration                ║
+"   ╚══════════════════════════════════════════════════════════════════════╝

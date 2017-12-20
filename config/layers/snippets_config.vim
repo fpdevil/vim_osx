@@ -37,7 +37,26 @@ endif
 " neosnippet settings if available
 " ====================================================================================
 if has_key(g:plugs,'neosnippet.vim')
+    " plugin key-mappings.
+    imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+    smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+    xmap <C-k>     <Plug>(neosnippet_expand_target)
+
+    " super-tab like snippets behavior.
+    imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+          \ "\<Plug>(neosnippet_expand_or_jump)"
+          \ : pumvisible() ? "\<C-n>" : "\<TAB>"
+    smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+          \ "\<Plug>(neosnippet_expand_or_jump)"
+          \ : "\<TAB>"
+
+    " for snippet_complete marker
+    if has('conceal')
+      set conceallevel=2 concealcursor=i
+    endif
+    " enable snipmate compatibility features
     let g:neosnippet#enable_snipmate_compatibility = 1
+    " let neosnippet know about other snippets
     if filereadable(expand("~/.vim/plugged/vim-snippets/snippets"))
         let g:neosnippet#snippets_directory = "~/.vim/plugged/vim-snippets/snippets"
     endif

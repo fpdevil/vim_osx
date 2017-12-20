@@ -199,19 +199,6 @@ endfunction
 
 noremap <Leader>st :call ShowColorTheme()<CR>
 
-function! s:highlight_general_checkstyles()
-    "let w:m1=matchadd('Tab', '    ', -1)
-    let w:m1=matchadd('WideSpace', '　', -1)
-    let w:m2=matchadd('EOLSpace', '\s\+$', -1)
-    let w:m3=matchadd('WideEisuu', '[Ａ-Ｚａ-ｚ０-９]', -1)
-    "let w:m4=matchadd('SpaceAndComma', ' ,', -1)
-    "let w:m5=matchadd('CommaAndNonSpace', ',[^(\\n| )]', -1)
-    "let w:m6=matchadd('Tab', '\t', -1)
-endf
-
-call s:highlight_general_checkstyles()
-
-
 " -----------------------------------------------------------------------------
 " a custom functions for handling the Module name of Haskell
 " The initial letter should be in upper case

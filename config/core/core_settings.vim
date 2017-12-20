@@ -6,7 +6,7 @@
 " *******    For UNICODE support of symbols like ⚠                             *******
 " *******    note: set encoding BEFORE script encoding                         *******
 " ************************************************************************************
-scriptencoding utf-8
+scriptencoding utf-8                            " utf-8 encoding for scripts
 
 " below 2 options to be loaded first
 if has('vim_starting')
@@ -16,32 +16,38 @@ if has('vim_starting')
 endif
 filetype off
 
-set encoding=utf-8                              " utf-8 encoding
+" set file encodings
+"set encoding=utf-8                             " utf-8 encoding
+if &encoding !=? 'utf-8'
+  let &termencoding = &encoding
+  set encoding=utf-8
+endif
 set fileencoding=utf-8                          " file utf-8 encode
 set fileencodings=utf-8                         " file utf-8 encode
-scriptencoding utf-8                            " utf-8 encoding for scripts
+
+
 set binary                                      " enable binary support
 set showcmd                                     " show current command in status bar
 set showmode                                    " show mode in status bar
 set showmatch                                   " show matching brackets
 
+
 " complete options
 " set completeopt=menu,menuone,longest,preview
-set completeopt+=menuone	                      " always show the completion menu
-set completeopt+=preview	                      " sometimes annoying window on the top
-set completeopt+=longest	                      " do not select the first variant by default
+set completeopt+=menuone	                        " always show the completion menu
+set completeopt+=preview	                        " sometimes annoying window on the top
+set completeopt+=longest	                        " do not select the first variant by default
 
-set backspace=indent,eol,start                  " fix backspace indent
+set backspace=indent,eol,start                      " fix backspace indent
 
 set hidden
 
 "set list
-"set listchars=tab:\|\ ,                        " sets a | char at tab
+"set listchars=tab:\|\ ,                            " sets a | char at tab
 set grepformat=%f:%l:%c:%m,%f:%l:%m
 
-" highlight the current line and active column (shows crosshairs as +)
-"set cursorline
-"set cuc cul"
+" toggle the cursor crosshairs (shows crosshairs as +)
+map <silent> # :set cursorcolumn! cursorline!<CR>
 
 " show wildmenu
 set wildmenu
@@ -55,6 +61,19 @@ filetype indent on
 " dont fold by default
 set nofoldenable
 
+" Use indentation for folds
+set foldmethod=indent
+set foldnestmax=5
+set foldlevelstart=99
+set foldcolumn=0
+
+augroup vimrcFold
+  " fold vimrc itself by categories
+  autocmd!
+  autocmd FileType vim set foldmethod=marker
+  autocmd FileType vim set foldlevel=0
+augroup END
+
 " ignore case while completing file names
 set wildignorecase
 
@@ -66,6 +85,11 @@ set lazyredraw
 
 " let vim set the text of the window icon
 set icon
+
+" set the cursor based on modes
+set guicursor=n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50
+  \,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor
+  \,sm:block-blinkwait175-blinkoff150-blinkon175
 
 " generate documentation tags automatically
 silent! helptags ALL
@@ -105,13 +129,13 @@ hi VertSplit ctermbg=NONE guibg=NONE
 "set fillchars+=vert:│
 
 " Tab and indentation management (May be overriten by autocmd rules)
-set tabstop=4                   " number of visual spaces per TAB
-set softtabstop=4               " number of spaces in tab when editing
-set expandtab                   " tabs are spaces
+set expandtab                               " tabs are spaces
+set tabstop=4                               " number of visual spaces per TAB
+set softtabstop=4                           " number of spaces in tab when editing
 set shiftwidth=4
 
-set autoindent                  " copy indent from current line
-set autoread                    " read open files again if changed outside vim
+set autoindent                              " copy indent from current line
+set autoread                                " read open files again if changed outside vim
 set smartindent
 set cindent
 set cinoptions=(0,u0,U0
@@ -255,32 +279,6 @@ if has("autocmd")
         \   exe "normal! g`\"" |
         \ endif
 endif
-
-" ------------------------------------------------------------------------------------
-" ***           custom color highlighting and alerts in common editing             ***
-" ------------------------------------------------------------------------------------
-highlight Cursor guibg=black guifg=pink             " gui cursor color
-highlight Search guibg=peru guifg=wheat             " gui search highlight
-
-highlight CommaAndNonSpace      ctermbg=brown guifg=white guibg=brown
-highlight EOLSpace              ctermbg=brown guifg=white guibg=brown
-highlight HashRocketAndNonSpace ctermbg=brown guifg=white guibg=brown
-highlight NonSpaceAndHashRocket ctermbg=brown guifg=white guibg=brown
-highlight SpaceAndComma         ctermbg=brown guifg=white guibg=brown
-highlight Tab                   ctermbg=brown guifg=white guibg=brown
-highlight WideEisuu             ctermbg=brown guifg=white guibg=brown
-highlight WideSpace             ctermbg=brown guifg=white guibg=brown
-highlight BadWhitespace         ctermbg=brown guifg=white guibg=brown
-
-" Setting Italics for comments
-"highlight Comment cterm=italic
-"highlight Comment gui=italic
-highlight htmlArg cterm=italic
-
-" Searing red very visible cursor red back ground
-hi Cursor guibg=red
-" Use same color behind the concealed unicode characters
-hi clear Conceal
 
 
 " VIM Spellchecking

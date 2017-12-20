@@ -123,6 +123,8 @@ call plug#begin('~/.vim/plugged')
     Plug 'moll/vim-node', { 'for': 'javascript' }                                   " Tools & Env for node.js
     Plug 'ahayman/vim-nodejs-complete', { 'for': 'javascript' }                     " nodejs omnifunc
     Plug 'mattn/jscomplete-vim', { 'for': 'javascript' }                            " vim omnifunc for JavaScript
+    Plug 'jbgutierrez/vim-babel'                                                    " wrapper around babel.js
+    Plug 'mattn/webapi-vim'                                                         " vim interface to Web API
     Plug 'vim-erlang/vim-erlang-runtime', { 'for': 'erlang' }                       " erlang indentation, syntax
     Plug 'vim-erlang/vim-erlang-omnicomplete', { 'for': 'erlang' }                  " erlang code auto completion
     Plug 'vim-erlang/vim-erlang-compiler', { 'for': 'erlang' }                      " erlang syntax checker, compiler

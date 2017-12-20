@@ -127,24 +127,26 @@ autocmd BufNewFile *.cpp,*.[ch],*.sh,*.java,*.tex,*.py,*.html exec ":call SetTit
 
 func SetTitle()
     if &filetype == 'sh'
-        " for shell script file type
-        call setline(1,"\#########################################################################")
-        call append(line("."),   "\# File Name    : ".expand("%"))
-        call append(line(".")+1, "\# Author       : ". s:usrname)
-        call append(line(".")+2, "\# mail         : ". s:email)
-        call append(line(".")+3, "\# Created Time : ".strftime("%c"))
-        call append(line(".")+4, "\#########################################################################")
-        call append(line(".")+5, "\#!/bin/bash")
-        call append(line(".")+6, "")
+      " for shell script file type
+      call setline(1, "\#!/usr/bin/env bash")
+      call setline(2, "")
+      call setline(3, "#" . repeat('=', 78))
+      call setline(4, "\# File Name    : ". expand("%"))
+      call setline(5, "\# Author       : ". s:usrname)
+      call setline(6, "\# mail         : ". s:email)
+      call setline(7, "\# Created Time : ". strftime("%c"))
+      call setline(8, "\# Copyright (C) ". strftime("%Y") . " " . s:usrname)
+      call setline(9, "#" . repeat('=', 78))
+      call setline(10, "")
     endif
     if &filetype == 'cpp'
       if !has_key(g:plugs,'c-support')
         " for cpp file type
         call setline(1, "/*************************************************************************")
-        call append(line("."),   "    > File Name    : ".expand("%"))
+        call append(line("."),   "    > File Name    : ". expand("%"))
         call append(line(".")+1, "    > Author       : ". s:usrname)
         call append(line(".")+2, "    > Mail         : ". s:email)
-        call append(line(".")+3, "    > Created Time : ".strftime("%c"))
+        call append(line(".")+3, "    > Created Time : ". strftime("%c"))
         call append(line(".")+4, " ************************************************************************/")
         call append(line(".")+5, "")
         call append(line(".")+6, "#include <iostream>")
@@ -198,7 +200,7 @@ func SetTitle()
     if &filetype == 'python'
         " for python files
         call setline(1, "\#!/usr/bin/env python")
-        call setline(2, "\# -*- encoding:utf-8 -*-")
+        call setline(2, "\# -*- coding:utf-8 -*-")
         call setline(3, "\# Copyright (C) ".strftime("%Y"))
         call setline(4, "")
         call setline(5, "\# @Author       : ". s:usrname)

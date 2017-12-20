@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--######################################################################-->
-<!--## Datapower Routing Configuration file        						          ##-->
-<!--## Specify the following for each service URL  						          ##-->
-<!--## 1. proxyIface - Datapower FSH Interface     						          ##-->
-<!--## 2. proxyPort  - Datapower FSH Port          						          ##-->
-<!--## 3. sslProxy (SSL Proxy Profile if needed)   						          ##-->
-<!--## 4. App name for logging                     						          ##-->
+<!--## Datapower Routing Configuration file        						##-->
+<!--## Specify the following for each service URL  						##-->
+<!--## 1. proxyIface - Datapower FSH Interface     						##-->
+<!--## 2. proxyPort  - Datapower FSH Port          						##-->
+<!--## 3. sslProxy (SSL Proxy Profile if needed)   						##-->
+<!--## 4. App name for logging                     						##-->
 <!--## 1 & 2 will be selected based on the attribute of proxy           ##-->
 <!--## type="resource" or type="authorization"                          ##-->
 <!--######################################################################-->
@@ -26,7 +26,7 @@
             <sslProxy>247_MPG_CLIENT_SSL_PROXY_PROFILE</sslProxy>
         </proxy>
     </service>
-    <service uri="csr">
+    <service uri="/csr/dev">
         <!-- Route config for CSR App authorization token -->
         <proxy type="authorization">
             <proxyIface>ManagementInterface</proxyIface>
@@ -42,7 +42,7 @@
             <sslProxy>client:SSL_CLIENT_ROOT</sslProxy>
         </proxy>
     </service>
-    <service uri="abc">
+    <service uri="/csr/qa">
         <proxy type="authorization">
             <proxyIface>ManagementInterface</proxyIface>
             <proxyPort>8080</proxyPort>

@@ -18,7 +18,8 @@ if has_key(g:plugs, 'vimfiler.vim')
                 \ '^\.DS_Store$',
                 \ '^\.init\.vim-rplugin\~$',
                 \ '^\.netrwhist$',
-                \ '\.class$'
+                \ '\.class$',
+                \ '\%(^\..*\|\.pyc$\)'
                 \]
 
     if has('mac')
@@ -46,4 +47,5 @@ if has_key(g:plugs, 'vimfiler.vim')
 
     nnoremap <silent> <Leader>vF :<C-U>VimFiler -buffer-name=explorer -split -simple -winwidth=35 -toggle -no-quit<CR>
     nnoremap <silent> <Leader>vf :<C-U>VimFiler<CR>
+    nnoremap <silent> <Leader>ve :VimFilerExplorer<CR>
 endif

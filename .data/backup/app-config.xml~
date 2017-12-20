@@ -1,819 +1,304 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--####################################################################################-->
+<!--## Filename    : app-config.xml                                                   ##-->
+<!--## Author      : Sampath Singamsetty, Nrusing Nayak (Middleware Engineering)      ##-->
+<!--## Owner       : Raj Damera / Somesh Adiraju                                      ##-->
+<!--## Version     : 1.3                                                              ##-->
+<!--## Description :                                                                  ##-->
+<!--##               This configuration file contains application specific settings.  ##-->
+<!--##               relevant  for each  individual service  or end-point. All of the ##-->
+<!--##               normal requests going to the backend specified in the MPG config ##-->
+<!--##               which does not need any special  interception is not required to ##-->
+<!--##               be specified here.                                               ##-->
+<!--##               Only those services which needs to be sent to  different backend ##-->
+<!--##               than the original MPG backend or those services  which needs any ##-->
+<!--##               special treatment like request or response transformations etc., ##-->
+<!--##               needs to be specified here.                                      ##-->
+<!--##               The transformations which triggers this configuration file which ##-->
+<!--##               in the present case is svc-config.xsl checks the request url and ##-->
+<!--##               looks for an entry in this  file. If it finds an entry, the same ##-->
+<!--##               will be populated as  internal http request  headers so that the ##-->
+<!--##               information propogates from one object (MPG) to other object.    ##-->
+<!--##               This configuration set is  augmented by 2 additional MPG objects ##-->
+<!--##               which needs to be configured on Datapower as below               ##-->
+<!--##               (i)  XML Transformer (For processing xml data to json)           ##-->
+<!--##               (ii) JSON Transformer (For processing the json data)             ##-->
+<!--##                                                                                ##-->
+<!--##               Each service node set in the configuration file specifis below:  ##-->
+<!--##               uri - a matching uri for which interception is needed            ##-->
+<!--##               sslProfile - if backend url is over https specify the object     ##-->
+<!--##               reqTransform - if any transformation required for request data   ##-->
+<!--##               resTransform - if any transformation required for response data  ##-->
+<!--##               proxyUrl - the FSH address of XML or JSON Transformer MPG(s)     ##-->
+<!--##               routingUrl - the final destination url of the service            ##-->
+<!--####################################################################################-->
 <app-metadata>
-    <service uri="/6.0/security/authentication/authenticate/token">
-        <sslProxyProfile/>
+    <!--********************************************************************-->
+    <!--** below are all for the production services                      **-->
+    <!--********************************************************************-->
+    <service uri="/csr/mapCSRAPI/mapcsr_service/login/session/host/status">
+        <sslProfile>client:SSL_CLIENT_ROOT</sslProfile>
         <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.0/security/authentication/login/session/host">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.0/security/authentication/login/session/host/status">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.0/bag/passengerBaggageDetails/passengersBagsDetails">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.4/checkin/checkininitiate/starttransaction">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.4/checkin/checkininitiate/SetPaxTripSelection">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.4/checkin/checkininitiate/AddUpdateFqtv">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.4/checkin/checkininitiate/DeleteFqtv">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.4/checkin/checkininitiate/LoadGroupPNR">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.4/checkin/checkininitiate/ActivateCustomerList">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.4/checkin/CheckinInitiate/PrintZPLBoardingPass">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.0/bag/passengerBaggageDetails/gateCheckedBagsCount">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.4/checkin/checkininitiate/setcustomers">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.4/checkin/checkininitiate/GetFqtvAirlines">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <!--## new service added on 20th Dec 2016 ##-->
-    <service uri="/6.4/checkin/checkininitiate/CalculateTotalFeesCurrency">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.4/checkin/CheckinBagMgmt/GetBagPolicy">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.4/checkin/CheckinBagMgmt/CalculateBagFee">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.4/checkin/checkinbagmgmt/addbag">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.4/checkin/checkinbagmgmt/DeleteBagTags">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.4/checkin/checkinbagmgmt/MobilePrinting">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.4/checkin/checkinedd/voidedd">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.4/checkin/checkinedd/geteddtranslist">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.4/checkin/checkinedd/emaileddreceipt">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.4/checkin/checkinedd/SearchEDD">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <!--#############################################################################-->
-    <!--######################### New PrintEDD Service added ########################-->
-    <!--#############################################################################-->
-    <service uri="/6.4/checkin/checkinedd/PrintEDDReceipt">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.4/checkin/checkinseatmgmt/calculateseatfee">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.4/checkin/checkinseatmgmt/changeseat">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.4/checkin/checkininitiate/EmailBoardingPass">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.4/checkin/checkinseatmgmt/GetSeatMapOverrideList">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <!--## updated from version 5.1 to 6.0 on Jan 4th 2017 ##-->
-    <service uri="/6.1/airport/urocrtt/GetBoundaryParameters">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.1/bag/bagalgorithm/BagsCount">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <!-- CSL version upgraded to version 6.1 -->
-    <service uri="/6.1/bag/bagalgorithm/PredictedBagsCount">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <!--#############################################################################-->
-    <!--########## Services Defined below are for Work Assignments - JSON ###########-->
-    <!--#############################################################################-->
-    <service uri="/6.0/airport/urocrtt/GetStationPermissions">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.1/airport/urocrtt/AcknowledgeAssignment">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.1/airport/urocrtt/GetSingleResource">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.1/airport/urocrtt/GetFlightByPackage">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.1/airport/urocrtt/GetAssignmentListByPackage">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <!--#############################################################################-->
-    <!--########### Services Defined below are for Flight Manager - JSON ############-->
-    <!--#############################################################################-->
-    <service uri="/6.1/security/flightcontrol/addprintertocontrolset">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.1/security/flightcontrol/close">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.1/security/flightcontrol/open">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.1/security/flightcontrol/restrict">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.1/security/flightcontrol/cancelpassengerreconciliationcomplete">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.1/security/flightcontrol/passengerreconciliationcomplete">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.1/security/flightcontrol/prcstatus">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.0/flight/Boarding/prcstatus">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.1/security/flightcontrol/getControlSetState">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.1/security/flightcontrol/boardpassenger">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.1/security/flightcontrol/deboardpassenger">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.1/flight/flightstatus/multistatuspost">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/5.3/flight/Flightsummary/pbtcounts">
-        <sslProxyProfile/>
-        <reqTransform>FlightSummaryPBTCountReq.xsl</reqTransform>
-        <resTransform/>
-    </service>
-    <service uri="/6.0/ods/uflifo/flightcounts/pbtcounts/">
-        <sslProxyProfile/>
-        <reqTransform>UFlifoPBTCounts.xsl</reqTransform>
-        <resTransform/>
-    </service>
-    <service uri="/6.0/flight/unseattraveler/gradechange">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.0/flight/unseattraveler/unseattraveler">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.0/flight/processmisconnect/processmisconnectbyflight">
-        <sslProxyProfile/>
-        <reqTransform>processmisconnectbyflight.xsl</reqTransform>
-        <resTransform/>
-    </service>
-    <service uri="/6.1/flight/passengerflighttransfer/availability">
-        <sslProxyProfile/>
-        <reqTransform>PassengerflighttransferAvailability.xsl</reqTransform>
-        <resTransform/>
-    </service>
-    <service uri="/6.1/flight/passengerflighttransfer/standby/transfer">
-        <sslProxyProfile/>
-        <reqTransform>PassengerflighttransferStandbyTransfer.xsl</reqTransform>
-        <resTransform/>
-    </service>
-    <service uri="/6.4/flight/processseats/changeseats">
-        <sslProxyProfile/>
-        <reqTransform>processsseatsChangeseats.xsl</reqTransform>
-        <resTransform/>
-    </service>
-    <service uri="/6.1/flight/seatmap/GetSeatMapDetail">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/5.1/flight/travelerlist/mock">
-        <sslProxyProfile/>
-        <reqTransform>TravelerlistMock.xsl</reqTransform>
-        <resTransform/>
-    </service>
-    <service uri="/6.3/Payment/DataVault/AddPaymentFS">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.4/checkin/checkininitiate/reprintboardingpass">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.4/checkin/checkinInitiate/CalculateTotalFeesOnOverride">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/5.3/flight/Flightsummary/count">
-        <sslProxyProfile/>
-        <reqTransform>FlightSummaryCountReq.xsl</reqTransform>
-        <resTransform/>
-    </service>
-    <service uri="/5.3/flight/Flightsummary/state">
-        <sslProxyProfile/>
-        <reqTransform>FlightSummaryStateReq.xsl</reqTransform>
-        <resTransform/>
-    </service>
-    <!--#############################################################################-->
-    <!--######################### kept at v6.4 Feb 22, 2017 #########################-->
-    <!--#############################################################################-->
-    <!--## matching both for traveler and travelerByPnr by wildcard match so       ##-->
-    <!--## seperating both. Change EntryLevelFareInd to False with Res xslt        ##-->
-    <!--## Change CacheFlag to str(true/false) based on travelerListOption         ##-->
-    <!--#############################################################################-->
-    <service uri="/6.4/flight/travelerlist/traveler">
-        <sslProxyProfile/>
-        <reqTransform>FltManagerTravelerListJSReqTransform.xsl</reqTransform>
-        <resTransform/>
-    </service>
-    <service uri="/6.5/flight/travelerlist/dynamictraveler">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <!-- new entry added for traveler list by PNR -->
-    <service uri="/6.5/flight/travelerlist/travelerByPnr">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <!--## new entry added for seat processing 19 Dec 2016 ##-->
-    <service uri="/6.4/flight/processseats/releaseheldseats">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <!-- Update to 5.1 version -->
-    <service uri="/5.1/flight/travelerlist">
-        <sslProxyProfile/>
-        <reqTransform>Travelerlist.xsl</reqTransform>
-        <resTransform/>
-    </service>
-    <service uri="/6.1/flight/seatmap">
-        <sslProxyProfile/>
-        <reqTransform>seatmap.xsl</reqTransform>
-        <resTransform>FlightSeatMapJSONx.xsl</resTransform>
-    </service>
-    <service uri="/6.4/checkin/checkinseatmgmt/getseatmap">
-        <sslProxyProfile/>
-        <reqTransform>getseatmap.xsl</reqTransform>
-        <resTransform>GetSeatMapJSONx-v1.2.xsl</resTransform>
-    </service>
-    <service uri="/6.4/checkin/checkinstartlite/starttransaction">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform>CheckinSeatMapJSONx-v1.3.xsl</resTransform>
-    </service>
-    <service uri="/6.4/checkin/checkinstartlite/starttransaction">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.4/checkin/checkinstartlite/starttransaction">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="rviceA/AcquireAnonymousSession.aspx">
-        <sslProxyProfile>247_CSS_TOKEN_SSL_CLIENT_CRYPTO_PROFILE</sslProxyProfile>
-        <reqTransform>getAnonymousCSLToken.xsl</reqTransform>
-        <resTransform/>
-    </service>
-    <service uri="/6.0/security/authentication/authenticate/clienttoken">
-        <sslProxyProfile/>
-        <reqTransform>SharesToken.xsl</reqTransform>
-        <resTransform>CSLTokenJSONx.xsl</resTransform>
-    </service>
-    <service uri="/6.0/security/authentication/authenticate/clienttoken">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform>CSLTokenJSONx.xsl</resTransform>
-    </service>
-    <service uri="/6.0/security/authentication/authenticate/clienttoken">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform>CSLTokenJSONx.xsl</resTransform>
-    </service>
-    <service uri="Services/POP/V4.5.0/MerchandizingServices.svc/soap">
-        <sslProxyProfile/>
-        <reqTransform>BagEmbargoReqSOAP.xsl</reqTransform>
-        <resTransform>BagEmbargoJSONx.xsl</resTransform>
-    </service>
-    <service uri="/APSMobileService.svc">
-        <sslProxyProfile/>
+        <resTransform>LoginSessionStatusJSONx.xsl</resTransform>
+        <proxyUrl>http://PublicInterfaceINETFrontEnd:3486</proxyUrl>
+        <routingUrl>https://unitedservices.ual.com/6.0/security/authentication/login/session/host/status</routingUrl>
+    </service>
+    <service uri="/csr/mapCSRAPI/mapcsr_service/mobileSvc/ApsAssociateDeviceToBpPrinterGetLeid">
+        <sslProfile/>
+        <reqTransform>AssociateDeviceToBpPrinterGetLeidReqSOAP.xsl</reqTransform>
+        <resTransform>AssociateToBpPrinterGetLeidResJSONx.xsl</resTransform>
+        <proxyUrl>http://PublicInterfaceINETFrontEnd:3486</proxyUrl>
+        <routingUrl>http://apsmanagement.ual.com/APSMobile/APSMobileService.svc</routingUrl>
+    </service>
+    <service uri="/csr/mapCSRAPI/mapcsr_service/mobileSvc/ApsGetWorkstationLeid">
+        <sslProfile/>
+        <reqTransform>GetWorkstationLeidReqSOAP.xsl</reqTransform>
+        <resTransform>GetWorkstationLeidJSONx.xsl</resTransform>
+        <proxyUrl>http://PublicInterfaceINETFrontEnd:3486</proxyUrl>
+        <routingUrl>http://apsmanagement.ual.com/APSMobile/APSMobileService.svc</routingUrl>
+    </service>
+    <service uri="/csr/mapCSRAPI/mapcsr_service/mobileSvc/getAAADevices">
+        <sslProfile/>
         <reqTransform>GetAADevicesReqSOAP.xsl</reqTransform>
         <resTransform>APSDevicesJSONx.xsl</resTransform>
+        <proxyUrl>http://PublicInterfaceINETFrontEnd:3486</proxyUrl>
+        <routingUrl>http://apsmanagement.ual.com/APSMobile/APSMobileService.svc</routingUrl>
     </service>
-    <service uri="/APSMobileService.svc">
-        <sslProxyProfile/>
+    <service uri="/csr/mapCSRAPI/mapcsr_service/mobileSvc/ApsGetAirports">
+        <sslProfile/>
         <reqTransform>GetAirportsReqSOAP.xsl</reqTransform>
         <resTransform>ApsAirportsJSONx.xsl</resTransform>
+        <proxyUrl>http://PublicInterfaceINETFrontEnd:3486</proxyUrl>
+        <routingUrl>http://apsmanagement.ual.com/APSMobile/APSMobileService.svc</routingUrl>
     </service>
-    <service uri="/APSMobileService.svc">
-        <sslProxyProfile/>
+    <service uri="/csr/mapCSRAPI/mapcsr_service/mobileSvc/ApsGetLocationsDevices">
+        <sslProfile/>
         <reqTransform>GetLocationsDeviceTypeDevicesReqSOAP.xsl</reqTransform>
         <resTransform>APSLocationsDevicesJSONx.xsl</resTransform>
+        <proxyUrl>http://PublicInterfaceINETFrontEnd:3486</proxyUrl>
+        <routingUrl>http://apsmanagement.ual.com/APSMobile/APSMobileService.svc</routingUrl>
     </service>
-    <service uri="/APSMobileService.svc">
-        <sslProxyProfile/>
+    <service uri="/csr/mapCSRAPI/mapcsr_service/mobileSvc/ApsGetLocationsAllDevices">
+        <sslProfile/>
         <reqTransform>GetLocationsDevicesReqSOAP.xsl</reqTransform>
         <resTransform>APSLocationsAllDevicesJSONx.xsl</resTransform>
+        <proxyUrl>http://PublicInterfaceINETFrontEnd:3486</proxyUrl>
+        <routingUrl>http://apsmanagement.ual.com/APSMobile/APSMobileService.svc</routingUrl>
     </service>
-    <service uri="/APSMobileService.svc">
-        <sslProxyProfile/>
+    <service uri="/csr/mapCSRAPI/mapcsr_service/mobileSvc/ApsAssociateDeviceToBpPrinter">
+        <sslProfile/>
         <reqTransform>AssociateDeviceToBpPrinterReqSOAP.xsl</reqTransform>
         <resTransform>AssociateToBpPrinterResJSONx.xsl</resTransform>
+        <proxyUrl>http://PublicInterfaceINETFrontEnd:3486</proxyUrl>
+        <routingUrl>http://apsmanagement.ual.com/APSMobile/APSMobileService.svc</routingUrl>
     </service>
-    <service uri="/emulatorSvc/EmulatorService.asmx">
-        <sslProxyProfile/>
-        <reqTransform>EmulatorSvcAddLeidReqSOAP.xsl</reqTransform>
-        <resTransform>EmulatorSvcAddLeidJSONx.xsl</resTransform>
-    </service>
-    <service uri="/emulatorSvc/EmulatorService.asmx">
-        <sslProxyProfile/>
-        <reqTransform>EmulatorSvcAddLeidWrkStnReqSOAP.xsl</reqTransform>
-        <resTransform>EmulatorSvcAddLeidWrkStnJSONx.xsl</resTransform>
-    </service>
-    <service uri="/emulatorSvc/EmulatorService.asmx">
-        <sslProxyProfile/>
-        <reqTransform>EmulatorSvcRemLeidReqSOAP.xsl</reqTransform>
-        <resTransform>EmulatorSvcRemLeidJSONx.xsl</resTransform>
-    </service>
-    <service uri="/emulatorSvc/EmulatorService.asmx">
-        <sslProxyProfile/>
-        <reqTransform>EmulatorSvcRemLeidWrkStnReqSOAP.xsl</reqTransform>
-        <resTransform>EmulatorSvcRemLeidWrkStnJSONx.xsl</resTransform>
-    </service>
-    <service uri="/MobileAgentPlatform/MobileAgentPlatform.svc/CompleteAddBags">
-        <sslProxyProfile/>
+    <service uri="/csr/mapCSRAPI/mapcsr_service/6.1/security/flightcontrol/addprintertocontrolset">
+        <sslProfile/>
         <reqTransform/>
         <resTransform/>
+        <proxyUrl/>
+        <routingUrl>http://unitedservices.ual.com/6.1/security/flightcontrol/addprintertocontrolset</routingUrl>
     </service>
-    <service uri="/MobileAgentPlatform/MobileAgentPlatformConfig.svc/GetConfiguration">
-        <sslProxyProfile/>
+    <service uri="/csr/mapCSRAPI/mapcsr_service/WFStaging/AgentStart/AgentChangePrinters">
+        <sslProfile/>
         <reqTransform/>
         <resTransform/>
+        <proxyUrl/>
+        <routingUrl>http://unitedservices.ual.com/WFStaging/AgentStart/AgentChangePrinters</routingUrl>
     </service>
-    <service uri="/MobileAgentPlatform/MobileAgentPlatform.svc/LogApplication">
-        <sslProxyProfile/>
+    <service uri="/csr/mapCSRAPI/mapcsr_service/WFStaging/AgentStart/AgentGetCurrentPrinters">
+        <sslProfile/>
         <reqTransform/>
         <resTransform/>
+        <proxyUrl/>
+        <routingUrl>http://unitedservices.ual.com/WFStaging/AgentStart/AgentGetCurrentPrinters</routingUrl>
     </service>
-    <service uri="/MobileAgentPlatform/MobileAgentPlatform.svc/Ping">
-        <sslProxyProfile/>
+    <service uri="/csr/mapCSRAPI/mapcsr_service/6.0/flight/printerutilities/getDocumentPrinterAddress">
+        <sslProfile/>
         <reqTransform/>
         <resTransform/>
+        <proxyUrl/>
+        <routingUrl>http://unitedservices.ual.com/6.0/flight/printerutilities/getDocumentPrinterAddress</routingUrl>
     </service>
-    <service uri="/MobileAgentPlatform/MobileAgentPlatform.svc/FlightInformation">
-        <sslProxyProfile/>
+    <service uri="/csr/mapCSRAPI/mapcsr_service/6.5/flight/travelerlist/travelerByPnr">
+        <sslProfile/>
         <reqTransform/>
         <resTransform/>
+        <proxyUrl>http://PublicInterfaceINETFrontEnd:3485</proxyUrl>
+        <routingUrl>http://unitedservices.ual.com/6.5/flight/travelerlist/travelerByPnr</routingUrl>
     </service>
-    <service uri="/MobileAgentPlatform/MobileAgentPlatformConfig.svc/GetConfigChangeSeatWaiver">
-        <sslProxyProfile/>
+    <!--********************************************************************-->
+    <!--** below are all for the development services                     **-->
+    <!--********************************************************************-->
+    <service uri="/csr/dev/mapCSRAPI/mapcsr_service/mobileSvc/ApsAssociateDeviceToBpPrinterGetLeid">
+        <sslProfile/>
+        <routingUrl>http://aps-stage.ual.com/APSMobile/APSMobileService.svc</routingUrl>
+        <reqTransform>AssociateDeviceToBpPrinterGetLeidReqSOAP.xsl</reqTransform>
+        <resTransform>AssociateToBpPrinterGetLeidResJSONx.xsl</resTransform>
+        <proxyUrl>http://ManagementInterface:3486</proxyUrl>
+    </service>
+    <service uri="/csr/dev/mapCSRAPI/mapcsr_service/mobileSvc/ApsGetWorkstationLeid">
+        <sslProfile/>
+        <routingUrl>http://aps-stage.ual.com/APSMobile/APSMobileService.svc</routingUrl>
+        <reqTransform>GetWorkstationLeidReqSOAP.xsl</reqTransform>
+        <resTransform>GetWorkstationLeidJSONx.xsl</resTransform>
+        <proxyUrl>http://ManagementInterface:3486</proxyUrl>
+    </service>
+    <service uri="/csr/dev/mapCSRAPI/mapcsr_service/mobileSvc/getAAADevices">
+        <sslProfile/>
+        <routingUrl>http://aps-stage.ual.com/APSMobile/APSMobileService.svc</routingUrl>
+        <reqTransform>GetAADevicesReqSOAP.xsl</reqTransform>
+        <resTransform>APSDevicesJSONx.xsl</resTransform>
+        <proxyUrl>http://ManagementInterface:3486</proxyUrl>
+    </service>
+    <service uri="/csr/dev/mapCSRAPI/mapcsr_service/mobileSvc/ApsGetAirports">
+        <sslProfile/>
+        <routingUrl>http://aps-stage.ual.com/APSMobile/APSMobileService.svc</routingUrl>
+        <reqTransform>GetAirportsReqSOAP.xsl</reqTransform>
+        <resTransform>ApsAirportsJSONx.xsl</resTransform>
+        <proxyUrl>http://ManagementInterface:3486</proxyUrl>
+    </service>
+    <service uri="/csr/dev/mapCSRAPI/mapcsr_service/mobileSvc/ApsGetLocationsDevices">
+        <sslProfile/>
+        <routingUrl>http://aps-stage.ual.com/APSMobile/APSMobileService.svc</routingUrl>
+        <reqTransform>GetLocationsDeviceTypeDevicesReqSOAP.xsl</reqTransform>
+        <resTransform>APSLocationsDevicesJSONx.xsl</resTransform>
+        <proxyUrl>http://ManagementInterface:3486</proxyUrl>
+    </service>
+    <service uri="/csr/dev/mapCSRAPI/mapcsr_service/mobileSvc/ApsGetLocationsAllDevices">
+        <sslProfile/>
+        <routingUrl>http://aps-stage.ual.com/APSMobile/APSMobileService.svc</routingUrl>
+        <reqTransform>GetLocationsDevicesReqSOAP.xsl</reqTransform>
+        <resTransform>APSLocationsAllDevicesJSONx.xsl</resTransform>
+        <proxyUrl>http://ManagementInterface:3486</proxyUrl>
+    </service>
+    <service uri="/csr/dev/mapCSRAPI/mapcsr_service/mobileSvc/ApsAssociateDeviceToBpPrinter">
+        <sslProfile/>
+        <routingUrl>http://aps-stage.ual.com/APSMobile/APSMobileService.svc</routingUrl>
+        <reqTransform>AssociateDeviceToBpPrinterReqSOAP.xsl</reqTransform>
+        <resTransform>AssociateToBpPrinterResJSONx.xsl</resTransform>
+        <proxyUrl>http://ManagementInterface:3486</proxyUrl>
+    </service>
+    <service uri="/csr/dev/mapCSRAPI/mapcsr_service/6.1/security/flightcontrol/addprintertocontrolset">
+        <sslProfile/>
         <reqTransform/>
         <resTransform/>
+        <proxyUrl/>
+        <routingUrl>http://unitedservicesstage.ual.com/6.1/security/flightcontrol/addprintertocontrolset</routingUrl>
     </service>
-    <service uri="/MobileAgentPlatform/MobileAgentPlatform.svc/CustomerDetails">
-        <sslProxyProfile/>
+    <service uri="/csr/dev/mapCSRAPI/mapcsr_service/WFStaging/AgentStart/AgentChangePrinters">
+        <sslProfile/>
         <reqTransform/>
         <resTransform/>
+        <proxyUrl/>
+        <routingUrl>http://unitedservicesstage.ual.com/WFStaging/AgentStart/AgentChangePrinters</routingUrl>
     </service>
-    <service uri="/MobileAgentPlatform/MobileAgentPlatformMail.svc/SendMail">
-        <sslProxyProfile/>
+    <service uri="/csr/dev/mapCSRAPI/mapcsr_service/WFStaging/AgentStart/AgentGetCurrentPrinters">
+        <sslProfile/>
         <reqTransform/>
         <resTransform/>
+        <proxyUrl/>
+        <routingUrl>http://unitedservicesstage.ual.com/WFStaging/AgentStart/AgentGetCurrentPrinters</routingUrl>
     </service>
-    <service uri="/MobileAgentPlatform/MobileAgentPlatformConfig.svc/GetDevicesLogging">
-        <sslProxyProfile/>
+    <service uri="/csr/dev/mapCSRAPI/mapcsr_service/6.0/flight/printerutilities/getDocumentPrinterAddress">
+        <sslProfile/>
         <reqTransform/>
         <resTransform/>
+        <proxyUrl/>
+        <routingUrl>http://unitedservicesstage.ual.com/6.0/flight/printerutilities/getDocumentPrinterAddress</routingUrl>
     </service>
-    <service uri="/MobileAgentPlatform/MobileAgentPlatformConfig.svc/AddDeviceLogging">
-        <sslProxyProfile/>
+    <service uri="/csr/dev/mapCSRAPI/mapcsr_service/6.5/flight/travelerlist/travelerByPnr">
+        <sslProfile/>
         <reqTransform/>
         <resTransform/>
+        <proxyUrl>http://ManagementInterface:3485</proxyUrl>
+        <routingUrl>http://unitedservicesstage.ual.com/6.5/flight/travelerlist/travelerByPnr</routingUrl>
     </service>
-    <service uri="/MobileAgentPlatform/MobileAgentPlatformConfig.svc/DeleteDeviceLogging">
-        <sslProxyProfile/>
+    <!--********************************************************************-->
+    <!--** below are all for the stage services                           **-->
+    <!--********************************************************************-->
+    <service uri="/csr/qa/mapCSRAPI/mapcsr_service/mobileSvc/getAAADevices">
+        <sslProfile/>
+        <routingUrl>http://aps-stage.ual.com/APSMobile/APSMobileService.svc</routingUrl>
+        <reqTransform>GetAADevicesReqSOAP.xsl</reqTransform>
+        <resTransform>APSDevicesJSONx.xsl</resTransform>
+        <proxyUrl>http://ManagementInterface:3486</proxyUrl>
+    </service>
+    <service uri="/csr/qa/mapCSRAPI/mapcsr_service/mobileSvc/ApsGetAirports">
+        <sslProfile/>
+        <routingUrl>http://aps-stage.ual.com/APSMobile/APSMobileService.svc</routingUrl>
+        <reqTransform>GetAirportsReqSOAP.xsl</reqTransform>
+        <resTransform>ApsAirportsJSONx.xsl</resTransform>
+        <proxyUrl>http://ManagementInterface:3486</proxyUrl>
+    </service>
+    <service uri="/csr/qa/mapCSRAPI/mapcsr_service/mobileSvc/ApsGetLocationsDevices">
+        <sslProfile/>
+        <routingUrl>http://aps-stage.ual.com/APSMobile/APSMobileService.svc</routingUrl>
+        <reqTransform>GetLocationsDeviceTypeDevicesReqSOAP.xsl</reqTransform>
+        <resTransform>APSLocationsDevicesJSONx.xsl</resTransform>
+        <proxyUrl>http://ManagementInterface:3486</proxyUrl>
+    </service>
+    <service uri="/csr/qa/mapCSRAPI/mapcsr_service/mobileSvc/ApsGetLocationsAllDevices">
+        <sslProfile/>
+        <routingUrl>http://aps-stage.ual.com/APSMobile/APSMobileService.svc</routingUrl>
+        <reqTransform>GetLocationsDevicesReqSOAP.xsl</reqTransform>
+        <resTransform>APSLocationsAllDevicesJSONx.xsl</resTransform>
+        <proxyUrl>http://ManagementInterface:3486</proxyUrl>
+    </service>
+    <service uri="/csr/qa/mapCSRAPI/mapcsr_service/mobileSvc/ApsAssociateDeviceToBpPrinter">
+        <sslProfile/>
+        <routingUrl>http://aps-stage.ual.com/APSMobile/APSMobileService.svc</routingUrl>
+        <reqTransform>AssociateDeviceToBpPrinterReqSOAP.xsl</reqTransform>
+        <resTransform>AssociateToBpPrinterResJSONx.xsl</resTransform>
+        <proxyUrl>http://ManagementInterface:3486</proxyUrl>
+    </service>
+    <service uri="/csr/qa/mapCSRAPI/mapcsr_service/6.1/security/flightcontrol/addprintertocontrolset">
+        <sslProfile/>
         <reqTransform/>
         <resTransform/>
+        <proxyUrl/>
+        <routingUrl>http://unitedservicesstage.ual.com/6.1/security/flightcontrol/addprintertocontrolset</routingUrl>
     </service>
-    <service uri="/WFStaging/AgentStart/AgentActivateTransaction">
-        <sslProxyProfile/>
+    <service uri="/csr/qa/mapCSRAPI/mapcsr_service/WFStaging/AgentStart/AgentChangePrinters">
+        <sslProfile/>
         <reqTransform/>
         <resTransform/>
+        <proxyUrl/>
+        <routingUrl>http://unitedservicesstage.ual.com/WFStaging/AgentStart/AgentChangePrinters</routingUrl>
     </service>
-    <service uri="/WFStaging/AgentStart/AgentAddBagTag">
-        <sslProxyProfile/>
+    <service uri="/csr/qa/mapCSRAPI/mapcsr_service/WFStaging/AgentStart/AgentGetCurrentPrinters">
+        <sslProfile/>
         <reqTransform/>
         <resTransform/>
+        <proxyUrl/>
+        <routingUrl>http://unitedservicesstage.ual.com/WFStaging/AgentStart/AgentGetCurrentPrinters</routingUrl>
     </service>
-    <service uri="/WFStaging/AgentStart/AgentChangePrinters">
-        <sslProxyProfile/>
+    <service uri="/csr/qa/mapCSRAPI/mapcsr_service/6.0/flight/printerutilities/getDocumentPrinterAddress">
+        <sslProfile/>
         <reqTransform/>
         <resTransform/>
+        <proxyUrl/>
+        <routingUrl>http://unitedservicesstage.ual.com/6.0/flight/printerutilities/getDocumentPrinterAddress</routingUrl>
     </service>
-    <service uri="/WFStaging/AgentStart/AgentCheckin">
-        <sslProxyProfile/>
+    <service uri="/csr/qa/mapCSRAPI/mapcsr_service/6.5/flight/travelerlist/travelerByPnr">
+        <sslProfile/>
         <reqTransform/>
         <resTransform/>
+        <proxyUrl>http://ManagementInterface:3485</proxyUrl>
+        <routingUrl>http://unitedservicesstage.ual.com/6.5/flight/travelerlist/travelerByPnr</routingUrl>
     </service>
-    <service uri="/WFStaging/AgentStart/AgentDeleteBagTag">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
+    <service uri="/csr/qa/mapCSRAPI/mapcsr_service/mobileSvc/ApsAssociateDeviceToBpPrinterGetLeid">
+        <sslProfile/>
+        <routingUrl>http://aps-stage.ual.com/APSMobile/APSMobileService.svc</routingUrl>
+        <reqTransform>AssociateDeviceToBpPrinterGetLeidReqSOAP.xsl</reqTransform>
+        <resTransform>AssociateToBpPrinterGetLeidResJSONx.xsl</resTransform>
+        <proxyUrl>http://ManagementInterface:3486</proxyUrl>
     </service>
-    <service uri="/WFStaging/AgentStart/AgentDeleteStandByTrip">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/WFStaging/AgentStart/AgentDeliverBoardingPass">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/WFStaging/AgentStart/AgentGetCSVSegments">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/WFStaging/AgentStart/AgentGetCurrentPrinters">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/WFStaging/AgentStart/AgentGetFlightAvailability">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/WFStaging/AgentStart/AgentGetReaccomRTD">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/WFStaging/AgentStart/AgentGetRTD">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/WFStaging/AgentStart/AgentProcessAPISInfo">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/WFStaging/AgentStart/AgentProcessCompanionUpgradeCustomers">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/WFStaging/AgentStart/AgentProcessCSVOverrideSegments">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/WFStaging/AgentStart/AgentProcessCSVSegments">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/WFStaging/AgentStart/AgentProcessCustomerWithoutPassport">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/WFStaging/AgentStart/AgentProcessCustomerWithPassport">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/WFStaging/AgentStart/AgentProcessIntlExceptions">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/WFStaging/AgentStart/AgentProcessPRCInfo">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/WFStaging/AgentStart/AgentProcessPremeirUpgradeCustomers">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/WFStaging/AgentStart/AgentProcessReaccom">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/WFStaging/AgentStart/AgentProcessReaccomFlightChange">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/WFStaging/AgentStart/AgentProcessSDCChangeFlight">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/WFStaging/AgentStart/AgentProcessSeatChanges">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/WFStaging/AgentStart/AgentprocessSecureFlightCustomer">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/WFStaging/AgentStart/AgentReaccomFlightOptions">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/WFStaging/AgentStart/AgentReaccomKeepOriginal">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/WFStaging/AgentStart/AgentRemoveStandByTrip">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/WFStaging/AgentStart/AgentSaveSeat">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/WFStaging/AgentStart/AgentSDCGetFlightOptions">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/WFStaging/AgentStart/AgentSDCKeepOriginalItinerary">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/WFStaging/AgentStart/AgentSelectBubble">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/WFStaging/AgentStart/AgentSine">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/WFStaging/AgentStart/GetAgentAlternateSeatMap">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/WFStaging/AgentStart/GetAgentSeatMap">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.4/Flight/accommodatedList">
-        <sslProxyProfile/>
-        <reqTransform>PassengerList.xsl</reqTransform>
-        <resTransform/>
-    </service>
-    <service uri="/6.2/Flight/ProcessStandby/nameselect">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.5/Flight/ProcessStandby/nameselect">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.3/flight/ProcessStandby/requestclearanceforcabin">
-        <sslProxyProfile/>
-        <reqTransform>ClearanceCabinReq.xsl</reqTransform>
-        <resTransform/>
-    </service>
-    <service uri="/6.2/Flight/ProcessStandby/getseats">
-        <sslProxyProfile/>
-        <reqTransform>getSeatsReq.xsl</reqTransform>
-        <resTransform/>
-    </service>
-    <service uri="/6.2/Flight/ProcessStandby/init">
-        <sslProxyProfile/>
-        <reqTransform>ProcessStandbyInitReq.xsl</reqTransform>
-        <resTransform/>
-    </service>
-    <service uri="/6.4/flight/ProcessSeats/assignseats">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.4/checkin/checkinstartlite/starttransaction">
-        <sslProxyProfile/>
-        <reqTransform>getseatmap.xsl</reqTransform>
-        <resTransform>CheckinSeatMapWithKeyJSONXRes.xsl</resTransform>
-    </service>
-    <service uri="/6.0/security/flightcontrol/getcontrolSetState">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.3/security/flightcontrol/addleidtocontrolsetbyworkstation">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.0/security/FlightControl/deleteleidfromcontrolsetbyworkstation">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.0/security/FlightControl/deleteallleidfromcontrolset">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.1/Flight/flightdetails/getAircraftAmenities">
-        <sslProxyProfile/>
-        <reqTransform>GetAircraftAmenitiesReq.xsl</reqTransform>
-        <resTransform/>
-    </service>
-    <service uri="/6.3/security/FlightControl/addleidtocontrolsetbygate">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/MobileAgentPlatform/MobileAgentPlatformConfig.svc/GetConfiguration">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="bileAgentPlatform/serviceEntries">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri=":3455/MobileAgentPlatform/gatewayApi/getVersions">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.0/ods/uflifo/flightcounts/Counts">
-        <sslProxyProfile/>
-        <reqTransform>flightcounts.xsl</reqTransform>
-        <resTransform/>
-    </service>
-    <service uri="/6.2/flight/csareporting/report">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/6.2/flight/csareporting/remarks">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform>CSARemarksJSONx</resTransform>
-    </service>
-    <service uri="/6.0/printing/Telex/print/paperwork">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
-    </service>
-    <service uri="/7.0/flight/manageoversell/fltinitstat">
-        <reqTransform>manageoversell.xsl</reqTransform>
-        <resTransform>ManageOversellJSONx.xsl</resTransform>
-    </service>
-    <service uri="/6.0/flight/printerutilities/getDocumentPrinterAddress">
-        <sslProxyProfile/>
-        <reqTransform>getDocumentPrinter.xsl</reqTransform>
-        <resTransform>getDocumentPrinterJSONx.xsl</resTransform>
-    </service>
-    <service uri="/MobileAgentPlatform/MobileAgentPlatform.svc/FlightInformationAndCount">
-        <sslProxyProfile/>
-        <reqTransform/>
-        <resTransform/>
+    <service uri="/csr/qa/mapCSRAPI/mapcsr_service/mobileSvc/ApsGetWorkstationLeid">
+        <sslProfile/>
+        <routingUrl>http://aps-stage.ual.com/APSMobile/APSMobileService.svc</routingUrl>
+        <reqTransform>GetWorkstationLeidReqSOAP.xsl</reqTransform>
+        <resTransform>GetWorkstationLeidJSONx.xsl</resTransform>
+        <proxyUrl>http://ManagementInterface:3486</proxyUrl>
     </service>
 </app-metadata>

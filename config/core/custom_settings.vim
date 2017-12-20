@@ -1,22 +1,53 @@
 " #############################################################################
-" # This file contains any custom settings or key mappings for vim
+" #  This file contains any custom settings or key mappings for vim           #
 " #############################################################################
-
-" # mappings for moving lines and words {{{
-"   push line UP and DOWN
-"nnoremap <leader><Down> ddp
-"nnoremap <leader><Up> ddkP
-
-"   push word under cursor to left and right
-nnoremap <leader><Left> "_yiw?\w\+\_W\+\%#<CR>:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<CR><C-o><C-l>
-nnoremap <leader><Right> "_yiw:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<CR><C-o>/\w\+\_W\+<CR><C-l>
-" }}}
 
 " vim-plug specific
 " alias to upgrade the vim-plug after doing a plugins update
 command! PU PlugUpdate | PlugUpgrade
 
+" open .vimrc with a shortcut
+nnoremap <leader>vim :tabnew ~/.vim/vimrc<cr>
+
+" ------------------------------------------------------------------------------------
+" ***           custom color highlighting and alerts in common editing             ***
+" ------------------------------------------------------------------------------------
+highlight Cursor guibg=black guifg=pink             " gui cursor color
+highlight Search guibg=peru guifg=wheat             " gui search highlight
+
+highlight CommaAndNonSpace      ctermbg=brown guifg=white guibg=brown
+highlight EOLSpace              ctermbg=brown guifg=white guibg=brown
+highlight HashRocketAndNonSpace ctermbg=brown guifg=white guibg=brown
+highlight NonSpaceAndHashRocket ctermbg=brown guifg=white guibg=brown
+highlight SpaceAndComma         ctermbg=brown guifg=white guibg=brown
+highlight Tab                   ctermbg=brown guifg=white guibg=brown
+highlight WideEisuu             ctermbg=brown guifg=white guibg=brown
+highlight WideSpace             ctermbg=brown guifg=white guibg=brown
+highlight BadWhitespace         ctermbg=brown guifg=white guibg=brown
+
+" Setting Italics for comments
+"highlight Comment cterm=italic
+"highlight Comment gui=italic
+highlight htmlArg cterm=italic
+
+" Searing red very visible cursor red back ground
+hi Cursor guibg=red
+
+function! s:highlight_general_checkstyles()
+    "let w:m1=matchadd('Tab', '    ', -1)
+    let w:m1=matchadd('WideSpace', '　', -1)
+    let w:m2=matchadd('EOLSpace', '\s\+$', -1)
+    let w:m3=matchadd('WideEisuu', '[Ａ-Ｚａ-ｚ０-９]', -1)
+    "let w:m4=matchadd('SpaceAndComma', ' ,', -1)
+    "let w:m5=matchadd('CommaAndNonSpace', ',[^(\\n| )]', -1)
+    "let w:m6=matchadd('Tab', '\t', -1)
+endf
+
+call s:highlight_general_checkstyles()
+
+" ------------------------------------------------------------------------------------
 " handling the cursor shapes (make a straight line in INSERT mode
+" ------------------------------------------------------------------------------------
 if has("autocmd")
   au VimEnter,InsertLeave * silent execute '!echo -ne "\e[2 q"' | redraw!
   au InsertEnter,InsertChange *
@@ -67,6 +98,7 @@ autocmd InsertEnter * call s:ShowIndentLine()
 " **** ~/.vim/plugged/vim-erlang-tags/bin/vim-erlang-tags.erl                      ****
 " *************************************************************************************
 "set tags+=~/.vim/tags/opencv
+
 set tags+=~/.vim/tags/systags
 
 set tags+=/usr/local/lib/erlang/lib/tags

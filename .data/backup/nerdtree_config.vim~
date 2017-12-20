@@ -13,13 +13,21 @@ if has_key(g:plugs, 'nerdtree')
             \| endif
     augroup END
 
-    nmap <leader>nt :NERDTreeToggle<CR>
+    function! ToggleNerdTree()
+	    if @% != "" && (!exists("g:NERDTree") || (g:NERDTree.ExistsForTab() && !g:NERDTree.IsOpen()))
+		    :NERDTreeFind
+	    else
+		    :NERDTreeToggle
+	    endif
+    endfunction
+    "nmap <leader>nt :NERDTreeToggle<CR>
+    map <silent> <Leader>nt :call ToggleNerdTree()<CR>
 
     let NERDTreeHighlightCursorline   = 1            " highlight current cursor line
     let NERDTreeShowHidden            = 1            " show hidden files
     let g:NERDTreeChDirMode           = 1            " change to cwd
     let g:NERDTreeDirArrowExpandable  = ''          " horizontal arrow
-    let g:NERDTreeDirArrowCollapsible = ''          " vertical arrow
+    let g:NERDTreeDirArrowCollapsible = '▽'          " vertical arrow
 endif
 " }}}
 
@@ -36,7 +44,7 @@ if has_key(g:plugs, 'vim-nerdtree-tabs')
     endfunction
 
     call NERDTreeFileHighlight('hrl', 'green', 'none', 'green', '#eee8d5')
-    call NERDTreeFileHighlight('vim', 'LightYellow', 'LightRed', 'firebrick', 'grey')
+    call NERDTreeFileHighlight('vim', 'DarkBlue', 'green', 'firebrick', 'grey')
     call NERDTreeFileHighlight('erl', 'LightRed', 'none', '#FA5882', '#eee8d5')
     call NERDTreeFileHighlight('ini', 'yellow', 'none', 'yellow', '#eee8d5')
     call NERDTreeFileHighlight('md', 'blue', 'none', '#3366FF', '#eee8d5')

@@ -10,4 +10,12 @@ if has_key(g:plugs, 'tabular')
     vmap <leader>a> :Tabularize /-><CR>
     vmap <leader>a< :Tabularize /<-<CR>
     vmap <leader>a, :Tabularize /,<CR>
+    vmap <leader>a. :Tabularize /.<CR>
+    vmap <leader>a& :Tabularize /&<CR>
+    vmap <leader>a( :Tabularize /(<CR>
+    vmap <leader>a) :Tabularize /)<CR>
+    vmap <leader>a{ :Tabularize /{<CR>
+    vmap <leader>a} :Tabularize /}<CR>
+    vmap <leader>a[ :Tabularize /[<CR>
+    vmap <leader>a] :Tabularize /]<CR>
 endif

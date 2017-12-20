@@ -185,7 +185,6 @@ function! ToggleNumber()
 endfunction
 
 
-
 " -----------------------------------------------------------------------------
 " show current color scheme name
 " usage :call ShowColorTheme()

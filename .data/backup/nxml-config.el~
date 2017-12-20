@@ -36,7 +36,7 @@
              '("<!DOCTYPE html .+DTD XHTML .+>" . nxml-mode) )
 
 (fset 'xml-mode 'nxml-mode)
-;(fset 'html-mode 'nxml-mode)
+;;(fset 'html-mode 'nxml-mode)
 (require 'rng-loc nil t)
 
 ;; pom files should be treated as xml files
@@ -53,6 +53,17 @@
       nxml-default-buffer-file-coding-system 'utf-8)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; indentation setup for xml ref: https://www.emacswiki.org/emacs/CustomizeAquamacs
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ (defun sgml-mode-indent-setup ()
+   (setq sgml-basic-offset 4))
+
+ (defun nxml-mode-indent-setup ()
+   (setq nxml-child-indent 4))
+
+(add-hook 'nxml-mode-hook 'nxml-mode-indent-setup)
+(add-hook 'sgml-mode-hook 'sgml-mode-indent-setup)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; company-nxml
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun my-company-nxml-settings ()
@@ -61,7 +72,8 @@
   (add-to-list (make-local-variable 'company-backends)
     'company-nxml))
 
-(add-hook 'nxml-mode-hook 'my-company-nxml-settings)
+(after 'company
+  (add-hook 'nxml-mode-hook 'my-company-nxml-settings))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; hide show
@@ -104,6 +116,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package x-path-walker
   :ensure t
+  :defer t
   :config
   (dolist (hook '(html-mode-hook
                   web-mode-hook
@@ -138,38 +151,9 @@
                            "*Xmllint Error Buffer*" t))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; flymake xml checker using xmlstarlet (brew install xmlstarlet)
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defun flymake-xml-init ()
-  (let* ((temp-file (flymake-init-create-temp-buffer-copy
-		     'flymake-create-temp-inplace))
-	 (local-file (file-relative-name
-		      temp-file
-		      (file-name-directory buffer-file-name))))
-    (list "xmlparse" (list local-file))))
-
-(add-to-list 'flymake-allowed-file-name-masks
-	     '("\\.xml\\'" flymake-xml-init))
-
-(add-to-list 'flymake-err-line-patterns
-	     '("\\(.*\\) at line \\([0-9]+\\) char \\([0-9]+\\) of file://\\(.*\\)"
-	      4 2 3 1))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; flycheck xml checker using xmllint (brew install xmllint)
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(flycheck-define-checker xml-xmllint
-  "A XML syntax checker and validator using the xmllint utility"
-  :command ("/usr/bin/xmllint" "--noout" source)
-  :error-patterns
-  ((error line-start (file-name) ":" line ":" (message) line-end))
-  :modes (xml-mode nxml-mode))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; for auto-complete of nXml
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (require 'auto-complete-nxml nil t)
-
 ;; customize
 ;; Keystroke for popup help about something at point.
 ;(setq auto-complete-nxml-popup-help-key "C-:")

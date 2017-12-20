@@ -2,6 +2,22 @@
 " ---      YouCompleteMe auto completion in gui mode for MacVim             ---
 " =============================================================================
 
+" custom functions
+" make UltiSnips works nicely with YCM
+function! g:UltiSnips_Complete()
+    call UltiSnips#ExpandSnippet()
+    if g:ulti_expand_res == 0
+        if pumvisible()
+            return "\<C-n>"
+        else
+            call UltiSnips#JumpForwards()
+            if g:ulti_jump_forwards_res == 0
+                return "\<TAB>"
+            endif
+        endif
+    endif
+    return ""
+endfunction
 
 " =============================================================================
 " choose the python binary to select while using YouCompleteMe
@@ -106,6 +122,7 @@ nnoremap <leader>Y :let g:ycm_auto_trigger=1<CR>
 "    if !empty(glob('~/.vim/plugged/ultisnips/plugin/UltiSnips.vim'))
 " =============================================================================
 if has('gui_running') && has_key(g:plugs, 'ultisnips') && has_key(g:plugs, 'supertab')
+    au BufEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
     " make YCM compatible with UltiSnips (using supertab)
     let g:ycm_key_list_select_completion             = ['<C-n>', '<Down>']
     let g:ycm_key_list_previous_completion           = ['<C-p>', '<Up>']

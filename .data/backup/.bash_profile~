@@ -51,9 +51,9 @@ export PATH=$PATH:$GOPATH/bin
 #############################################################################
 # for haskell
 #############################################################################
-#export STACK_BIN=$HOME/.local/bin
-#export CABAL_BIN=$HOME/Library/Haskell/bin
-#export PATH=$CABAL_BIN:$STACK_BIN:$PATH
+export STACK_BIN=$HOME/.local/bin
+export CABAL_BIN=$HOME/Library/Haskell/bin
+export PATH=$CABAL_BIN:$STACK_BIN:$PATH
 
 #############################################################################
 # for opencv
@@ -65,6 +65,9 @@ export PATH=$PATH:$GOPATH/bin
 # CPPFLAGS: -I/usr/local/opt/opencv3/include
 # For pkg-config to find this software you may need to set:
 # PKG_CONFIG_PATH: /usr/local/opt/opencv3/lib/pkgconfig
+
+# for xmllint indentation
+export XMLLINT_INDENT="	"
 
 #############################################################################
 # Path

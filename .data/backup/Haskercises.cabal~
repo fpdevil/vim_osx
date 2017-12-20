@@ -2,7 +2,7 @@ name:                Haskercises
 version:             0.1.0.0
 synopsis:            Multiple general exercises and examples worked in Haskell
 description:         Please see README.md
-homepage:            https://github.com/githubuser/Haskercises#readme
+homepage:            https://github.com/fpdevil/Haskercises#readme
 license:             BSD3
 license-file:        LICENSE
 author:              Sampath Singamsetty
@@ -31,4 +31,4 @@ executable exercises
 
 source-repository head
   type:     git
-  location: https://github.com/singamsetty/haskercises
+  location: https://github.com/fpdevil/haskercises
