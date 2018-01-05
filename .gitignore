@@ -1,7 +1,8 @@
 bundle
 plugged/
-hoogle
+hoogle/
 haskellmode.config
 .netrwhist
-.data
+.data/
+eclim/
 tags/
