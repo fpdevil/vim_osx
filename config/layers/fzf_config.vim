@@ -26,15 +26,32 @@ if has_key(g:plugs, 'fzf.vim')
                 \ 'header':  ['fg', 'Comment'],
                 \   }
 
+    " This is the default extra key bindings
+    let g:fzf_action = {
+          \ 'ctrl-t': 'tab split',
+          \ 'ctrl-x': 'split',
+          \ 'ctrl-v': 'vsplit',
+          \ }
+
     " nnoremap <silent> <Leader><Leader> :Files<CR>
-    nnoremap <silent> <expr> <Leader><Leader> (expand('%') =~ 'NERD_tree' ? "\<c-w>\<c-w>" : '').":Files\<cr>"
-    nnoremap <silent> <Leader>C        :Colors<CR>
-    nnoremap <silent> <Leader><Enter>  :Buffers<CR>
-    nnoremap <silent> <Leader>,f       :FufFileWithCurrentBufferDir<CR>
-    nnoremap <silent> <Leader>ag       :Ag <C-R><C-W><CR>
-    nnoremap <silent> <Leader>AG       :Ag <C-R><C-A><CR>
-    xnoremap <silent> <Leader>ag       y:Ag <C-R>"<CR>
-    nnoremap <silent> <Leader>`        :Marks<CR>
+    "nnoremap <silent> <expr> <Leader><Leader> (expand('%') =~ 'NERD_tree' ? "\<c-w>\<c-w>" : '').":Files\<cr>"
+    "nnoremap <silent> <Leader>C        :Colors<CR>
+    "nnoremap <silent> <Leader><Enter>  :Buffers<CR>
+    "nnoremap <silent> <Leader>,f       :FufFileWithCurrentBufferDir<CR>
+    "nnoremap <silent> <Leader>ag       :Ag <C-R><C-W><CR>
+    "nnoremap <silent> <Leader>AG       :Ag <C-R><C-A><CR>
+    "xnoremap <silent> <Leader>ag       y:Ag <C-R>"<CR>
+    "nnoremap <silent> <Leader>`        :Marks<CR>
+
+    nnoremap <silent> <expr> <Leader>zf (expand('%') =~ 'NERD_tree' ? "\<c-w>\<c-w>" : '').":Files\<cr>"
+    nnoremap <silent> <Leader>zc        :Colors<CR>
+    nnoremap <silent> <Leader>zb        :Buffers<CR>
+    nnoremap <silent> <Leader>zd        :FufFileWithCurrentBufferDir<CR>
+    nnoremap <silent> <Leader>zg        :Ag <C-R><C-W><CR>
+    nnoremap <silent> <Leader>zG        :Ag <C-R><C-A><CR>
+    xnoremap <silent> <Leader>zy        y:Ag <C-R>"<CR>
+    nnoremap <silent> <Leader>zm        :Marks<CR>
+
     " nnoremap <silent> q: :History:<CR>
     " nnoremap <silent> q/ :History/<CR>
 

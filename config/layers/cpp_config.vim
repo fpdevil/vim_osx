@@ -11,6 +11,7 @@
 let g:syntastic_c_compiler                = '/usr/bin/clang'
 let g:syntastic_cpp_compiler              = '/usr/bin/clang++'
 let g:syntastic_cpp_compiler_options      = '-std=c++11 -stdlib=libstdc++ -Wall -Wextra -Weverything'
+let g:syntastic_c_compiler_options        = '-Wall -std=c11'
 let g:syntastic_cpp_cpplint_exec          = 'cpplint'
 let g:syntastic_c_checkers                = ['gcc', 'make']
 let g:syntastic_cpp_checkers              = ['cppcheck', 'cpplint', 'gcc']

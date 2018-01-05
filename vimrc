@@ -34,6 +34,9 @@
 "  ====        cd ~/.vim/bundle/vimproc.vim && make                     ====
 "  =========================================================================
 
+" for Vim 8 defaults
+unlet! skip_defaults_vim
+silent! source $VIMRUNTIME/defaults.vim
 
 " == == == == == == == == == == == == == == == == == == == == == == == == == ==
 " get the initial startup time details

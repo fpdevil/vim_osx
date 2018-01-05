@@ -1,7 +1,9 @@
 " for closing the error window use the below
 " :lclose or :SyntasticReset
 
-"{{{ syntax checkers settings
+" ------------------------------------------------------------------------------------
+" -----                      syntax checkers settings                            -----
+" ------------------------------------------------------------------------------------
 if has_key(g:plugs, 'syntastic')
     let g:syntastic_mode_map                 = {
                 \ 'mode'                : 'active',
@@ -18,7 +20,7 @@ if has_key(g:plugs, 'syntastic')
                 \ 'EVL105': 1
                 \ }
 endif
-"}}}
+
 
 " disable synastic checker for erlang as the erlang's plugin
 " vim-erlang-compiler is conflicting with this
@@ -62,18 +64,29 @@ function! s:getbg(group)
 endfunction
 
 "{{{ syntastic checker to display error and warning symbols
+let g:syntastic_enable_highlighting  = 1
 let g:syntastic_enable_signs         = 1
-let g:syntastic_error_symbol         = '✗'
-let g:syntastic_warning_symbol       = '⚠'
-let g:syntastic_style_error_symbol   = '✍'
-let g:syntastic_style_warning_symbol = '✍'
+let g:syntastic_error_symbol         = '❌'
+let g:syntastic_style_error_symbol   = '⁉️'
+let g:syntastic_warning_symbol       = '⚠️'
+let g:syntastic_style_warning_symbol = '💩'
 let g:sytastic_stl_format            = "[ln:%F (%t)]"
+
+"let g:syntastic_error_symbol = '✖'
+"let g:syntastic_warning_symbol = '➤'
+"let g:syntastic_info_symbol = '🛈'
+
 hi! link SyntasticErrorLine Visual
 hi! link SyntasticWarningLine Visual
-au VimEnter,ColorScheme * exec 'hi! SyntasticErrorSign guifg=red ctermfg=red ' . s:getbg('SyntasticErrorLine')
-au VimEnter,ColorScheme * exec 'hi! SyntasticWarningSign guifg=yellow ctermfg=yellow ' . s:getbg('SyntasticWarningLine')
-au VimEnter,ColorScheme * exec 'hi! SyntasticError ' . s:getbg('SyntasticErrorLine')
-au VimEnter,ColorScheme * exec 'hi! SyntasticWarning ' . s:getbg('SyntasticWarningLine')
+hi! link SyntasticErrorSign SignColumn
+hi! link SyntasticWarningSign SignColumn
+hi! link SyntasticStyleErrorSign SignColumn
+hi! link SyntasticStyleWarningSign SignColumn
+
+"au VimEnter,ColorScheme * exec 'hi! SyntasticErrorSign guifg=red ctermfg=red ' . s:getbg('SyntasticErrorLine')
+"au VimEnter,ColorScheme * exec 'hi! SyntasticWarningSign guifg=yellow ctermfg=yellow ' . s:getbg('SyntasticWarningLine')
+"au VimEnter,ColorScheme * exec 'hi! SyntasticError ' . s:getbg('SyntasticErrorLine')
+"au VimEnter,ColorScheme * exec 'hi! SyntasticWarning ' . s:getbg('SyntasticWarningLine')
 "}}}
 
 

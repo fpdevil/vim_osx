@@ -33,6 +33,13 @@ function! BuildTern(info)
     endif
 endfunction
 
+function! GetImport(info)
+    if a:info.status == 'installed' || a:info.force
+        !npm install
+        !npm install -g import-js
+    endif
+endfunction
+
 " function for handling the YouCompleteMe post build and installation
 function! YCMBuilder(info)
     " info dictionary structure has following 3 fields
@@ -48,6 +55,7 @@ function! YCMBuilder(info)
         !cd ./third_party/tern_runtime && npm install
     endif
 endfunction
+
 
 " --- syntax checkers section {{{
 Plug 'scrooloose/syntastic', { 'do': function('InstallJsHint') }                " realtime syntax checker
@@ -74,6 +82,7 @@ Plug 'conradirwin/vim-bracketed-paste'                                          
 
 "{{{ --- vim code commenting
 Plug 'scrooloose/nerdcommenter'                                                 " intensely orgasmic commenting
+Plug 'tomtom/tcomment_vim'                                                      " line comment default toggle `gc`
 
 "}}}
 
@@ -183,7 +192,8 @@ Plug 'nbouscal/vim-stylish-haskell', { 'for': 'haskell' }                       
 Plug 'mpickering/hlint-refactor-vim', { 'for': 'haskell' }                      " Hlint refactor
 Plug 'itchyny/vim-haskell-indent', { 'for': 'haskell'}                          " haskell indent plugin
 Plug 'dan-t/vim-hsimport', {'for': 'haskell'}                                   " plugin for hsimport
-Plug 'adinapoli/cumino'                                                         " vim ghci tmux integration
+Plug 'adinapoli/cumino', { 'for': 'haskell' }                                   " vim ghci tmux integration
+Plug 'alx741/vim-stylishask'                                                    " stylish haskell integration
 "Plug 'dag/vim2hs'                                                              " vimscripts for haskell development
 " }}}
 
@@ -207,6 +217,8 @@ Plug 'osyo-manga/unite-airline_themes'                                          
 Plug 'majutsushi/tagbar'                                                        " tagbar support
 Plug 'kien/rainbow_parentheses.vim'                                             " rainbow parenthesis color brackets
 Plug 'jaxbot/semantic-highlight.vim'                                            " semantic highlighting
+Plug 'rakr/vim-two-firewatch'                                                   " duotone light and firewatch for atom
+Plug 'vheon/vim-cursormode'                                                     " guicursor for terminal user
 "Plug 'bling/vim-bufferline'                                                    " show number of buffers
 "Plug 'bling/vim-airline'                                                       " using vim-airline repo
 " }}}
@@ -232,6 +244,7 @@ Plug 'nsf/gocode', { 'rtp': 'vim', 'do': '~/.vim/plugged/gocode/vim/symlink.sh' 
 " --- javascript syntax check and auto-completions section {{{
 Plug 'maksimr/vim-jsbeautify', { 'for': 'javascript' }                          " beautify js
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' }                         " js for vim
+Plug 'maxmellon/vim-jsx-pretty', { 'for': ['javascript', 'javascript.jsx'] }    " pretty hl for js[x]
 Plug 'jelera/vim-javascript-syntax', { 'for': 'javascript' }                    " enhanced js syntax
 Plug 'othree/yajs.vim', { 'for': 'javascript' }                                 " yet another js
 Plug 'othree/es.next.syntax.vim', { 'for': 'javascript' }                       " syntax for ECMA
@@ -251,7 +264,12 @@ Plug 'othree/javascript-libraries-syntax.vim', { 'for': [
             \ 'ls',
             \ 'typescript']
             \ }                                                                 " js syntax check and library support
-Plug 'marijnh/tern_for_vim', { 'do': function('BuildTern') }                    " tern plugin for vim js
+Plug 'marijnh/tern_for_vim', {
+            \ 'do': function('BuildTern'),
+            \ 'for': ['javascript', 'javascript.jsx']}                          " tern plugin for vim js
+Plug 'galooshi/vim-import-js', {
+            \ 'do': function('GetImport'),
+            \ 'for': ['javascript', 'javascript.vim']}                          " import js
 Plug 'shutnik/jshint2.vim', { 'for': 'javascript' }                             " JSHint integration
 Plug 'heavenshell/vim-jsdoc', { 'for': 'javascript' }                           " Generate JSDoc to your JavaScript code
 Plug 'moll/vim-node', { 'for': 'javascript' }                                   " Tools & Env for node.js

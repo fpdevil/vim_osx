@@ -70,6 +70,40 @@ if has_key(g:plugs, 'vim-leader-guide')
                 \ 'R'    : [ 'call ApplyAllSuggestions()', 'apply all suggestions from linter' ],
                 \ }
 
+    " for miscelleaneous tools
+    let g:lmap.m = {
+                \ 'name': "Misc Tools",
+                \ }
+
+    " for bookmarks
+    let g:lmap.m.b  = {
+                \ 'name' : 'Bookmark Tools',
+		\ 't'    : ['<Plug>BookmarkToggle', 'BookmarkToggle'],
+                \ 'a'    : ['<Plug>BookmarkAnnotate',   'BookmarkAnnotate'],
+                \ 's'    : ['<Plug>BookmarkShowAll',   'BookmarkShowAll'],
+                \ 'n'    : ['<Plug>BookmarkNext', 'BookmarkNext'],
+                \ 'p'    : ['<Plug>BookmarkPrev',  'BookmarkPrev'],
+                \ 'c'    : ['<Plug>BookmarkClear', 'BookmarkClear'],
+                \ 'x'    : ['<Plug>BookmarkClearAll', 'BookmarkClearAll'],
+                \ }
+
+    " for FuzzyFinder FZF
+    let g:lmap.z = {
+                \ 'name': 'Fuzzy Finder',
+                \ 'f' : [':Files', 'Preview Files'],
+                \ 'c' : [':Colors', 'List Color Schemes'],
+                \ 'b' : [':Buffers', 'List Buffers'],
+                \ 'd' : [':FufFileWithCurrentBufferDir', 'Find File under CurDir'],
+                \ 'g' : [':Ag <C-R><C-W>', 'SilverSearch'],
+                \ 'G' : [':Ag <C-R><C-A>', 'SilverSearcher'],
+                \ 'y' : ['y:Ag <C-R>"', 'SilverSearchAg'],
+                \ 'm' : [':Marks', 'Marks'],
+                \ 'w' : ['Windows', 'Windows'],
+                \ 'k' : ['Maps', 'NormalMode KeyMappings'],
+                \ 's' : ['Snippets', 'ShowSnippets'],
+                \ 't' : ['Commits', 'ShowCommits'],
+                \ }
+
     " to make the guide pop up Register the description dictionary for the prefix first
     call leaderGuide#register_prefix_descriptions("-", "g:lmap")
     nnoremap <silent> <leader> :<c-u>LeaderGuide '-'<CR>

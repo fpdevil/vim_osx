@@ -1,6 +1,0 @@
-var fs = require('fs');
-
-fs.readFile('aaa-error-message.xml', 'utf-8', function(data, error) {
-  if (error) console.log(error);
-  console.log(data);
-});

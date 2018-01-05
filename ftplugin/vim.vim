@@ -5,3 +5,6 @@ setlocal showtabline=2
 setlocal softtabstop=4
 setlocal comments=sO:\"\ -,mO:\"\ \ ,eO:\"\",f:\"
 setlocal foldmethod=marker
+setlocal keywordprg=:help
+setlocal formatoptions-=o
+setlocal formatoptions-=r

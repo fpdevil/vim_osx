@@ -147,3 +147,20 @@ if has('gui_running')
     let $GOPATH = $HOME . "/sw/programming/gocode/go"
     let $PATH = $HOME . "/usr/local/opt/go/libexec/bin:" . $PATH
 endif
+
+" -------------------------------------------------------------------------------------
+" Highlight TODO and FIXME
+" http://stackoverflow.com/questions/11709965/vim-highlight-the-word-todo-for-every-filetype
+" -------------------------------------------------------------------------------------
+augroup HiglightTODO
+    autocmd!
+    autocmd WinEnter,VimEnter * :silent! call matchadd('Todo', 'TODO\|FIXME', -1)
+augroup END
+
+" -------------------------------------------------------------------------------------
+" Automatically reload vim config(s)
+" -------------------------------------------------------------------------------------
+"augroup myvimrc
+"    au!
+"    au BufWritePost .vimrc,vimrc so $MYVIMRC | if has('gui_running') | so $MYGVIMRC | endif
+"augroup END

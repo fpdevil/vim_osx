@@ -17,6 +17,7 @@ antigen bundle command-not-found
 antigen bundle zsh-users/zsh-completions
 antigen bundle zsh-users/zsh-autosuggestions
 antigen bundle zsh-users/zsh-syntax-highlighting
+antigen bundle supercrabtree/k
 
 antigen apply
 
@@ -30,6 +31,7 @@ antigen apply
 #############################################################################
 # For Python Virtualenv/Virtualenvwrapper
 #############################################################################
+mkdir -p ~/.virtualenvs
 export WORKON_HOME=~/.virtualenvs
 export VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python3.6
 source /usr/local/bin/virtualenvwrapper.sh

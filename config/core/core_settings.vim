@@ -29,7 +29,7 @@ set fileencodings=utf-8                         " file utf-8 encode
 set binary                                      " enable binary support
 set showcmd                                     " show current command in status bar
 set showmode                                    " show mode in status bar
-set showmatch                                   " show matching brackets
+set showmatch                                   " highlight matching brackets
 
 
 " complete options
@@ -49,7 +49,7 @@ set grepformat=%f:%l:%c:%m,%f:%l:%m
 " toggle the cursor crosshairs (shows crosshairs as +)
 map <silent> # :set cursorcolumn! cursorline!<CR>
 
-" show wildmenu
+" show wildmenu to visual autocomplete for command menu
 set wildmenu
 
 " allow plugins by file type (required for plugins!)
@@ -114,7 +114,8 @@ if has('gui_running')
     set showtabline=0 " Hide tabline
     set guioptions-=e " Hide tab
     if s:sysos == 'osx'
-        set guifont=Monaco\ for\ Powerline:h12
+        "set guifont=Monaco\ for\ Powerline:h12
+        set guifont=Meslo\ LG\ L\ DZ\ for\ Powerline:h12
     elseif s:sysos == 'linux'
         set guifont=DejaVu\ Sans\ Mono\ 11
     endif

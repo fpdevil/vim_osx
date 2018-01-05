@@ -4,21 +4,25 @@ if has("gui_running")
     colorscheme solarized
 else " has no gui
     if has("unix")
-        set background=dark
+        "set background=dark
         colorscheme PaperColor
         "colorscheme seoul256-light
-        "let g:airline_theme = 'zenburn'
+        let g:airline_theme = 'vice'
     endif
 endif
 
 if exists('g:colors_name') && g:colors_name == 'solarized'
     if has('gui_running')
-        let g:solarized_termtrans  = 1
-        let g:solarized_termcolors = 256
+        let g:solarized_bold       = 0
+        let g:solarized_underline  = 1
+        let g:solarized_italic     = 1
         let g:solarized_contrast   = "high"
         let g:solarized_visibility = "high"
         let g:airline_theme        = 'base16_spacemacs'
     else
+        let g:solarized_termcolors = 256
+        let g:solarized_degrade    = 0
+        let g:solarized_termtrans  = 1
         set background=light
     endif
 elseif exists('g:colors_name') && g:colors_name == 'PaperColor'
