@@ -16,3 +16,5 @@ setlocal keywordprg=pydoc
 
 setlocal makeprg=pep8\ %
 setlocal commentstring=#\ %s
+
+setlocal concealcursor=""           " disable conealing for active line

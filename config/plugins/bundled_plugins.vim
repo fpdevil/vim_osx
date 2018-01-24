@@ -274,10 +274,11 @@ Plug 'heavenshell/vim-jsdoc', { 'for': 'javascript' }                           
 Plug 'moll/vim-node', { 'for': 'javascript' }                                   " Tools & Env for node.js
 Plug 'myhere/vim-nodejs-complete', { 'for': 'javascript' }                      " nodejs omnifunc
 Plug 'mattn/jscomplete-vim', { 'for': 'javascript' }                            " vim omnifunc for JavaScript
-"Plug 'bigfish/vim-js-context-coloring', { 'for': 'javascript' }                " js highlight, context & coloring
 
 Plug 'jbgutierrez/vim-babel'                                                    " wrapper around babel.js
 Plug 'mattn/webapi-vim'                                                         " vim interface to Web API
+
+"Plug 'bigfish/vim-js-context-coloring', { 'for': 'javascript' }                " js highlight, context & coloring
 " }}}
 
 
@@ -292,6 +293,7 @@ Plug 'akalyaev/vim-erlang-spec', { 'for': 'erlang' }                            
 Plug 'vim-erlang/vim-erlang-tags'                                               " erlang tag generate for vim
 Plug 'vim-erlang/erlang-motions.vim', { 'for': 'erlang' }                       " erlang motions and text objects
 Plug 'ppikula/vim-wrangler'                                                     " vim wrangler plugin
+Plug 'ehamberg/vim-cute-erlang', { 'for': 'erlang' }                            " conceal for erlang
 " }}}
 
 
@@ -346,7 +348,7 @@ Plug 'lervag/vimtex'                                                            
 " --- CtrlP Family plugins and extensions {{{
 Plug 'ctrlpvim/ctrlp.vim'                                                       " fuzzy file, buffer, mru, tag etc
 Plug 'tacahiroy/ctrlp-funky'                                                    " function navigator for ctrlp
-Plug 'voronkovich/ctrlp-nerdtree.vim'                                           " ctrlp for opening nerdtree
+Plug 'voronkovich/ctrlp-nerdtree.vim', { 'on': 'CtrlPNerdTree' }                " ctrlp for opening nerdtree
 Plug 'sgur/ctrlp-extensions.vim', { 'on': [
             \ 'CtrlPCmdline',
             \ 'CtrlPMenu',
@@ -426,6 +428,7 @@ Plug 'davidhalter/jedi-vim'                                                     
 Plug 'Vimjas/vim-python-pep8-indent', { 'for': 'python' }                       " python indentation style for vim
 Plug 'tell-k/vim-autopep8', { 'for': 'python' }                                 " autopep8 plugin for python
 Plug 'python-rope/ropevim'                                                      " rope for python code assist
+Plug 'ehamberg/vim-cute-python', { 'for': 'python' }                            " conceal for python
 "Plug 'lambdalisue/vim-pyenv'                                                   " python virtual env (if required)
 " }}}
 

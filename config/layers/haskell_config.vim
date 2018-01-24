@@ -50,6 +50,12 @@ if has_key(g:plugs,'haskell-vim')
   let g:haskell_enable_static_pointers  = 1   " to enable highlighting of `static`
   let g:haskell_backpack                = 1   " to enable highlighting of backpack keywords
   let g:haskell_indent_case_alternative = 1
+
+  let hs_highlight_delimiters = 1             " highlight delimiter characters
+  let hs_highlight_boolean    = 1             " treat True and False as keywords
+  let hs_highlight_types      = 1             " treat names of primitive types as keywords
+  let hs_highlight_more_types = 1             " treat names of other common types as keywords
+  let hs_highlight_debug      = 1             " highlight names of debugging functions
 endif
 " }}}
 
@@ -64,9 +70,13 @@ let g:haskell_conceal_enumerations = 1
 " }}}
 
 "{{{ syntax checker for haskell
-
 let g:syntastic_mode_map={'mode': 'active', 'passive_filetypes': ['haskell']}
+"}}}
 
+"{{{ vim stylish haskell integration
+"if has_key(g:plugs,'vim-stylish-haskell')
+"  let g:stylish_haskell_command="~/Library/Haskell/bin/stylish-haskell"
+"endif
 "}}}
 
 " ------------------------------------------------------------------------------------

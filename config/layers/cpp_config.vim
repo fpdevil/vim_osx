@@ -168,3 +168,11 @@ au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
 autocmd FileType cpp set completeopt=menuone,menu,longest,preview
 autocmd FileType c set completeopt=menuone,menu,longest,preview
 
+
+" ====================================================================================
+" custom function to compile or interpret
+" ====================================================================================
+func! CompileRunGcc()
+  exec "w"
+  exec "!gcc --std=c99 -Wall % -o %<.out; ./%<.out"
+endfunc

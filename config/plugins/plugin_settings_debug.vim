@@ -30,7 +30,7 @@ endfunction
 "call s:LoadConfig("ale_config.vim")                " syntax configuration for ALE if available
 "call s:LoadConfig("haskell_config.vim")            " Haskell language configuration
 "call s:LoadConfig("vim_complete_config.vim")       " vim source completion configuration
-"call s:LoadConfig("javascript_config.vim")         " JavaScript language configuration
+call s:LoadConfig("javascript_config.vim")         " JavaScript language configuration
 "call s:LoadConfig("clojure_config.vim")            " clojure language configuration
 "call s:LoadConfig("erlang_config.vim")             " erlang language configuration
 "call s:LoadConfig("ycm_config.vim")                " YouCompleteMe configuration

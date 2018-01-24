@@ -7,8 +7,8 @@ autocmd FileType javascript set tabstop=4|set shiftwidth=4|set shiftwidth=4|set 
 au BufEnter *.js set ai sw=4 ts=4 sts=4
 
 " {{{ for tern completions with omnifunc
-if !exists('g:neocomplete#omni#functions')
-    let g:neocomplete#omni#functions = {}
+if !exists('g:neocomplete#sources#omni#functions')
+    let g:neocomplete#sources#omni#functions = {}
 endif
 
 let g:neocomplete#sources#omni#functions.javascript = [
@@ -66,6 +66,8 @@ autocmd FileType javascript noremap <buffer> <c-f> :call JsBeautify()<cr>
 autocmd FileType html noremap <buffer> <c-f> :call JsBeautify()<cr>
 autocmd FileType css noremap <buffer> <c-f> :call JsBeautify()<cr>
 
+nnoremap <leader>jsf :%!js-beautify -j -q -B -f -<CR>
+
 " Character Concealing enable in the editor mode
 set conceallevel=1
 
@@ -87,6 +89,8 @@ if has_key(g:plugs,'vim-javascript')
     let g:javascript_plugin_ngdoc = 1
     let g:javascript_plugin_flow  = 1
 endif
+
+map <leader>jcl :exec &conceallevel ? "set conceallevel=0" : "set conceallevel=1"<CR>
 
 if (has_key(g:plugs, 'vim-jsx-pretty'))
     let g:vim_jsx_pretty_colorful_config = 1

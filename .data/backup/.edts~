@@ -1,4 +1,0 @@
-:name "code"
-:node-sname "mycode"
-:lib-dirs '("src")
-:app-include-dirs '("include")

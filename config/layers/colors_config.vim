@@ -7,7 +7,8 @@ else " has no gui
         "set background=dark
         colorscheme PaperColor
         "colorscheme seoul256-light
-        let g:airline_theme = 'vice'
+        "let g:airline_theme = 'vice'
+        let g:airline_theme = 'dark'
     endif
 endif
 

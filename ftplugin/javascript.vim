@@ -6,7 +6,14 @@ setlocal tabstop=4
 setlocal softtabstop=4
 setlocal shiftwidth=4
 
-setlocal errorformat=%-P%f,\%E%>\ #%n\ %m,%Z%.%#Line\ %l\\,\ Pos\ %c,\%-G%f\ is\ OK.,%-Q
+setlocal conceallevel=1
+
+" set up native eslint making so we can debug eslint configs
+setlocal makeprg=npx\ eslint\ -f\ compact\ %
+setlocal errorformat=%f:\ line\ %l\\,\ col\ %c\\,\ %trror\ -\ %m
+setlocal errorformat+=%f:\ line\ %l\\,\ col\ %c\\,\ %tarning\ -\ %m
+setlocal errorformat+=%-G\s%#
+setlocal errorformat+=%-G\s%#%\\d%\\+\ problems%#
 
 setlocal foldmethod=marker
 setlocal foldmarker=/*,*/
@@ -22,3 +29,4 @@ highlight jsModuleKeyword      ctermfg=225            guifg=#FFBBBB
 highlight jsNoise              ctermfg=197 cterm=bold guifg=#F92672 gui=bold
 highlight jsObjectBraces       ctermfg=197 cterm=bold guifg=#F92672 gui=bold
 highlight jsVariableDef        ctermfg=194 cterm=bold guifg=#AAFFAA gui=bold
+
