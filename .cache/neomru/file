@@ -1,4 +1,6 @@
 0.3.0
+/Users/sampathsingamsetty/vim_osx/private/.gitignore
+/Users/sampathsingamsetty/vim_osx/.gitignore
 /usr/local/Cellar/python/3.6.4_4/Frameworks/Python.framework/Versions/3.6/lib/python3.6/os.py
 /Users/sampathsingamsetty/sw/programming/python/pycomcv/src/number_threshold.py
 /Users/sampathsingamsetty/vim_osx/config/layers/python_config.vim

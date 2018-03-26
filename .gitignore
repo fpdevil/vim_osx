@@ -7,3 +7,4 @@ haskellmode.config
 eclim/
 tags/
 backup/
+!*.gitkeep
