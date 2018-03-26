@@ -141,3 +141,9 @@ This should show the status of each plugin.
 - Erlang Auto-Completion and real-time syntax checking with VimErl plugin
 
 ![alt text](screenshots/erlang.png "An erlang auto-completion and syntax highlighting screenshot")
+
+- Jedi provides auto-completion and real-time syntax checking in association with neocomplete. A simple suggestion pop-up using Ctrl-Space of jedi in a python buffer will look as under
+
+![alt text](screenshots/python.png "Python auto-completion and syntax highlighting in action")
+
+
