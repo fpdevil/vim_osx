@@ -1,6 +1,7 @@
 " #############################################################################
 " ############### Template document declaration for file types ################
 " #############################################################################
+" vim:set et sw=4
 " scriptencoding utf-8
 
 
@@ -123,7 +124,8 @@ augroup END
 "    available or not is kept and if that plugin is available the template is
 "    inserted by plugin
 
-autocmd BufNewFile *.cpp,*.[ch],*.sh,*.java,*.tex,*.py,*.html exec ":call SetTitle()"
+"autocmd BufNewFile *.cpp,*.[ch],*.sh,*.java,*.tex,*.py,*.html exec ":call SetTitle()"
+autocmd BufNewFile *.[ch],*.sh,*.java,*.tex,*.py,*.html exec ":call SetTitle()"
 
 func SetTitle()
     if &filetype == 'sh'

@@ -14,7 +14,7 @@ let g:SuperTabContextDiscoverDiscovery      = ["&completefunc:<c-x><c-u>", "&omn
 if has("gui_running")
     imap <c-space> <c-r>=SuperTabAlternateCompletion("\<lt>c-x>\<lt>c-o>")<cr>
 else " no gui
-    if has("unix")
+    if has("unix") || has("macunix")
         inoremap <Nul> <c-r>=SuperTabAlternateCompletion("\<lt>c-x>\<lt>c-o>")<cr>
     endif
 endif

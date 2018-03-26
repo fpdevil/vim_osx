@@ -28,13 +28,20 @@ au filetype erlang hi link erlangAtom Normal
 au filetype erlang setlocal indentkeys-==),=],=}
 hi link erlangAtom Normal
 
+" Erlang omnicomplete plugin for Vim
+if has_key(g:plugs,'vim-erlang-omnicomplete')
+    let g:erlang_completion_preview_help = 1
+endif
+
 " completions for erlang
-" autocmd FileType erlang set omnifunc=erlangcomplete#Complete
+"autocmd FileType erlang setlocal omnifunc=erlangcomplete#Complete
 autocmd FileType erlang setlocal completefunc=erlang_complete#Complete
 
 " for erlang development - syntax checking through syntaxerl
-let g:syntastic_erlang_checkers   = ['escript', '/opt/erlang/syntaxerl/syntaxerl']
-let g:syntastic_erlc_include_path = "ebin"
+if has_key(g:plugs, 'syntastic')
+    let g:syntastic_erlang_checkers   = ['escript', '/opt/erlang/syntaxerl/syntaxerl']
+    let g:syntastic_erlc_include_path = "ebin"
+endif
 let g:erlangManPath               = '/usr/local/opt/erlang/lib/erlang/man'      "erlang man pages
 let g:erlangCompiler              = "erlc"
 let g:erlangWranglerPath          = "/usr/local/lib/erlang/lib/wrangler-1.2.0/" "wrangler
@@ -60,7 +67,8 @@ nmap ep :execute ErlPretty()
 
 " =================== vimerl-complete for erlang completion ====================
 if has_key(g:plugs,'vimerl-complete')
-    let g:vimerl_complete_auto = 1
+    let g:vimerl_complete_auto        = 1
+    let g:vimerl_complete_only_export = 0
 endif
 
 " ==============================================================================

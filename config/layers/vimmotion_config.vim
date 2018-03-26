@@ -18,6 +18,7 @@ if has_key(g:plugs, 'vim-easymotion')
     map <Leader><leader>h <Plug>(easymotion-linebackward)
     map <Leader><Leader>j <Plug>(easymotion-j)
     map <Leader><Leader>k <Plug>(easymotion-k)
+    map <Leader><Leader>w <Plug>(easymotion-w)
     map <Leader><leader>l <Plug>(easymotion-lineforward)
     map <Leader><leader>. <Plug>(easymotion-repeat)
 endif

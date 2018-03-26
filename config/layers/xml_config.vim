@@ -1,3 +1,7 @@
+" -----------------------------------------------------------------------------
+" --       XML specific settings - formatting and syntax checking            --
+" -----------------------------------------------------------------------------
+
 au BufRead,BufNewFile *.xml,*.xsl$ set expandtab
 au BufRead,BufNewFile *.xml,*.xsl$ set tabstop=4
 au BufRead,BufNewFile *.xml,*.xsl$ set softtabstop=4
@@ -22,6 +26,7 @@ autocmd FileType xml,*.xsl$ setlocal shiftwidth=4
 " Use export XMLLINT_INDENT="^I" (i.e. ctrl+v, ctrl+i)
 " -----------------------------------------------------------------------------
 let $XMLLINT_INDENT='	'
+"set equalprg=xmllint\ --format\ --recover\ -\ 2>/dev/null
 au FileType xml,*.xsl$ setlocal equalprg=xmllint\ --format\ --recover\ -\ 2>/dev/null
 au FileType xsl exe ":silent 1,$!XMLLINT_INDENT='    ' xmllint --format --recover - 2>/dev/null"
 

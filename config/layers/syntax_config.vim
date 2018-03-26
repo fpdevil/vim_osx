@@ -5,14 +5,17 @@
 " -----                      syntax checkers settings                            -----
 " ------------------------------------------------------------------------------------
 if has_key(g:plugs, 'syntastic')
+    " to disable syntastic if really needed (:stm - :ab lists all abbreviations)
+    cabbrev stm SyntasticToggleMode<CR>
     let g:syntastic_mode_map                 = {
                 \ 'mode'                : 'active',
-                \ 'active_filetypes'    : ["haskell", "python", "cpp", "c"],
+                \ 'active_filetypes'    : ["haskell", "python", "cpp", "c", "javascript"],
                 \ 'passive_filetypes'   : ["go", "html", "erlang"]
                 \ }
     let g:syntastic_always_populate_loc_list = 1
     let g:syntastic_auto_loc_list            = 1
-    let g:syntastic_check_on_wq              = 0                        " exit syntax checking while exiting with :wq
+    let g:syntastic_check_on_wq              = 1                " exit syntax checking while exiting with :wq
+    "let g:syntastic_aggregate_errors        = 1                " runs all checkers on current filetype
     let g:syntastic_vimlint_options          = {
                 \ 'EVL102': 1,
                 \ 'EVL103': 1,
@@ -76,6 +79,12 @@ let g:sytastic_stl_format            = "[ln:%F (%t)]"
 "let g:syntastic_warning_symbol = '➤'
 "let g:syntastic_info_symbol = '🛈'
 
+
+"highlight SyntasticErrorSign ctermfg=red ctermbg=237
+"highlight SyntasticWarningSign ctermfg=yellow ctermbg=237
+"highlight SyntasticStyleErrorSign ctermfg=red ctermbg=237
+"highlight SyntasticStyleWarningSign ctermfg=yellow ctermbg=237
+
 hi! link SyntasticErrorLine Visual
 hi! link SyntasticWarningLine Visual
 hi! link SyntasticErrorSign SignColumn
@@ -83,16 +92,15 @@ hi! link SyntasticWarningSign SignColumn
 hi! link SyntasticStyleErrorSign SignColumn
 hi! link SyntasticStyleWarningSign SignColumn
 
-"au VimEnter,ColorScheme * exec 'hi! SyntasticErrorSign guifg=red ctermfg=red ' . s:getbg('SyntasticErrorLine')
-"au VimEnter,ColorScheme * exec 'hi! SyntasticWarningSign guifg=yellow ctermfg=yellow ' . s:getbg('SyntasticWarningLine')
-"au VimEnter,ColorScheme * exec 'hi! SyntasticError ' . s:getbg('SyntasticErrorLine')
-"au VimEnter,ColorScheme * exec 'hi! SyntasticWarning ' . s:getbg('SyntasticWarningLine')
 "}}}
 
 
 "{{{ status line settings for syntastic
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
+"set statusline+=%#warningmsg#
+"set statusline+=%{SyntasticStatuslineFlag()}
+"set statusline+=%*
+set statusline+=\ %#warningmsg#
+set statusline+=%{exists('g:loaded_syntastic_plugin')?SyntasticStatuslineFlag():''}
 set statusline+=%*
 "}}}
 

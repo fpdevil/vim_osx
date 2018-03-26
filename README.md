@@ -8,7 +8,7 @@ The `vimrc` file should be easy to understand and contains almost everything wit
 The configuration is split across 4 files
 
 - The main vim configuration file `vimrc`
--  `core_settings.vim` containing all the editor specific settings
+- `core_settings.vim` containing all the editor specific settings
 - `bundled_plugins.vim` containing the list of plugins
 - `plugin_settings.vim` containing the custom settings for installed plugins.
 

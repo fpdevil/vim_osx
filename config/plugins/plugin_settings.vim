@@ -3,6 +3,7 @@
 " ####################################################################################
 
 scriptencoding utf-8
+filetype plugin indent on
 
 " --- define a local variable for holding the plugins
 " --- configuration files location
@@ -12,10 +13,11 @@ let s:plugins_config = "~/.vim/config/layers/"
 " --- custom function for sourcing each configuration file
 function s:LoadConfig(cfg)
     let l:path = g:plugins_config
-    exec "source " . l:path . a:cfg
+    execute 'source ' . l:path . a:cfg
 endfunction
 
 
+call s:LoadConfig("leader_guide_config.vim")       " configuration for vim leader guide
 call s:LoadConfig("colors_config.vim")             " required color scheme
 call s:LoadConfig("rainbow_config.vim")            " rainbow parenthesis configuration
 call s:LoadConfig("airline_config.vim")            " Airline statusline configuration
@@ -27,9 +29,12 @@ call s:LoadConfig("supertab_config.vim")           " supertab configuration
 call s:LoadConfig("tabalign_config.vim")           " text/tab alignment
 call s:LoadConfig("easy_align_config.vim")         " easy text alignment configuration
 call s:LoadConfig("autocomplete_config.vim")       " neocomplete configuration for code completion
-call s:LoadConfig("completeparam_config.vim")      " complete parameter configuration
 call s:LoadConfig("neocomplete_config.vim")        " neocomplete nextgen autocomplete configuration
+"call s:LoadConfig("deoplete_config.vim")           " asynchronous code completion with deoplete
+call s:LoadConfig("completion_sources.vim")        " syntax and completion sources
+call s:LoadConfig("completeparam_config.vim")      " complete parameter configuration
 call s:LoadConfig("async_code_completion.vim")     " configuration for asynchroonus code completion
+call s:LoadConfig('vimplugins_config.vim')         " vim-plugins assortment of c-support,vim,py etc
 call s:LoadConfig("snippets_config.vim")           " snippet plugin related configuration
 call s:LoadConfig("syntax_config.vim")             " syntastic plugin related configuration
 call s:LoadConfig("ale_config.vim")                " syntax configuration for ALE if available
@@ -64,7 +69,6 @@ call s:LoadConfig("fml_config.vim")                " configuration for follow my
 call s:LoadConfig("notes_config.vim")              " configuration for vim notes
 call s:LoadConfig("vim_move_config.vim")           " configuration for moving text
 call s:LoadConfig("emmet_config.vim")              " configuration for html helper emmett
-call s:LoadConfig("leader_guide_config.vim")       " configuration for vim leader guide
 call s:LoadConfig("indentline_config.vim")         " configuration for indent line plugin
 call s:LoadConfig("undo_tree_config.vim")          " vim undo tree visualizer configuration
 call s:LoadConfig("goyo_config.vim")               " vim writing tools configuration

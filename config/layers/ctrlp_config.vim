@@ -14,7 +14,7 @@ let g:ctrlp_map                 = '<c-p>'
 let g:ctrlp_cmd                 = 'CtrlP'
 let g:ctrlp_working_path_mode   = 'ra'
 let g:ctrlp_clear_cache_on_exit = 1
-let g:ctrlp_cache_dir           = $HOME . '/.cache/ctrlp'       " for speeding up ctrl
+let g:ctrlp_cache_dir           = GetCacheDir('ctrlp')         " for speeding up ctrl
 let g:ctrlp_custom_ignore       = 'node_modules\|bower_components\|docs\|DS_Store\|^.git$\|_site'
 let g:ctrlp_buftags             = {
             \ 'go' : '--language-force=go --golang-types=ftv',

@@ -18,3 +18,6 @@ setlocal makeprg=pep8\ %
 setlocal commentstring=#\ %s
 
 setlocal concealcursor=""           " disable conealing for active line
+
+" aggregate checks from multiple linters and checkers
+let syntastic_aggregate_errors = 1

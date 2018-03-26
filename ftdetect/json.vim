@@ -4,3 +4,5 @@ au BufRead,BufNewFile .jsbeautifyrc setfiletype json
 au BufRead,BufNewFile .eslintrc setfiletype json
 " to detect .jscsrc as a valid json file
 au BufRead,BufNewFile .jscsrc setfiletype json
+" to detect .jshintrc as a valid json file
+au BufRead,BufNewFile .jshintrc setfiletype json

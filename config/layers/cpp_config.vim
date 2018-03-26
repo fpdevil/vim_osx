@@ -5,36 +5,50 @@
 
 "{{{ syntastic checker for cpp
 " syntastic checker settings for c and c++
-"let g:syntastic_c_compiler                = 'gcc'
-"let g:syntastic_cpp_compiler              = 'g++'
+if has_key(g:plugs, 'syntastic')
+    "let g:syntastic_c_compiler                = 'gcc'
+    "let g:syntastic_cpp_compiler              = 'g++'
 
-let g:syntastic_c_compiler                = '/usr/bin/clang'
-let g:syntastic_cpp_compiler              = '/usr/bin/clang++'
-let g:syntastic_cpp_compiler_options      = '-std=c++11 -stdlib=libstdc++ -Wall -Wextra -Weverything'
-let g:syntastic_c_compiler_options        = '-Wall -std=c11'
-let g:syntastic_cpp_cpplint_exec          = 'cpplint'
-let g:syntastic_c_checkers                = ['gcc', 'make']
-let g:syntastic_cpp_checkers              = ['cppcheck', 'cpplint', 'gcc']
-let g:syntastic_cpp_check_header          = 1
-let g:syntastic_cpp_remove_include_errors = 1
-let g:syntastic_cpp_include_dirs          = [
-            \ '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1',
-            \ '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/8.0.0/include',
-            \ '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include',
-            \ '/usr/include',
-            \ '/usr/local/include',
-            \ '/usr/local/opt/opencv3/include'
-            \ ]
+    let g:syntastic_c_compiler                = '/usr/bin/clang'
+    let g:syntastic_cpp_compiler              = '/usr/bin/clang++'
+    let g:syntastic_cpp_compiler_options      = '-std=c++11 -stdlib=libstdc++ -Wall -Wextra -Weverything'
+    let g:syntastic_c_compiler_options        = '-Wall -std=c11'
+    let g:syntastic_cpp_cpplint_exec          = '/usr/local/bin/cpplint'
+    let g:syntastic_c_checkers                = ['gcc', 'make']
+    let g:syntastic_cpp_checkers              = ['cppcheck', 'cpplint', 'gcc']
+    let g:syntastic_cpp_check_header          = 1
+    let g:syntastic_cpp_remove_include_errors = 1
+    let g:syntastic_c_include_dirs            = ['include', '../include']
+    let g:syntastic_cpp_include_dirs          = [
+                \ '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1',
+                \ '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/9.0.0/include',
+                \ '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include',
+                \ '/usr/include',
+                \ '/usr/local/include'
+                \ ]
+endif
 "}}}
 
-" vim-clang completions
+" =============================================================================
+"          vim-clang completions (support c++0x features and use libcxx)
+" =============================================================================
 " vim-clang supports relative include path in .clang configuration file
 " contents of .clang -I.
 if has_key(g:plugs, 'vim-clang')
-    let g:clang_c_options                   = '-std=gnu11'
-    let g:clang_cpp_options                 = '-std=c++11 -stdlib=libc++'
-    autocmd FileType c,cpp setlocal omnifunc=ClangComplete
-    "let g:clang_compilation_database = './build'
+    let g:clang_exec                         = 'clang'
+    let g:clang_c_options                    = '-std=c11'
+    let g:clang_cpp_options                  = '-std=c++11 -stdlib=libc++'
+    let g:clang_format_auto                  = 1
+    let g:clang_format_exec                  = 'clang-format'
+    let g:clang_format_style                 = 'LLVM'
+    let g:clang_c_completeopt                = 'longest,menuone'
+    let g:clang_cpp_completeopt              = 'longest,menuone,preview'
+    let g:clang_verbose_pmenu                = 1
+    let g:clang_debug                        = 4
+    let g:clang_sh_exec                      = 'bash'
+    let g:clang_statusline                   = '%s\ \|\ %%l/\%%L\ \|\ %%p%%%%'
+    "autocmd FileType c,cpp setlocal omnifunc = ClangComplete
+    "let g:clang_compilation_database        = './build'
 endif
 
 " =============================================================================
@@ -74,11 +88,15 @@ let g:color_coded_filetypes = ['c', 'cpp', 'objc', 'python', 'haskell']
 "let s:xcode_usr_path      = '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/'
 "let s:clang_library_path = s:xcode_usr_path . 'lib/'
 
+" =============================================================================
+"                   clang for completing C/C++ code
+" =============================================================================
 if has_key(g:plugs,'clang-complete') || has_key(g:plugs,'clang_complete')
-    let g:clang_exec          = "/usr/bin/clang"
-    let s:clang_library_path  = '/Library/Developer/CommandLineTools/usr/lib'
-    if isdirectory(s:clang_library_path)
-        let g:clang_library_path=s:clang_library_path
+    " set the location of the pre-built llvm-clang for osx
+    let s:clang_library  = '/opt/software/clang+llvm-6.0.0-x86_64-apple-darwin'
+    if isdirectory(s:clang_library)
+        let g:clang_exec         = s:clang_library . '/bin/clang'
+        let g:clang_library_path = s:clang_library . '/lib'
     endif
 
     " user options for clang
@@ -87,17 +105,19 @@ if has_key(g:plugs,'clang-complete') || has_key(g:plugs,'clang_complete')
                 \ '-stdlib=libc++' .
                 \ '-I/usr/include' .
                 \ '-I/usr/local/include' .
-                \ '-I/usr/local/opt/opencv3/include' .
-                \ '-I/usr/local/Cellar/opencv3/HEAD-a4db983_4/include'
+                \ '-I/usr/local/opt/opencv3/include'
     let g:clang_sort_algo       = "priority"
     let g:clang_snippets_engine = "ultisnips"
 
-    let g:clang_complete_auto  = 0
-    let g:clang_auto_select    = 1
-    let g:clang_use_library    = 1
-    let g:clang_snippets       = 1
-    let g:clang_complete_copen = 1
-    let g:clang_hl_errors      = 1
+
+    let g:clang_complete_auto              = 1  " if 0 disable auto completion use <c-x> <c-o>
+    let g:clang_omnicppcomplete_compliance = 0  " this makes <C-X><C-U> as main clang completion
+    let g:clang_auto_select                = 1
+    let g:clang_close_preview              = 1
+    let g:clang_use_library                = 1
+    let g:clang_snippets                   = 1
+    let g:clang_complete_copen             = 1
+    let g:clang_hl_errors                  = 1
     " let g:clang_user_options = '-std=c++1y -I ' . s:xcode_usr_path . 'include/c++/v1 -I /usr/local/include'
 endif
 
@@ -120,33 +140,28 @@ endif
 " ====================================================================================
 if has_key(g:plugs, 'vim-marching')
     let g:marching_clang_command         = "/usr/bin/clang"
+    let g:marching_backend               = "clang_command"
     let g:marching#clang_command#options = {
                 \ "cpp" : "-std=c++1y"
                 \ }
     let g:marching_include_paths = [
                 \  "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1",
-                \  "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/8.0.0/include",
+                \  "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/9.0.0/include",
                 \  "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include",
                 \  "/usr/include",
-                \  "/usr/local/include",
-                \  "/usr/local/Cellar/opencv3/include"
+                \  "/usr/local/include"
                 \ ]
     let g:marching_enable_neocomplete = 1
     set updatetime=200
 endif
 
-"{{{ insert c template header and enable tools
-"    http://www.thegeekstuff.com/2009/01/tutorial-make-vim-as-your-cc-ide-using-cvim-plugin
-let g:C_CustomTemplateFile = '~/.vim/templates/c.templates'
-let g:C_UseTool_cmake      = 'yes'
-let g:C_UseTool_doxygen    = 'yes'
-"}}}
+
 
 " ====================================================================================
 "                       OmniCppComplete completion engine
 " ====================================================================================
 if has_key(g:plugs, 'OmniCppComplete')
-    set omnifunc=syntaxcomplete#Complete  "override built-in C omnicomplete with C++ OmniCppComplete plugin
+    setlocal omnifunc=syntaxcomplete#Complete  "override built-in C omnicomplete with C++ OmniCppComplete plugin
     let OmniCpp_NamespaceSearch     = 1
     let OmniCpp_GlobalScopeSearch   = 1
     let OmniCpp_DisplayMode         = 1
@@ -162,17 +177,17 @@ if has_key(g:plugs, 'OmniCppComplete')
 endif
 
 " ====================================================================================
-"             automatically open and close the popup menu / preview window
+"   preview handling - automatically open and close the popup menu / preview window
 " ====================================================================================
 au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
-autocmd FileType cpp set completeopt=menuone,menu,longest,preview
-autocmd FileType c set completeopt=menuone,menu,longest,preview
+autocmd FileType cpp setlocal completeopt=menuone,menu,longest,preview
+autocmd FileType c setlocal completeopt=menuone,menu,longest,preview
 
 
 " ====================================================================================
 " custom function to compile or interpret
 " ====================================================================================
 func! CompileRunGcc()
-  exec "w"
-  exec "!gcc --std=c99 -Wall % -o %<.out; ./%<.out"
+    exec "w"
+    exec "!gcc --std=c99 -Wall % -o %<.out; ./%<.out"
 endfunc

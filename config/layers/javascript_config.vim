@@ -3,8 +3,8 @@
 " ------------------------------------------------------------------------------
 
 "  for proper javascript indentation
-autocmd FileType javascript set tabstop=4|set shiftwidth=4|set shiftwidth=4|set expandtab|set autoindent
-au BufEnter *.js set ai sw=4 ts=4 sts=4
+autocmd FileType javascript set tabstop=4|setl shiftwidth=4|setl shiftwidth=4|setl expandtab|setl autoindent
+au BufEnter *.js setl ai sw=4 ts=4 sts=4
 
 " {{{ for tern completions with omnifunc
 if !exists('g:neocomplete#sources#omni#functions')
@@ -17,11 +17,14 @@ let g:neocomplete#sources#omni#functions.javascript = [
             \ ]
 
 if exists('g:plugs["tern_for_vim"]')
-    let g:tern#command               = ['tern']
-    let g:tern#arguments             = ['--persistent']
-    let g:tern_map_keys              = 1
-    let g:tern_show_signature_in_pum = 1
-    let g:tern_show_argument_hints   = 'on_hold'
+    let g:tern#command                      = ['tern']
+    let g:tern#arguments                    = ['--persistent']
+    let g:tern_map_keys                     = 1
+    let g:tern_show_signature_in_pum        = 1
+    let g:tern_show_argument_hints          = 'on_hold'
+    let tern#is_show_argument_hints_enabled = 1
+
+    " set autocompletion
     autocmd FileType javascript setlocal omnifunc=tern#Complete
 
     function! s:gotodef() abort
@@ -35,9 +38,9 @@ endif
 "{{{ nodejs omnifunc for vim
 "    refer https://github.com/myhere/vim-nodejs-complete
 if has_key(g:plugs, 'vim-nodejs-complete')
-    autocmd FileType javascript setlocal omnifunc=nodejscomplete#CompleteJS
     " automatically open and close the popup menu / preview window
     au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
+    "autocmd FileType javascript setlocal omnifunc=nodejscomplete#CompleteJS
     " default omnifunc is javascriptcomplete#CompleteJS
     " if jscomplete is needed as omnifunc, uncomment below
     " if filereadable(expand("~/.vim/plugged/jscomplete-vim/autoload/jscomplete.vim"))
@@ -57,6 +60,53 @@ function! GoToDef()
     endif
 endfunction
 "}}}
+
+" ternjs with deoplete
+if isdirectory(expand('~/.vim/plugged/deoplete.nvim'))
+    " Set bin if you have many instalations
+    let g:deoplete#sources#ternjs#tern_bin = '/usr/local/bin/tern'
+    let g:deoplete#sources#ternjs#timeout  = 1
+    " Whether to include the types of the completions in the result data. Default: 0
+    let g:deoplete#sources#ternjs#types = 1
+    " Whether to include the distance (in scopes for variables, in prototypes for
+    " properties) between the completions and the origin position in the result
+    " data. Default: 0
+    let g:deoplete#sources#ternjs#depths = 1
+    " Whether to include documentation strings (if found) in the result data.
+    " Default: 0
+    let g:deoplete#sources#ternjs#docs = 1
+    " When on, only completions that match the current word at the given point will
+    " be returned. Turn this off to get all results, so that you can filter on the
+    " client side. Default: 1
+    let g:deoplete#sources#ternjs#filter = 0
+    " Whether to use a case-insensitive compare between the current word and
+    " potential completions. Default 0
+    let g:deoplete#sources#ternjs#case_insensitive = 1
+    " When completing a property and no completions are found, Tern will use some
+    " heuristics to try and return some properties anyway. Set this to 0 to
+    " turn that off. Default: 1
+    let g:deoplete#sources#ternjs#guess = 0
+    " Determines whether the result set will be sorted. Default: 1
+    let g:deoplete#sources#ternjs#sort = 0
+    " When disabled, only the text before the given position is considered part of
+    " the word. When enabled (the default), the whole variable name that the cursor
+    " is on will be included. Default: 1
+    let g:deoplete#sources#ternjs#expand_word_forward = 0
+    " Whether to ignore the properties of Object.prototype unless they have been
+    " spelled out by at least two characters. Default: 1
+    let g:deoplete#sources#ternjs#omit_object_prototype = 0
+    " Whether to include JavaScript keywords when completing something that is not
+    " a property. Default: 0
+    let g:deoplete#sources#ternjs#include_keywords = 1
+    " If completions should be returned when inside a literal. Default: 1
+    let g:deoplete#sources#ternjs#in_literal = 0
+    "Add extra filetypes
+    let g:deoplete#sources#ternjs#filetypes = [
+                    \ 'jsx',
+                    \ 'javascript.jsx',
+                    \ 'javascript',
+                    \ ]
+endif
 
 
 " ------------------------------------------------------------------------------------
@@ -97,21 +147,32 @@ if (has_key(g:plugs, 'vim-jsx-pretty'))
 endif
 
 " javascript-libraries-syntax customization
-let g:used_javascript_libs = 'underscore,angularjs,jasmine,chai'
+if isdirectory(expand('~/.vim/plugged/javascript-libraries-syntax.vim'))
+    let g:used_javascript_libs = 'underscore,angularjs,angularui,angularuirouter,react,jquery,chai,d3'
+endif
 
+" syntax checking with syntastic
 if (has_key(g:plugs, 'syntastic'))
     " real time syntax checking with jshint lint for javascript
     " jshint will be installed as a dependency while installing the syntastic
     " vim plugin using the underlying os x npm installer
-    let g:syntastic_javascript_eslint_exe = '[ -f $(npm bin)/eslint ] && $(npm bin)/eslint || eslint'
-    let g:syntastic_javascript_checkers   = ['eslint', 'jshint']
-    let g:syntastic_check_on_open         = 0 " show any js linting errors immediately
+    " -- for a local install of the eslint or a global
+    let g:syntastic_javascript_eslint_exe     = '[ -f $(npm bin)/eslint ] && $(npm bin)/eslint || eslint'
+    let g:syntastic_javascript_eslint_exec    = '/bin/ls'
+    let g:syntastic_javascript_eslint_generic = 1
+    let g:syntastic_javascript_eslint_args    = '-f compact'
+    let g:syntastic_javascript_checkers       = ['eslint', 'jshint', 'jslint', 'jsxhint']
+    let g:syntastic_check_on_open             = 0 " show any js linting errors immediately
+    let g:syntastic_javascript_jsxhint_exec   = 'jsx-jshint-wrapper'
+    "let g:syntastic_javascript_checkers      = ['eslint', 'jshint', 'jsxhint', 'jscs']
 endif
 
 
 "{{{ for vim-jsx settings
 if has_key(g:plugs, 'vim-jsx')
-    let g:jsx_ext_required = 0 " Allow JSX in normal JS files
+    " if 1 (default) expects jsx files to have .jsx extension
+    " if 0 .js files will also be opened as filetype javascript.jsx
+    let g:jsx_ext_required = 1
 endif
 "}}}
 
@@ -148,3 +209,21 @@ if (has_key(g:plugs,'vim-import-js'))
     inoremap <silent><buffer> <C-j>f <Esc>:ImportJSFix<CR>a
     inoremap <silent><buffer> <C-j>g <Esc>:ImportJSGoto<CR>a
 endif
+
+" ------------------------------------------------------------------------------------
+" -----                  settings for heavenshell/vim-jsdoc                      -----
+" ------------------------------------------------------------------------------------
+if has_key(g:plugs, 'vim-jsdoc')
+    let g:jsdoc_allow_input_prompt = 1 " allow prompt for interactive input
+    let g:jsdoc_input_description  = 1 " prompt for the function description
+    let g:jsdoc_enable_es6         = 1 " enable the usage of ECMAScript6's shorthand function notations
+    let g:jsdoc_underscore_private = 1 " turn on the detection of functions starting with an underscore as private functions
+endif
+
+" for some nicer looking colors
+highlight xmlAttrib ctermfg=121
+highlight jsThis ctermfg=224
+highlight jsSuper ctermfg=13
+highlight jsFuncCall ctermfg=cyan
+highlight jsComment ctermfg=245 ctermbg=none
+highlight jsClassProperty ctermfg=14 cterm=bold

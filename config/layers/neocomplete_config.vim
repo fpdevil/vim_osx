@@ -13,15 +13,16 @@ if has_key(g:plugs, 'neocomplete.vim')
     else
         let g:neocomplete#enable_at_startup              = 1             " use neocomplete at startup
     endif
+    let g:neocomplete#data_directory                     = GetCacheDir('neocomplete')
     let g:neocomplete#enable_smart_case                  = 1             " use smart-case
     let g:neocomplete#enable_camel_case                  = 1
     let g:neocomplete#enable_fuzzy_completion            = 1
-    let g:neocomplete#sources#syntax#min_keyword_length  = 1             " set minimum syntax keyword length
+    let g:neocomplete#sources#syntax#min_keyword_length  = 2             " set minimum syntax keyword length
     let g:neocomplete#sources#syntax#min_syntax_length   = 1
     let g:neocomplete#lock_buffer_name_pattern           = '\*ku\*'      " regex for buffer name
     let g:neocomplete#enable_auto_delimiter              = 1
     let g:neocomplete#enable_auto_select                 = 0             " AutoComplPop like behaviour
-    let g:neocomplete#enable_refresh_always              = 1
+    let g:neocomplete#enable_refresh_always              = 0             " increases screen flicker
     let g:neocomplete#use_vimproc                        = 1
 
     " define a dictionary
@@ -76,6 +77,7 @@ if has_key(g:plugs, 'neocomplete.vim')
         let g:neocomplete#force_omni_input_patterns = {}
     endif
     let g:neocomplete#force_omni_input_patterns.javascript   = '[^. \t]\.\w*'
+    let g:neocomplete#force_omni_input_patterns.c            = '[^.[:digit:] *\t]\%(\.\|->\)\w*'
     let g:neocomplete#force_omni_input_patterns.cpp          = '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
     let g:neocomplete#force_omni_input_patterns.erlang       = '\<[[:digit:][:alnum:]_-]\+:[[:digit:][:alnum:]_-]*'
     let g:neocomplete#force_omni_input_patterns.python       = '\%([^. \t]\.\|^\s*@\|^\s*from\s.\+import \|^\s*from \|^\s*import \)\w*'
@@ -89,6 +91,23 @@ if has_key(g:plugs, 'neocomplete.vim')
     let g:neocomplete#sources#omni#input_patterns.erlang     = '\<[[:digit:][:alnum:]_-]\+:[[:digit:][:alnum:]_-]*'
     "}}}
 
+    "{{{ delimiter pattern to smart complete a function
+    if !exists('g:neocomplete#delimiter_patterns')
+        let g:neocomplete#delimiter_patterns = {}
+    endif
+    let g:neocomplete#delimiter_patterns.vim    = ['#']
+    let g:neocomplete#delimiter_patterns.cpp    = ['::']
+    let g:neocomplete#delimiter_patterns.erlang = [':']
+    "}}}
+
+    "{{{ decide use source names
+	if !exists('g:neocomplete#sources')
+	    let g:neocomplete#sources = {}
+	endif
+	"let g:neocomplete#sources._ = ['buffer']
+	"let g:neocomplete#sources.cpp = ['buffer', 'dictionary', 'omni', 'file', 'tag', 'member']
+    "}}}
+
     "{{{
     let g:neocomplete#sources#vim#complete_functions = {
                 \ 'Unite': 'unite#complete_source',
@@ -98,7 +117,7 @@ if has_key(g:plugs, 'neocomplete.vim')
 
     "{{{ omni patterns for external plugins
     if !exists('g:neocomplete#sources#omni#functions')
-        let g:neocomplete#sources#omni#functions        = {}
+        let g:neocomplete#sources#omni#functions = {}
     endif
 
     let g:neocomplete#sources#omni#functions.go      = 'gocomplete#Complete'

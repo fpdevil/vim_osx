@@ -1,4 +1,4 @@
-if has_key(g:plugs, 'promptline.vim')
+if exists(':PromptlineSnapshot')
     "let g:promptline_preset = 'powerlineclone'
     let g:promptline_theme = 'powerlineclone'
     let g:promptline_preset = {

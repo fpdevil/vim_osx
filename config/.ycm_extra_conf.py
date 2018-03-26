@@ -1,8 +1,8 @@
+import logging
 import os
 import os.path
-import logging
-import ycm_core
 
+import ycm_core
 
 # `gcc -print-prog-name=cpp` -v
 # -isystem tag precedes all the system library paths
@@ -21,26 +21,20 @@ BASE_FLAGS = [
         '-xc++',
         '-isystem',
         '../BoostParts',
-        '-isystem', '/usr/include/c++/v1',
+        '-isystem', '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1',
         '-isystem', '/usr/local/include',
-        '-isystem', '/usr/include',
-        '-isystem', '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/8.0.0/include',
+        '-isystem', '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.0.0/include',
         '-isystem', '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include',
-        '-isystem', '/usr/local/opt/opencv3/include',
-        '-isystem', '/System/Library/Frameworks',
-        '-isystem', '/Library/Frameworks',
-        '-isystem', '/System/Library/Frameworks/Python.framework/Headers',
+        '-isystem', '/usr/include',
         '-I',
         '.',
         '-I/usr/lib/',
-        '-I/usr/include/',
-        '-I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1',
-        '-I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/8.0.0/include',
+        '-I/usr/local/include/',
+        '-I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1',
+        '-I/usr/local/include',
+        '-I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.0.0/include',
         '-I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include',
-        '-I/usr/local/opt/opencv3/lib',
-        '-I/usr/local/opt/opencv3/include'
-        '-I/usr/local/opt/opencv3/include/opencv'
-        '-I/usr/local/opt/opencv3/include/opencv2'
+        '-I/usr/include'
 ]
 
 SOURCE_EXTENSIONS = [

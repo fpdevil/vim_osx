@@ -2,10 +2,13 @@
 " ------------- Clojure language customization with rainbow parenthesis  -------------
 " ------------------------------------------------------------------------------------
 " Clojure
-autocmd BufEnter *.cljs,*.clj,*.cljs.hl RainbowParenthesesActivate
-autocmd BufEnter *.cljs,*.clj,*.cljs.hl RainbowParenthesesLoadRound
-autocmd BufEnter *.cljs,*.clj,*.cljs.hl RainbowParenthesesLoadSquare
-autocmd BufEnter *.cljs,*.clj,*.cljs.hl RainbowParenthesesLoadBraces
+if exists('RainbowParenthesesActivate')
+  autocmd BufEnter *.cljs,*.clj,*.cljs.hl RainbowParenthesesActivate
+  autocmd BufEnter *.cljs,*.clj,*.cljs.hl RainbowParenthesesLoadRound
+  autocmd BufEnter *.cljs,*.clj,*.cljs.hl RainbowParenthesesLoadSquare
+  autocmd BufEnter *.cljs,*.clj,*.cljs.hl RainbowParenthesesLoadBraces
+endif
+
 " Fix I don't know why
 autocmd BufEnter *.cljs,*.clj,*.cljs.hl setlocal iskeyword+=?,-,*,!,+,/,=,<,>,.,:
 
@@ -16,3 +19,14 @@ autocmd BufEnter *.cljs,*.cljs.hl set filetype=clojure
 "  don't forget to put <script src="http://localhost:9001/ws"></script>
 "  in your HTML
 "  au BufWritePost *.cljs :BCReloadPage
+
+" neoclojure
+if has_key(g:plugs,'neoclojure.vim')
+    augroup vimrc-neoclojure
+        autocmd!
+        " If you use neocomplete
+        autocmd FileType clojure setlocal omnifunc=neoclojure#complete#omni_auto
+        " Otherwise
+        autocmd FileType clojure setlocal omnifunc=neoclojure#complete#omni
+    augroup END
+endif

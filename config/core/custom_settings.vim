@@ -60,11 +60,10 @@ if has("autocmd")
 endif
 
 " define settings for the cache
-let s:cache_dir = '~/.vim/.cache'
-
-function! g:GetCacheDir(suffix)
-  return resolve(expand(s:cache_dir . '/' . a:suffix))
-endfunction
+" let s:cache_dir = '~/.vim/.cache'
+" function! g:GetCacheDir(suffix)
+  " return resolve(expand(s:cache_dir . '/' . a:suffix))
+" endfunction
 
 " -------------------------------------------------------------------------------------
 "  function for handling indent line plugin
@@ -99,7 +98,7 @@ autocmd InsertEnter * call s:ShowIndentLine()
 " *************************************************************************************
 "set tags+=~/.vim/tags/opencv
 
-set tags+=~/.vim/tags/systags
+set tags+=~/.vim/private/tags/systags
 
 set tags+=/usr/local/lib/erlang/lib/tags
 
@@ -141,11 +140,19 @@ endif"has('python3')
 " -------------------------------------------------------------------------------------
 if has('gui_running')
     set path+=/usr/local/lib/python3.6/site-packages
-    let $PYTHONPATH = "/usr/local/lib/python3.6/site-packages"
+    "let $PYTHONPATH = "/usr/local/lib/python3.6/site-packages"
     let $PYTHON3_INCLUDE_DIR = "/usr/local/opt/python3/Frameworks/Python.framework/Versions/3.6/include/python3.6m"
     let $PYTHON3_LIBRARY = "/usr/local/opt/python3/Frameworks/Python.framework/Versions/3.6/lib/python3.6/config-3.6m-darwin"
     let $GOPATH = $HOME . "/sw/programming/gocode/go"
     let $PATH = $HOME . "/usr/local/opt/go/libexec/bin:" . $PATH
+endif
+
+" -------------------------------------------------------------------------------------
+" for haskell external path setup in macvim
+" -------------------------------------------------------------------------------------
+if has('gui_running')
+  "set path+=~/Library/Haskell/bin
+  let $PATH=$PATH.':'.expand("~/Library/Haskell/bin/")
 endif
 
 " -------------------------------------------------------------------------------------

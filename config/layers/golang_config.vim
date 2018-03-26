@@ -5,15 +5,23 @@ autocmd BufRead,BufNewFile *.go set filetype=go
 au BufRead,BufNewFile *.go setl filetype=go nolist noexpandtab syntax=go
 "setlocal omnifunc=go#complete#Complete
 
+" if deoplete completion is used
+if has_key(g:plugs,'deoplete.vim')
+    let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
+    let g:deoplete#sources#go#sort_class    = ['package', 'func', 'type', 'var', 'const']
+    let g:deoplete#sources#go#use_cache     = 1
+    let g:deoplete#sources#go#align_class   = 1
+endif
+
 augroup filetypedetect_go
-  au Filetype go nnoremap <leader>gd :vsp <CR>:exe "GoDef" <CR>
-  au Filetype go nnoremap <leader>gc :vsp <CR>:exe "GoCallees" <CR>
-  " au Filetype go nnoremap <leader>gr :vsp <CR>:exe "GoReferrers" <CR>
-  " au Filetype go nnoremap <leader>gimp :vsp <CR>:exe "GoImplements" <CR>
-  au Filetype go nnoremap <leader>gdt :tab split <CR>:exe "GoDef"<CR>
-  au FileType go nmap <Leader>gi <Plug>(go-info)
-  au FileType go nmap <Leader>gb <Plug>(go-doc-browser)
-  au FileType go nmap <Leader>gr <Plug>(go-rename)
+    au Filetype go nnoremap <leader>gd :vsp <CR>:exe "GoDef" <CR>
+    au Filetype go nnoremap <leader>gc :vsp <CR>:exe "GoCallees" <CR>
+    " au Filetype go nnoremap <leader>gr :vsp <CR>:exe "GoReferrers" <CR>
+    " au Filetype go nnoremap <leader>gimp :vsp <CR>:exe "GoImplements" <CR>
+    au Filetype go nnoremap <leader>gdt :tab split <CR>:exe "GoDef"<CR>
+    au FileType go nmap <Leader>gi <Plug>(go-info)
+    au FileType go nmap <Leader>gb <Plug>(go-doc-browser)
+    au FileType go nmap <Leader>gr <Plug>(go-rename)
 augroup END
 
 let g:go_bin_path = expand("$GOPATH/bin")
@@ -32,22 +40,26 @@ if has_key(g:plugs, 'vim-go')
     let g:go_def_mode                    = "godef"
     let g:go_play_open_browser           = 0
     let g:go_auto_type_info              = 1
-    " syntastic checking for go
-    "let g:syntastic_go_chckers          = ['golint']
-    let g:syntastic_go_checkers          = ['go', 'golint', 'errcheck']
     let g:go_list_type                   = "quickfix"
+    let g:go_snippet_engine              = "neosnippet"
+    " syntastic checking for go
+    if has_key(g:plugs, 'syntastic')
+        "let g:syntastic_go_checkers = ['go', 'golint', 'errcheck']
+        let g:syntastic_go_chckers   = ['golint', 'govet', 'errcheck']
+        let g:syntastic_mode_map     = { 'mode': 'active', 'passive_filetypes': ['go'] }
+    endif
 endif
 
 " highlight go imports
 if has_key(g:plugs,'hl-goimport.vim')
-  highlight goImportedPkg ctermfg=1 guifg=#ff0000
+    highlight goImportedPkg ctermfg=1 guifg=#ff0000
 endif
 
 augroup go
-  autocmd!
-  autocmd Filetype go command! -bang A call go#alternate#Switch(<bang>0, 'edit')
-  autocmd Filetype go command! -bang AV call go#alternate#Switch(<bang>0, 'vsplit')
-  autocmd Filetype go command! -bang AS call go#alternate#Switch(<bang>0, 'split')
+    autocmd!
+    autocmd Filetype go command! -bang A call go#alternate#Switch(<bang>0, 'edit')
+    autocmd Filetype go command! -bang AV call go#alternate#Switch(<bang>0, 'vsplit')
+    autocmd Filetype go command! -bang AS call go#alternate#Switch(<bang>0, 'split')
 augroup END
 
 

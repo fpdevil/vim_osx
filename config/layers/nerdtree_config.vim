@@ -20,17 +20,43 @@ if has_key(g:plugs, 'nerdtree')
 		    :NERDTreeToggle
 	    endif
     endfunction
-    "nmap <leader>nt :NERDTreeToggle<CR>
+
     map <silent> <Leader>nt :call ToggleNerdTree()<CR>
+    map <silent> <leader>nf :NERDTreeFind<CR>
+
+    " leader guide integration
+    let g:lmap = get(g:, 'lmap', {})
+    let g:lmap.n = {
+                \ 'name' : 'NERDTree explorer',
+                \ 't'    : ['call ToggleNerdTree()', 'Togle Tree If Exists'],
+                \ 'f'    : ['NERDTreeFind', 'Find N Reveal File'],
+                \ }
 
     let NERDTreeHighlightCursorline   = 1            " highlight current cursor line
     let NERDTreeShowHidden            = 1            " show hidden files
+    let NERDTreeShowBookmarks         = 1            " show bookmarks
     let g:NERDTreeChDirMode           = 1            " change to cwd
     let g:NERDTreeDirArrowExpandable  = ''          " horizontal arrow
     let g:NERDTreeDirArrowCollapsible = '▽'          " vertical arrow
 endif
 " }}}
 
+"{{{ for nerdtree git plugin
+if has_key(g:plugs, 'nerdtree-git-plugin')
+    let g:NERDTreeIndicatorMapCustom = {
+        \ "Modified"  : "✹",
+        \ "Staged"    : "✚",
+        \ "Untracked" : "✭",
+        \ "Renamed"   : "➜",
+        \ "Unmerged"  : "═",
+        \ "Deleted"   : "✖",
+        \ "Dirty"     : "✗",
+        \ "Clean"     : "✔︎",
+        \ 'Ignored'   : '☒',
+        \ "Unknown"   : "?"
+        \ }
+endif
+"}}}
 
 "{{{ for NerdTree and Tabs
 

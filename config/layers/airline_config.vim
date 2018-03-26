@@ -6,7 +6,7 @@
 "=============================================================================
 scriptencoding utf-8
 
-if has_key(g:plugs,'vim-airline')
+if isdirectory(expand("~/.vim/plugged/vim-airline/"))
     "{{{ vim powerline symbols to be shown in the statusbar
     let g:Powerline_symbols       = 'unicode'           " fancy | unicode
     let g:airline_powerline_fonts = 1
@@ -122,5 +122,5 @@ if has_key(g:plugs,'vim-airline')
         call airline#parts#define_accent('H', 'bold')
         let g:airline_section_a = airline#section#create(keys)
     endfunction
-    autocmd VimEnter * call AccentDemo()
+    "autocmd VimEnter * call AccentDemo()
 endif

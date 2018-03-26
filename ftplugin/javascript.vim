@@ -30,3 +30,6 @@ highlight jsNoise              ctermfg=197 cterm=bold guifg=#F92672 gui=bold
 highlight jsObjectBraces       ctermfg=197 cterm=bold guifg=#F92672 gui=bold
 highlight jsVariableDef        ctermfg=194 cterm=bold guifg=#AAFFAA gui=bold
 
+
+" aggregate checks from multiple linters and checkers
+let syntastic_aggregate_errors = 1
