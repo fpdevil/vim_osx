@@ -18,6 +18,7 @@ endfunction
 
 
 call s:LoadConfig("leader_guide_config.vim")       " configuration for vim leader guide
+call s:LoadConfig("unite_config.vim")              " UNITE plugin(s) configuration
 call s:LoadConfig("colors_config.vim")             " required color scheme
 call s:LoadConfig("rainbow_config.vim")            " rainbow parenthesis configuration
 call s:LoadConfig("airline_config.vim")            " Airline statusline configuration
@@ -45,16 +46,15 @@ call s:LoadConfig("clojure_config.vim")            " clojure language configurat
 call s:LoadConfig("erlang_config.vim")             " erlang language configuration
 call s:LoadConfig("ycm_config.vim")                " YouCompleteMe configuration
 call s:LoadConfig("python_config.vim")             " python language configuration
-call s:LoadConfig("golang_config.vim")             " GO language configuration
 call s:LoadConfig("cpp_config.vim")                " c/c++ language configuration
 call s:LoadConfig("scala_config.vim")              " scala language configuration
+call s:LoadConfig("golang_config.vim")             " GO language configuration
 call s:LoadConfig("nerdtree_config.vim")           " NerdTree configuration
 call s:LoadConfig("vimfiler_config.vim")           " VimFiler file explorer configuration
 call s:LoadConfig("ctrlp_config.vim")              " Control-P configuration
 call s:LoadConfig("ctrlspace_config.vim")          " Ctrl-Space configuration
 call s:LoadConfig("vcs_config.vim")                " VCS/GIT Repo configuration
 call s:LoadConfig("vim_signify_config.vim")        " configuration for vim signify (diff)
-call s:LoadConfig("unite_config.vim")              " UNITE plugin(s) configuration
 call s:LoadConfig("neomru_config.vim")             " neomru settings
 call s:LoadConfig("pandoc_config.vim")             " pandoc configuration
 call s:LoadConfig("slime_config.vim")              " slime related configuration

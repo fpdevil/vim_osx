@@ -16,12 +16,12 @@ endif
 augroup filetypedetect_go
     au Filetype go nnoremap <leader>gd :vsp <CR>:exe "GoDef" <CR>
     au Filetype go nnoremap <leader>gc :vsp <CR>:exe "GoCallees" <CR>
-    " au Filetype go nnoremap <leader>gr :vsp <CR>:exe "GoReferrers" <CR>
-    " au Filetype go nnoremap <leader>gimp :vsp <CR>:exe "GoImplements" <CR>
     au Filetype go nnoremap <leader>gdt :tab split <CR>:exe "GoDef"<CR>
     au FileType go nmap <Leader>gi <Plug>(go-info)
     au FileType go nmap <Leader>gb <Plug>(go-doc-browser)
     au FileType go nmap <Leader>gr <Plug>(go-rename)
+    " au Filetype go nnoremap <leader>gr :vsp <CR>:exe "GoReferrers" <CR>
+    " au Filetype go nnoremap <leader>gimp :vsp <CR>:exe "GoImplements" <CR>
 augroup END
 
 let g:go_bin_path = expand("$GOPATH/bin")
@@ -108,3 +108,23 @@ if has_key(g:plugs,'youcompleteme')
     nnoremap <leader>yc :YcmCompleter ClearCompilationFlagCache<cr>
 endif
 "}}}
+
+" {{{ unite menu integration for `go`
+let g:unite_source_menu_menus.golang = {
+            \ 'description' : '         golang development
+            \                                    ⌘ [space]d',
+            \ }
+let g:unite_source_menu_menus.golang.command_candidates = [
+            \ ['▷  go info                                                   ⌘ (C-C)i', 'GoInfo'],
+            \ ['▷  go lint                                                   ⌘ (C-C)l', 'GoLint'],
+            \ ['▷  go doc                                                    ⌘ (C-C)D', 'GoDoc'],
+            \ ['▷  go fmt                                                    ⌘ (C-C)f', 'GoFmt'],
+            \ ['▷  go play                                                   ⌘ (C-C)p', 'GoPlay'],
+            \ ['▷  go def                                                    ⌘ (C-C)d', 'GoDef'],
+            \ ['▷  go install                                                ⌘ (C-C)I', 'GoInstall'],
+            \ ['▷  go build                                                  ⌘ (C-C)b', 'GoBuild'],
+            \ ['▷  go error check                                            ⌘ (C-C)e', 'GoErrCheck'],
+            \ ]
+nnoremap <silent>[menu]d :Unite -silent -winheight=42 menu:golang<CR>
+
+" }}} END Unite Menu

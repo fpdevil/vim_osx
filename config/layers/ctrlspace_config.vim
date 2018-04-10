@@ -4,7 +4,7 @@
 " ---------  :help g:CtrlSpaceSymbols                                        ---------
 " ------------------------------------------------------------------------------------
 
-if has_key(g:plugs,'vim-ctrlspace')
+if !empty(glob('~/.vim/plugged/vim-ctrlspace'))
     if has("gui_running")
         " Settings for MacVim and powerline font
         let g:CtrlSpaceSymbols = { "File": "◯", "CTab": "▣", "Tabs": "▢" }
@@ -15,7 +15,8 @@ if has_key(g:plugs,'vim-ctrlspace')
     endif
     let g:CtrlSpaceUseUnicode         = 1
     let g:CtrlSpaceStatuslineFunction = "airline#extensions#ctrlspace#statusline()"
-    if has_key(g:plugs,'vim-airline')
+    "if has_key(g:plugs,'vim-airline')
+    if !exists("g:airline#extensions#ctrlspace#enabled")
         let g:airline#extensions#ctrlspace#enabled = 1
     endif
 endif

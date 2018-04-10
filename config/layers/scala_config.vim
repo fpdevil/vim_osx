@@ -2,11 +2,13 @@
 " scala language support configuration
 " ----------------------------------------------------------------------
 
-if has_key(g:plugs,'vim-scala')
+"if has_key(g:plugs,'vim-scala')
+if !empty(glob('~/.vim/plugged/vim-scala'))
     let g:scala_scaladoc_indent = 1
 endif
 
-if has_key(g:plugs, 'syntastic')
+"if has_key(g:plugs, 'syntastic')
+if !empty(glob('~/.vim/plugged/syntastic'))
     let g:syntastic_scala_checkers = ['scalac']
     let g:syntastic_scala_checkers = ['fsc']
 endif

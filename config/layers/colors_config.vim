@@ -1,18 +1,19 @@
 " set the required color scheme for vim in gui/terminal
 " set the colorscheme to solarized light if running macvim in gui
 
-" function to check for existence of colorscheme
-function! HasColorScheme(name)
-    let pattern = 'colors/' . a:name . '.vim'
-    return !empty(globpath(&rtp, pattern))
-endfunction
-
 if has("gui_running")
     silent! colo solarized8
 else " has no gui
     if has("unix")
-        if HasColorScheme('quantum')
-            colorscheme quantum
+        if !exists('g:vim_color_scheme')
+            let color_scheme = "solarized8_flat"
+            if HasColorScheme(g:color_scheme)
+                exec 'colorscheme '.g:color_scheme
+            endif
+        else
+            if HasColorScheme(g:vim_color_scheme)
+                exec 'colorscheme '.g:vim_color_scheme
+            endif
         endif
         "set background=light
         let g:airline_theme = 'dark'
@@ -35,6 +36,9 @@ if exists('g:colors_name') && g:colors_name == 'solarized8'
 elseif exists('g:colors_name') && g:colors_name == 'quantum'
     set background=dark
     let g:quantum_italics=1
+elseif exists('g:colors_name') && g:colors_name == 'solarized8_flat'
+    set background=light
+    let g:solarized_term_italics=1
 elseif exists('g:colors_name') && g:colors_name == 'PaperColor'
     let g:PaperColor_Theme_Options = {
       \   'language': {

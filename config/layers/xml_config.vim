@@ -13,10 +13,14 @@ au         BufNewFile *.xml,*.xsl$ set fileformat=unix
 au BufRead,BufNewFile *.xml,*.xsl$ let b:comment_leader = '<!--'
 
 let g:xml_syntax_folding=1
-autocmd FileType xml,*.xsl$ setlocal foldmethod=syntax
-autocmd FileType xml,*.xsl$ setlocal tabstop=4
-autocmd FileType xml,*.xsl$ setlocal softtabstop=4
-autocmd FileType xml,*.xsl$ setlocal shiftwidth=4
+
+augroup XmlFT
+	autocmd!
+	autocmd FileType xml,*.xsl$ setlocal foldmethod=syntax
+	autocmd FileType xml,*.xsl$ setlocal tabstop=4
+	autocmd FileType xml,*.xsl$ setlocal softtabstop=4
+	autocmd FileType xml,*.xsl$ setlocal shiftwidth=4
+augroup END
 
 
 " -----------------------------------------------------------------------------

@@ -1,15 +1,19 @@
 "{{{
 if has_key(g:plugs, 'fzf.vim')
-
+    " check if its neovim
     if has('nvim')
-      let $FZF_DEFAULT_OPTS .= ' --inline-info'
-      " let $NVIM_TUI_ENABLE_TRUE_COLOR = 1
+        let $FZF_DEFAULT_OPTS .= ' --inline-info'
+        " let $NVIM_TUI_ENABLE_TRUE_COLOR = 1
     endif
 
+    " preview command
     command! -bang -nargs=? -complete=dir Files
-      \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
+                \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
 
-  " Customize fzf colors to match your color scheme
+    " [[B]Commits] Customize the options used by 'git log':
+    let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
+
+    " customize tje FZF colors to match your color scheme
     let g:fzf_colors = {
                 \ 'fg':      ['fg', 'Normal'],
                 \ 'bg':      ['bg', 'Normal'],
@@ -33,28 +37,58 @@ if has_key(g:plugs, 'fzf.vim')
           \ 'ctrl-v': 'vsplit',
           \ }
 
-    " nnoremap <silent> <Leader><Leader> :Files<CR>
-    "nnoremap <silent> <expr> <Leader><Leader> (expand('%') =~ 'NERD_tree' ? "\<c-w>\<c-w>" : '').":Files\<cr>"
-    "nnoremap <silent> <Leader>C        :Colors<CR>
-    "nnoremap <silent> <Leader><Enter>  :Buffers<CR>
-    "nnoremap <silent> <Leader>,f       :FufFileWithCurrentBufferDir<CR>
-    "nnoremap <silent> <Leader>ag       :Ag <C-R><C-W><CR>
-    "nnoremap <silent> <Leader>AG       :Ag <C-R><C-A><CR>
-    "xnoremap <silent> <Leader>ag       y:Ag <C-R>"<CR>
-    "nnoremap <silent> <Leader>`        :Marks<CR>
+    " helper function for getting the help for any installed plugin
+    function! s:plugs_sink(line)
+        let dir = g:plugs[a:line].dir
+        for pat in ['doc/*.txt', 'README.md']
+            let match = get(split(globpath(dir, pat), "\n"), 0, '')
+            if len(match)
+                execute 'tabedit' match
+                return
+            endif
+        endfor
+        tabnew
+        execute 'Explore' dir
+    endfunction
 
-    nnoremap <silent> <expr> <Leader>zf (expand('%') =~ 'NERD_tree' ? "\<c-w>\<c-w>" : '').":Files\<cr>"
-    nnoremap <silent> <Leader>zc        :Colors<CR>
-    nnoremap <silent> <Leader>zb        :Buffers<CR>
-    nnoremap <silent> <Leader>zd        :FufFileWithCurrentBufferDir<CR>
-    nnoremap <silent> <Leader>zg        :Ag <C-R><C-W><CR>
-    nnoremap <silent> <Leader>zG        :Ag <C-R><C-A><CR>
-    xnoremap <silent> <Leader>zy        y:Ag <C-R>"<CR>
-    nnoremap <silent> <Leader>zm        :Marks<CR>
+    " Get plugin help
+    command! GetPlugHelp call fzf#run(fzf#wrap({
+                \ 'source':  sort(keys(g:plugs)),
+                \ 'sink':    function('s:plugs_sink')}))
+
+    "nnoremap <silent> <Leader>,f       :FufFileWithCurrentBufferDir<CR>
+    nnoremap <silent> <expr> <Leader><Leader> (expand('%') =~ 'NERD_tree' ? "\<c-w>\<c-w>" : '').":Files\<cr>"
+
+    " for FuzzyFinder FZF
+    let g:lmap = get(g:, 'lmap', {})
+    let g:lmap.z = {
+                \ 'name': 'Fuzzy Finder',
+                \ 'p' : ['GetPlugHelp', 'Get Help for listed Plugins'],
+                \ 'f' : [':Files', 'Preview Files'],
+                \ 'F' : [':Filetypes', 'Set File Type'],
+                \ 'c' : [':Colors', 'List Color Schemes'],
+                \ 'b' : [':Buffers', 'List Buffers'],
+                \ 'd' : [':FufFileWithCurrentBufferDir', 'Find File under CurDir'],
+                \ 'g' : [':GFiles?', 'Git files (git status)'],
+                \ 'r' : [':Ag <C-R><C-W>', 'SilverSearch'],
+                \ 'R' : [':Ag <C-R><C-A>', 'SilverSearcher'],
+                \ 'o' : ['History', 'Open Buffers and v:oldfiles'],
+                \ 'h' : ['History:', 'Cmd History'],
+                \ 'H' : ['History/', 'Search History'],
+                \ 'y' : ['y:Ag', 'SilverSearchAg'],
+                \ 'm' : [':Marks', 'Marks'],
+                \ 'w' : ['Windows', 'Windows'],
+                \ 'k' : ['Maps', 'NormalMode KeyMappings'],
+                \ 'K' : ['Commands', 'Commands Available'],
+                \ 's' : ['Snippets', 'Snippets (UltiSnips)'],
+                \ 't' : ['Commits', 'Git commits'],
+                \ 'T' : ['BCommits', 'Git commits for current buffer'],
+                \ }
 
     " nnoremap <silent> q: :History:<CR>
     " nnoremap <silent> q/ :History/<CR>
 
+    " from the core fzf tool
     imap <c-x><c-k> <plug>(fzf-complete-word)
     imap <c-x><c-f> <plug>(fzf-complete-path)
     imap <c-x><c-j> <plug>(fzf-complete-file-ag)
@@ -64,22 +98,59 @@ if has_key(g:plugs, 'fzf.vim')
     xmap <leader><tab> <plug>(fzf-maps-x)
     omap <leader><tab> <plug>(fzf-maps-o)
 
-    function! s:plugs_sink(line)
-      let dir = g:plugs[a:line].dir
-      for pat in ['doc/*.txt', 'README.md']
-        let match = get(split(globpath(dir, pat), "\n"), 0, '')
-        if len(match)
-          execute 'tabedit' match
-          return
-        endif
-      endfor
-      tabnew
-      execute 'Explore' dir
-    endfunction
-
-    command! PlugHelp call fzf#run(fzf#wrap({
-      \ 'source':  sort(keys(g:plugs)),
-      \ 'sink':    function('s:plugs_sink')}))
 
 endif
 "}}}
+
+"== == == == == == == == == == == == == == == == == == == == == == == == == ==
+"  Unite Menu integration for FuzzyFinder FzF
+"== == == == == == == == == == == == == == == == == == == == == == == == == ==
+let g:unite_source_menu_menus.fzf = {
+            \ 'description' : '            FzF tools
+            \                                             ⌘ [-]z',
+            \ }
+
+let g:unite_source_menu_menus.fzf.command_candidates = [
+            \ ['▷ Get Plugin Help                                   (fzf)           ⌘ <Leader>zp', 'GetPlugHelp'],
+            \ ['▷ Preview Files                                     (fzf)           ⌘ <Leader>zf', 'Files'],
+            \ ['▷ Set File Type for current buffer                  (fzf)           ⌘ <Leader>zF', 'Filetypes'],
+            \ ['▷ List and select a color themes                    (fzf)           ⌘ <Leader>zc', 'Colors'],
+            \ ['▷ List and select a buffer                          (fzf)           ⌘ <Leader>zb', 'Buffers'],
+            \ ['▷ Git files (git status)                            (fzf)           ⌘ <Leader>zg', 'GFiles?'],
+            \ ['▷ Get open buffers and v:oldfiles                   (fzf)           ⌘ <Leader>zo', 'History'],
+            \ ['▷ Get Command History                               (fzf)           ⌘ <Leader>zH', 'History:'],
+            \ ['▷ Get Search History                                (fzf)           ⌘ <Leader>zh', 'History/'],
+            \ ['▷ Show Marks                                        (fzf)           ⌘ <Leader>zm', 'Marks'],
+            \ ['▷ Show Windows                                      (fzf)           ⌘ <Leader>zw', 'Windows'],
+            \ ['▷ Show Snippets (UltiSnips)                         (fzf)           ⌘ <Leader>zs', 'Snippets'],
+            \ ['▷ Git Commits                                       (fzf)           ⌘ <Leader>zt', 'Commits'],
+            \ ['▷ Git commits for the current buffer                (fzf)           ⌘ <Leader>zT', 'BCommits'],
+            \ ]
+
+
+"== == == == == == == == == == == == == == == == == == == == == == == == == ==
+" unite menu integration for showing the grep options
+"== == == == == == == == == == == == == == == == == == == == == == == == == ==
+let g:unite_source_menu_menus.grep = {
+      \ 'description' : '           search files
+      \                                          ⌘ [space]a',
+      \ }
+let g:unite_source_menu_menus.grep.command_candidates = [
+        \ ['▷ grep (ag → ack → grep)                                     ⌘ <Leader>a',
+        \ 'Unite -auto-preview -winheight=40 -no-quit grep'],
+        \ ['▷ grep current word                                          ⌘ <Leader>A',
+        \ 'UniteWithCursorWord -auto-preview -winheight=40 -no-quit grep'],
+        \ ['▷ find',
+        \ 'Unite find'],
+        \ ['▷ locate',
+        \ 'Unite -start-insert locate'],
+        \ ['▷ vimgrep (very slow)',
+        \ 'Unite vimgrep'],
+        \ ]
+
+let g:unite_source_menu_menus.grep.command_candidates =
+      \ custom_functions#unite_menu_gen(g:unite_source_menu_menus.grep.command_candidates, [])
+
+nnoremap <silent>[menu]a :Unite -silent menu:grep<CR>
+
+" vim:set et sw=4 sts=4 cc=79:

@@ -2,17 +2,8 @@
 " -----                       for NerdTree configuration                         -----
 " ------------------------------------------------------------------------------------
 "{{{ invoke by using the leader key map as - + nt
-if has_key(g:plugs, 'nerdtree')
-    augroup nerd_loader
-    autocmd!
-    autocmd VimEnter * silent! autocmd! FileExplorer
-    autocmd BufEnter,BufNew *
-            \  if isdirectory(expand('<amatch>'))
-            \|   call plug#load('nerdtree')
-            \|   execute 'autocmd! nerd_loader'
-            \| endif
-    augroup END
-
+"if has_key(g:plugs, 'nerdtree')
+if !expand(glob('~/.vim/plugged/nerdtree'))
     function! ToggleNerdTree()
 	    if @% != "" && (!exists("g:NERDTree") || (g:NERDTree.ExistsForTab() && !g:NERDTree.IsOpen()))
 		    :NERDTreeFind
@@ -21,13 +12,13 @@ if has_key(g:plugs, 'nerdtree')
 	    endif
     endfunction
 
-    map <silent> <Leader>nt :call ToggleNerdTree()<CR>
-    map <silent> <leader>nf :NERDTreeFind<CR>
+    "map <silent> <Leader>nt :call ToggleNerdTree()<CR>
+    "map <silent> <leader>nf :NERDTreeFind<CR>
 
     " leader guide integration
     let g:lmap = get(g:, 'lmap', {})
     let g:lmap.n = {
-                \ 'name' : 'NERDTree explorer',
+                \ 'name' : 'Nerdtree File Explorer',
                 \ 't'    : ['call ToggleNerdTree()', 'Togle Tree If Exists'],
                 \ 'f'    : ['NERDTreeFind', 'Find N Reveal File'],
                 \ }
@@ -42,7 +33,8 @@ endif
 " }}}
 
 "{{{ for nerdtree git plugin
-if has_key(g:plugs, 'nerdtree-git-plugin')
+"if has_key(g:plugs, 'nerdtree-git-plugin')
+if !expand(glob('~/.vim/plugged/nerdtree-git-plugin'))
     let g:NERDTreeIndicatorMapCustom = {
         \ "Modified"  : "✹",
         \ "Staged"    : "✚",
@@ -60,7 +52,8 @@ endif
 
 "{{{ for NerdTree and Tabs
 
-if has_key(g:plugs, 'vim-nerdtree-tabs')
+"if has_key(g:plugs, 'vim-nerdtree-tabs')
+if !empty(glob('~/.vim/plugged/vim-nerdtree-tabs'))
     function! NERDTreeFileHighlight(extension, fg, bg, guifg, guibg)
         exec 'autocmd filetype nerdtree highlight ' . a:extension
                     \ .' ctermbg=' . a:bg . ' ctermfg='. a:fg
@@ -70,7 +63,7 @@ if has_key(g:plugs, 'vim-nerdtree-tabs')
     endfunction
 
     call NERDTreeFileHighlight('hrl', 'green', 'none', 'green', '#eee8d5')
-    call NERDTreeFileHighlight('vim', 'DarkBlue', 'none', 'firebrick', 'grey')
+    call NERDTreeFileHighlight('vim', 'DarkBlue', 'none', 'OrangeRed', 'ivory')
     call NERDTreeFileHighlight('erl', 'LightRed', 'none', '#FA5882', '#eee8d5')
     call NERDTreeFileHighlight('ini', 'yellow', 'none', 'yellow', '#eee8d5')
     call NERDTreeFileHighlight('md', 'blue', 'none', '#3366FF', '#eee8d5')

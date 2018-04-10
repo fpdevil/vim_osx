@@ -1,6 +1,7 @@
 "{{{  settings for vim-indent-guides
 "     ctermbg 234 = darkgrey, ctermbg 235 = lightgrey
-if has_key(g:plugs, 'vim-indent-guides')
+"if has_key(g:plugs, 'vim-indent-guides')
+if !empty(glob('~/.vim/plugged/vim-indent-guides'))
     let g:indent_guides_auto_colors           = 0
     let g:indent_guides_enable_on_vim_startup = 0
     let g:indent_guides_color_change_percent  = 7

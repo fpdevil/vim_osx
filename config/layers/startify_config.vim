@@ -3,7 +3,8 @@
 " ------------------------------------------------------------------------------------
 " show startify
 autocmd User Startified AirlineRefresh
-if has_key(g:plugs, 'vim-startify')
+"if has_key(g:plugs, 'vim-startify')
+if !empty(glob('~/.vim/plugged/vim-startify'))
     try
         autocmd BufEnter * call StartifyConfig()     " call function from custom_functions.vim"
     catch

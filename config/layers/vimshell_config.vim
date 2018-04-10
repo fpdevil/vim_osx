@@ -2,7 +2,8 @@
 " --- vimshell customizations
 " ------------------------------------------------------------------------------------
 "{{{ vimshell prompt setup
-if has_key(g:plugs, 'vimshell.vim')
+"if has_key(g:plugs, 'vimshell.vim')
+if !empty(glob('~/.vim/plugged/vimshell.vim'))
     let g:vimshell_right_prompt                 = ''
     let g:vimshell_user_prompt                  = 'fnamemodify(getcwd(), ":~")'
     let g:vimshell_prompt                       = '% '

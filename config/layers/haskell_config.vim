@@ -186,3 +186,25 @@ let g:lmap.h = {
             \ 'r'    : [ 'call ApplyOneSuggestion()', 'apply a single suggestion from linter' ],
             \ 'R'    : [ 'call ApplyAllSuggestions()', 'apply all suggestions from linter' ],
             \ }
+
+"== == == == == == == == == == == == == == == == == == == == == == == == == ==
+"  Unite Menu for Haskell tools
+"== == == == == == == == == == == == == == == == == == == == == == == == == ==
+let g:unite_source_menu_menus.haskell = {
+    \ 'description' : '        haskell tools
+    \                                         ⌘ [space]h',
+    \}
+
+" push the candidates for commands
+let g:unite_source_menu_menus.haskell.command_candidates = [
+            \ ['▷ hoogle search of word under cursor                (hoogle)        ⌘ <Leader>hh', 'Hoogle'],
+            \ ['▷ get detailed documentation                        (hoogle)        ⌘ <Leader>hi', 'HoogleInfo'],
+            \ ['▷ close the hoogle window                           (hoogle)        ⌘ <Leader>hz', 'HoogleClose'],
+            \ ['▷ syntax checking with ghc-mod                      (ghc-mod)       ⌘ <Leader>hc', 'SyntasticCheck ghc_mod'],
+            \ ['▷ get information about an identifier in preview    (ghc-mod)       ⌘ <Leader>hp', 'GhcModInfoPreview'],
+            \ ['▷ echo the type under cursor                        (ghc-mod)       ⌘ <Leader>ht', 'GhcModType'],
+            \ ['▷ insert a type signature under the cursor          (ghc-mod)       ⌘ <Leader>hT', 'GhcModTypeInsert'],
+            \ ['▷ show diagnostics                                  (ghc-mod)       ⌘ <Leader>hd', 'GhcModDiagnostics'],
+            \ ['▷ clear highlight from GhcModType                   (ghc-mod)       ⌘ <Leader>he', 'GhcModTypeClear'],
+            \ ['▷ syntax checking with hlint                        (hlint)         ⌘ <Leader>hl', 'SyntasticCheck hlint'],
+            \ ]

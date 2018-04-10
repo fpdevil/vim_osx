@@ -3,7 +3,8 @@
 " ------------------------------------------------------------------------------
 
 "  for proper javascript indentation
-autocmd FileType javascript set tabstop=4|setl shiftwidth=4|setl shiftwidth=4|setl expandtab|setl autoindent
+" autocmd FileType javascript setl tabstop=4|setl shiftwidth=4|setl softtabstop=4|setl expandtab|setl autoindent
+autocmd FileType javascript setlocal shiftwidth=4 tabstop=4 softtabstop=4
 au BufEnter *.js setl ai sw=4 ts=4 sts=4
 
 " {{{ for tern completions with omnifunc

@@ -34,13 +34,15 @@ au FileType python let g:jedi#smart_auto_mappings        = 1
 "au FileType python let g:jedi#popup_on_dot               = 1
 
 "{{{ using rope for python code assist
-if has_key(g:plugs, 'ropevim')
+"if has_key(g:plugs, 'ropevim')
+if !empty(glob('~/.vim/plugged/ropevim'))
     let ropevim_extended_complete=1
 endif
 "}}}
 
 " custom settings for python through syntastic checker
-if has_key(g:plugs, 'syntastic')
+"if has_key(g:plugs, 'syntastic')
+if !empty(glob('~/.vim/plugged/syntastic'))
     let g:syntastic_enable_highlighting        = 1
     let g:syntastic_python_python_exec         = '/usr/local/bin/python3'
     let g:syntastic_python_checkers            = ['flake8', 'pyflakes', 'pylint']
@@ -81,6 +83,77 @@ au BufEnter *.py set ai sw=4 ts=4 sta et fo=croql
 " ------------------------------------------------------------------------------
 "  Sort and highlight Python imports in Vim
 " ------------------------------------------------------------------------------
-if has_key(g:plugs,'impsort.vim')
+"if has_key(g:plugs,'impsort.vim')
+if !empty(glob('~/.vim/plugged/impsort.vim'))
     autocmd BufWritePre *.py ImpSort!
 endif
+
+" ------------------------------------------------------------------------------
+"  for vim-virtualenv
+" ------------------------------------------------------------------------------
+"if has_key(g:plugs,'vim-virtualenv')
+if !empty(glob('~/.vim/plugged/vim-virtualenv'))
+    let g:virtualenv_auto_activate = 1
+    let g:virtualenv_stl_format    = '(%n)'
+endif
+
+" for python-mode
+"if has_key(g:plugs,'python-mode')
+if !empty(glob('~/.vim/plugged/python-mode'))
+    let g:pymode_python          = 'python3'
+    let g:pymode_breakpoint_bind = '<Leader>B'
+    
+    let g:pymode_lint          = 1
+    let g:pymode_lint_on_write = 0
+    let g:pymode_lint_checkers = ['pylint', 'pep8', 'mccabe', 'pep257']
+    let g:pymode_lint_ignore   = ''
+    let g:pymode_virtualenv    = 1
+    let g:pymode_rope          = 1
+    
+    let g:pymode_rope_completion      = 0
+    let g:pymode_rope_complete_on_dot = 1
+    
+    " Ignore missing docstring error
+    let g:pymode_lint_ignore = "C0111,D100,D101,D102,D103" 
+endif
+
+
+"== == == == == == == == == == == == == == == == == == == == == == == == == ==
+"  Unite Menu for python tools
+"== == == == == == == == == == == == == == == == == == == == == == == == == ==
+let g:unite_source_menu_menus.python = {
+    \ 'description' : '         python tools
+    \                                          ⌘ [space]p',
+    \}
+
+" push candidates for commands
+let g:unite_source_menu_menus.python.command_candidates = [
+        \ ['▷ run python code                            (pymode)        ⌘ <Leader>r', 'PymodeRun'],
+        \ ['▷ show docs for the current word             (pymode)        ⌘ K', 'normal K'],
+        \ ['▷ insert a breakpoint                        (pymode)        ⌘ <Leader>B', 'normal <Leader>B'],
+        \ ['▷ pylint check                               (pymode)        ⌘ <Leader>n', 'PymodeLint'],
+        \ ['▷ pylint auto correct                        (pymode)        ⌘ <Leader>N', 'PymodeLintAuto'],
+        \ ['▷ go to definition                           (pymode-rope)   ⌘ C-C g', 'call pymode#rope#goto_definition()'],
+        \ ['▷ find where a function is used              (pymode-rope)   ⌘ C-C f', 'call pymode#rope#find_it()'],
+        \ ['▷ show docs for current word                 (pymode-rope)   ⌘ C-C d', 'call pymode#rope#show_doc()'],
+        \ ['▷ reorganize imports                         (pymode-rope)   ⌘ C-C r o', 'call pymode#rope#organize_imports()'],
+        \ ['▷ refactorize - rename                       (pymode-rope)   ⌘ C-C r r', 'call pymode#rope#rename()'],
+        \ ['▷ refactorize - inline                       (pymode-rope)   ⌘ C-C r i', 'call pymode#rope#inline()'],
+        \ ['▷ refactorize - move                         (pymode-rope)   ⌘ C-C r v', 'call pymode#rope#move()'],
+        \ ['▷ refactorize - use function                 (pymode-rope)   ⌘ C-C r u', 'call pymode#rope#use_function()'],
+        \ ['▷ refactorize - change signature             (pymode-rope)   ⌘ C-C r s', 'call pymode#rope#signature()'],
+        \ ['▷ refactorize - rename current module        (pymode-rope)   ⌘ C-C r 1 r', 'PymodeRopeRenameModule'],
+        \ ['▷ refactorize - module to package            (pymode-rope)   ⌘ C-C r 1 p', 'PymodeRopeModuleToPackage'],
+        \ ['▷ list virtualenvs                           (virtualenv)', 'Unite output:VirtualEnvList'],
+        \ ['▷ activate virtualenv                        (virtualenv)', 'VirtualEnvActivate'],
+        \ ['▷ deactivate virtualenv                      (virtualenv)', 'VirtualEnvDeactivate'],
+        \ ['▷ run coverage2                              (coveragepy)', 'call system("coverage2 run ".bufname("%")) | Coveragepy report'],
+        \ ['▷ run coverage3                              (coveragepy)', 'call system("coverage3 run ".bufname("%")) | Coveragepy report'],
+        \ ['▷ toggle coverage report                     (coveragepy)', 'Coveragepy session'],
+        \ ['▷ toggle coverage marks                      (coveragepy)', 'Coveragepy show'],
+        \ ]
+
+let g:unite_source_menu_menus.python.command_candidates =
+            \ custom_functions#unite_menu_gen(g:unite_source_menu_menus.python.command_candidates, [])
+
+nnoremap <silent>[menu]p :Unite -silent -winheight=42 menu:python<CR>

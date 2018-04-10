@@ -1,7 +1,8 @@
 " =============================================================================
 " ---      YouCompleteMe auto completion in gui mode for MacVim             ---
 " =============================================================================
-if has_key(g:plugs,'youcompleteme')
+"if has_key(g:plugs,'youcompleteme')
+if !empty(glob('~/.vim/plugged/youcompleteme'))
     " custom functions
     " make UltiSnips works nicely with YCM
     function! g:UltiSnips_Complete()

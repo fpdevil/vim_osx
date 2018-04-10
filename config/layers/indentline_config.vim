@@ -1,5 +1,6 @@
 "{{{ settings for displaying the indention levels
-if has_key(g:plugs, 'indentLine')
+"if has_key(g:plugs, 'indentLine')
+if !empty(glob('~/.vim/plugged/indentLine'))
     autocmd! User indentLine doautocmd indentLine Syntax
     let g:indentLine_color_term      = 239
     let g:indentLine_color_gui       = '#09AA08'

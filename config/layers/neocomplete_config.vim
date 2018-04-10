@@ -89,6 +89,7 @@ if has_key(g:plugs, 'neocomplete.vim')
     let g:neocomplete#sources#omni#input_patterns.gitcommit  = ''
     let g:neocomplete#sources#omni#input_patterns.go         = '[^.[:digit:] *\t]\.\w*'
     let g:neocomplete#sources#omni#input_patterns.erlang     = '\<[[:digit:][:alnum:]_-]\+:[[:digit:][:alnum:]_-]*'
+    let g:neocomplete#sources#omni#input_patterns.clojure    = '\.\|/'
     "}}}
 
     "{{{ delimiter pattern to smart complete a function
@@ -121,7 +122,7 @@ if has_key(g:plugs, 'neocomplete.vim')
     endif
 
     let g:neocomplete#sources#omni#functions.go      = 'gocomplete#Complete'
-    let g:neocomplete#sources#omni#functions.clojure = 'vimclojure#OmniCompletion'
+    "let g:neocomplete#sources#omni#functions.clojure = 'vimclojure#OmniCompletion'
     "}}}
 
     "{{{ plugin key mappings for NeoComplete
@@ -129,5 +130,46 @@ if has_key(g:plugs, 'neocomplete.vim')
     inoremap <expr><C-l> neocomplete#complete_common_string()
     inoremap <expr><C-e> neocomplete#cancel_popup()
     "}}}
+
+    " toggle the auto select feature
+    function! ToggleNeoComplete()
+        if !g:neocomplete#disable_auto_complete && g:neocomplete#enable_auto_select
+            let g:neocomplete#disable_auto_complete = 0
+            let g:neocomplete#enable_auto_select    = 0
+        elseif !g:neocomplete#disable_auto_complete && !g:neocomplete#enable_auto_select
+            let g:neocomplete#disable_auto_complete = 1
+            let g:neocomplete#enable_auto_select    = 0
+        elseif g:neocomplete#disable_auto_complete && !g:neocomplete#enable_auto_select
+            let g:neocomplete#disable_auto_complete = 0
+            let g:neocomplete#enable_auto_select    = 1
+        endif
+    endfunction
+    
+    nnoremap <silent><Leader>ea :call ToggleNeoComplete()<CR>
+
+    " Unite Menu {{{
+    let g:unite_source_menu_menus.code = {
+        \ 'description' : '           coding
+            \                                                ⌘ [space]c',
+        \}
+    let g:unite_source_menu_menus.code.command_candidates = [
+        \['▷ toggle auto-completion state (manual → disabled → auto)  ⌘ <Leader>ea',
+            \'call ToggleNeoComplete()'],
+        \['▷ syntastic toggle                           (syntastic)',
+            \'SyntasticToggleMode'],
+        \['▷ syntastic check & errors                   (syntastic)   ⌘ <Leader>N',
+            \'normal <Leader>N'],
+        \['▷ count lines of code',
+            \'Unite -default-action= output:call\\ LinesOfCode()'],
+        \['▷ toggle indent lines                                      ⌘ <Leader>L',
+            \'IndentLinesToggle'],
+        \]
+    
+    let g:unite_source_menu_menus.code.command_candidates =
+                \ custom_functions#unite_menu_gen(g:unite_source_menu_menus.code.command_candidates, [])
+    
+    nnoremap <silent>[menu]c :Unite -silent menu:code<CR>
+    " END Unite Menu }}}
+
 endif
 

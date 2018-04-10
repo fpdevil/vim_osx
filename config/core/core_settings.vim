@@ -11,6 +11,27 @@ if has('vim_starting')
 endif
 filetype off
 
+" ************************************************************************************
+" vim  Leader key mapping with g:vimosx_leader_key
+" use the option <leader key> + <keymap> for all shortcuts
+" ************************************************************************************
+"   let g:vimosx_leader_key='\' - this is default
+if !exists('g:vimosx_leader_key')
+   let mapleader = '-'
+   "let mapleader = "\<Space>"
+else
+   let mapleader=g:vimosx_leader_key
+endif
+if !exists('g:vimosx_localleader_key')
+   let maplocalleader = '_'
+else
+   let maplocalleader=g:vimosx_localleader_key
+endif
+
+augroup vimrc
+  autocmd!
+augroup END
+
 " For UNICODE support of symbols like ⚠
 " note: set encoding BEFORE script encoding
 scriptencoding utf-8
@@ -163,22 +184,6 @@ set formatoptions=c,q,r,t
 
 set bs=2                                    " allow backspacing over everything in insert mode
 
-" ************************************************************************************
-" vim  Leader key mapping with g:vimosx_leader_key
-" use the option <leader key> + <keymap> for all shortcuts
-" ************************************************************************************
-"   let g:vimosx_leader_key='\' - this is default
-if !exists('g:vimosx_leader_key')
-    let mapleader = '-'
-    "let mapleader = "\<Space>"
-else
-    let mapleader=g:spf13_leader
-endif
-if !exists('g:vimosx_localleader_key')
-    let maplocalleader = '_'
-else
-    let maplocalleader=g:vimosx_localleader_key
-endif
 
 " ------------------------------------------------------------------------------------
 " Use Vim settings, rather than Vi settings (much better!).
@@ -356,12 +361,16 @@ if has("spell") " if vim support spell checking
     if !filewritable($HOME . "/.vim/private/spell")
         call mkdir($HOME . "/.vim/private/spell","p")
     endif
-    set spellsuggest=10  " z= will show suggestions (10 at most)
+
+    " :set spell will do checks and jump using [s or s]
+    " at the word z= will show suggestions (10 at most)
+    set spellsuggest=10
     " spell checking for text, HTML, LaTeX, markdown and literate Haskell
     autocmd BufEnter *.txt,*.tex,*.html,*.md,*.ymd,*.lhs setlocal spell
-    autocmd BufEnter *.txt,*.tex,*.html,*.md,*.ymd,*.lhs setlocal spelllang=en
+    autocmd BufEnter *.txt,*.tex,*.html,*.md,*.ymd,*.lhs setlocal spelllang=en_us
+
     " better error highlighting with solarized
-    if exists('g:colors_name') && g:colors_name == 'solarized'
+    if exists('g:colors_name') && (g:colors_name == 'solarized' || g:colors_name == 'solarized8')
         highlight clear SpellBad
         highlight SpellBad term=standout ctermfg=2 term=underline cterm=underline
         highlight clear SpellCap

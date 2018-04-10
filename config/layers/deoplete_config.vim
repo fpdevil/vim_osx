@@ -49,7 +49,8 @@ if isdirectory(expand("~/.vim/plugged/deoplete.nvim"))
 
     let g:deoplete#sources['javascript.jsx'] = ['file', 'ultisnips', 'ternjs']
 
-    let g:deoplete#keyword_patterns.clojure  = '[\w!$%&*+/:<=>?@\^_~\-\.#]*'
+    " for clojure
+    let g:deoplete#keyword_patterns.clojure = '[\w!$%&*+/:<=>?@\^_~\-\.#]*'
 
     " accept partial fuzzy matches like YouCompleteMe
     call deoplete#custom#source('ghc', 'sorters', ['sorter_word'])

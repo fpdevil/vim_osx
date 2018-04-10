@@ -30,23 +30,10 @@ if isdirectory(expand("~/.vim/plugged/vim-leader-guide/"))
                 \ 'name' : 'File Tools',
                 \ }
 
-    " for FuzzyFinder FZF
-    let g:lmap.z = {
-                \ 'name': 'Fuzzy Finder',
-                \ 'f' : [':Files', 'Preview Files'],
-                \ 'c' : [':Colors', 'List Color Schemes'],
-                \ 'b' : [':Buffers', 'List Buffers'],
-                \ 'd' : [':FufFileWithCurrentBufferDir', 'Find File under CurDir'],
-                \ 'g' : [':Ag <C-R><C-W>', 'SilverSearch'],
-                \ 'G' : [':Ag <C-R><C-A>', 'SilverSearcher'],
-                \ 'y' : ['y:Ag <C-R>"', 'SilverSearchAg'],
-                \ 'm' : [':Marks', 'Marks'],
-                \ 'w' : ['Windows', 'Windows'],
-                \ 'k' : ['Maps', 'NormalMode KeyMappings'],
-                \ 's' : ['Snippets', 'ShowSnippets'],
-                \ 't' : ['Commits', 'ShowCommits'],
+    " for general utilities
+    let g:lmap.m.u = {
+                \ 'name' : 'Utilities and Tools',
                 \ }
-
 
     " to make the guide pop up Register the description dictionary for the prefix first
     call leaderGuide#register_prefix_descriptions("-", "g:lmap")

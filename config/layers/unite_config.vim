@@ -7,7 +7,8 @@ if isdirectory(expand("~/.vim/plugged/unite.vim/"))
     call unite#custom#source('codesearch', 'max_candidates', 30)
     call unite#filters#matcher_default#use(['matcher_fuzzy'])
     call unite#filters#sorter_default#use(['sorter_rank'])
-    call unite#custom#profile('default', 'context', {
+    call unite#custom#profile('default', 'context',
+                \ {
                 \ 'safe': 0,
                 \ 'start_insert': 1,
                 \ 'ignorecase' : 1,
@@ -25,7 +26,8 @@ if isdirectory(expand("~/.vim/plugged/unite.vim/"))
                 \ 'marked_icon': '✓',
                 \ 'prompt' : '➭ '
                 \ })
-    call unite#custom#profile('source/neobundle/update', 'context', {
+    call unite#custom#profile('source/neobundle/update', 'context',
+                \ {
                 \ 'start_insert' : 0,
                 \ })
 
@@ -60,14 +62,16 @@ if isdirectory(expand("~/.vim/plugged/unite.vim/"))
     let g:unite_source_menu_menus = {}
 
     if executable('ag')
-        let g:unite_source_grep_command                                               = 'ag'
-        let g:unite_source_rec_async_command                                          =
-                    \ ['ag', '--follow', '--nocolor', '--nogroup',
+        let g:unite_source_grep_command                      = 'ag'
+        let g:unite_source_grep_recursive_opt                = ''
+        let g:unite_source_rec_async_command                 =
+                    \ ['ag', '--follow',
+                    \  '--nocolor', '--nogroup',
                     \  '--hidden', '-g', '']
-        let g:unite_source_grep_default_opts                                          =
+        let g:unite_source_grep_default_opts                 =
                     \'-i --vimgrep --hidden --ignore ' .
-                    \ '''.hg'' --ignore ''.svn'' --ignore ''.git'' --ignore ''.bzr'''
-        let g:unite_source_grep_recursive_opt                                         = ''
+                    \ '''.hg'' --ignore ''.svn''
+                    \ --ignore ''.git'' --ignore ''.bzr'''
     endif
 
     " key mappings
@@ -124,6 +128,9 @@ if isdirectory(expand("~/.vim/plugged/unite.vim/"))
     nnoremap <silent><leader>ufo :<C-u>Unite outline -auto-preview -buffer-name=outline<Cr>
     nnoremap <silent><leader>ufa :<C-u>Unite file_rec/async<Cr>
     nnoremap <silent><leader>ufd :<C-u>Unite ref/man ref/hoogle ref/pydoc -default-action=split<Cr>
+
+    " search for a string in multiple files or under a filetree
+    nnoremap <silent><Leader>ufs :split<cr> :<C-u>Unite -start-insert file_rec/async<cr>
 
     " search plugin
     " :Unite neobundle/search
@@ -202,3 +209,53 @@ function! s:UniteSettings()
 endfunction
 
 au FileType unite call s:UniteSettings()
+
+
+
+"== == == == == == == == == == == == == == == == == == == == == == == == == ==
+" Unite Menu integration for all the unite commands
+"== == == == == == == == == == == == == == == == == == == == == == == == == ==
+let g:unite_source_menu_menus.files = {
+            \ 'description' : '          files & dirs
+            \                                          ⌘ [space]o',
+            \ }
+let g:unite_source_menu_menus.files.command_candidates = [
+         \ ['▷ open file                                                  ⌘ <Leader>o',
+         \ 'Unite -start-insert file'],
+         \ ['▷ open more recently used files                              ⌘ <Leader>m',
+         \ 'Unite file_mru'],
+         \ ['▷ open file with recursive search                            ⌘ <Leader>O',
+         \ 'Unite -start-insert file_rec/async'],
+         \ ['▷ edit new file',
+         \ 'Unite file/new'],
+         \ ['▷ search directory',
+         \ 'Unite directory'],
+         \ ['▷ search recently used directories',
+         \ 'Unite directory_mru'],
+         \ ['▷ search directory with recursive search',
+         \ 'Unite directory_rec/async'],
+         \ ['▷ make new directory',
+         \ 'Unite directory/new'],
+         \ ['▷ change working directory',
+         \ 'Unite -default-action=lcd directory'],
+         \ ['▷ know current working directory',
+         \ 'Unite output:pwd'],
+         \ ['▷ junk files                                                 ⌘ <Leader>d',
+         \ 'Unite junkfile/new junkfile'],
+         \ ['▷ save as root                                               ⌘ :w!!',
+         \ 'exe "write !sudo tee % >/dev/null"'],
+         \ ['▷ quick save                                                 ⌘ <Leader>w',
+         \ 'normal <Leader>w'],
+         \ ['▷ open ranger                                                ⌘ <Leader>x',
+         \ 'call RangerChooser()'],
+         \ ['▷ open vimfiler                                              ⌘ <Leader>X',
+         \ 'VimFiler'],
+         \ ]
+
+let g:unite_source_menu_menus.files.command_candidates =
+            \ custom_functions#unite_menu_gen(g:unite_source_menu_menus.files.command_candidates, [])
+
+nnoremap <silent>[menu]o :Unite -silent -winheight=17 -start-insert
+            \ menu:files<CR>
+
+" vim:set et sw=4 sts=4 cc=79:

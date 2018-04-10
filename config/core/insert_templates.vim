@@ -54,6 +54,7 @@ function! s:ErlHeader()
 endfunction
 
 augroup ErlHeader
+    autocmd!
     autocmd BufNewFile *.erl call s:ErlHeader()
 augroup END
 "}}}
@@ -113,6 +114,7 @@ function! s:HsHeader()
 endfunction
 
 augroup HsHeader
+    autocmd!
     autocmd BufNewFile *.hs call s:HsHeader()
 augroup END
 "}}}
@@ -124,8 +126,11 @@ augroup END
 "    available or not is kept and if that plugin is available the template is
 "    inserted by plugin
 
-"autocmd BufNewFile *.cpp,*.[ch],*.sh,*.java,*.tex,*.py,*.html exec ":call SetTitle()"
-autocmd BufNewFile *.[ch],*.sh,*.java,*.tex,*.py,*.html exec ":call SetTitle()"
+augroup InsertHdr
+    autocmd!
+    "autocmd BufNewFile *.cpp,*.[ch],*.sh,*.java,*.tex,*.py,*.html exec ":call SetTitle()"
+    autocmd BufNewFile *.[ch],*.sh,*.java,*.tex,*.py,*.html exec ":call SetTitle()"
+  augroup END
 
 func SetTitle()
     if &filetype == 'sh'

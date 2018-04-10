@@ -1,6 +1,7 @@
 " plugin settings for vim-operator-highlight
 
-if has_key(g:plugs,'vim-operator-highlight')
+"if has_key(g:plugs,'vim-operator-highlight')
+if !empty(glob('~/.vim/plugged/vim-operator-highlight'))
     let g:ophigh_highlight_link_group = 'Keyword'
     let g:ophigh_filetypes_to_ignore  = {
                 \ 'qf': 1, 'help': 1, 'unite': 1, 'tagbar': 1, 'gundo': 1, 'vimshell': 1,

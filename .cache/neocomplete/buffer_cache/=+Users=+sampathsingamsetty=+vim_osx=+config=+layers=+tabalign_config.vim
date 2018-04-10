@@ -1,1 +1,0 @@
-{'alignment', 'configuration', 'has_key(', 'g:plugs', 'tabular', 'g:lmap', 'get(', 'lmap', 'name', 'Tabular', 'Alignment', 'Tabularize', 'Align', 'region', 'along', 'vmap', '<leader>', '<CR>', 'endif'}

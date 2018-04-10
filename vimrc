@@ -46,21 +46,27 @@ if !v:vim_did_enter && has('reltime')
     augroup END
 endif
 
+" == == == == == == == == == == == == == == == == == == == == == == == == == ==
+" VIM Home directory location and runtime path
+" == == == == == == == == == == == == == == == == == == == == == == == == == ==
+let s:vim_osx_home = $HOME . '/.vim'
+let &runtimepath = substitute(&runtimepath, '^', s:vim_osx_home . ",", 'g')
 
 " == == == == == == == == == == == == == == == == == == == == == == == == == ==
 "    installing the vim-plug directly for the first time usage
 "    define local script variables
 " == == == == == == == == == == == == == == == == == == == == == == == == == ==
 let s:is_vim_plug_already_installed = 0
-let s:vim_plug_manager = expand('~/.vim/autoload/plug.vim')
+let s:vim_plug_manager = expand(s:vim_osx_home . '/autoload/plug.vim')
 let s:vim_plug_url='https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 
 " check if vim-plug is not available and download the same
 if empty(glob(s:vim_plug_manager))
     echo "> Installing the vim-plug for first time use..."
     echo ">"
-    silent !mkdir -p ~/.vim/autoload
-    silent exec '!/usr/bin/curl -fLo' . s:vim_plug_manager . ' --create-dirs ' . s:vim_plug_url
+    "silent !mkdir -p ~/.vim/autoload
+    execute "silent !mkdir -p " . s:vim_osx_home . "/autoload"
+    silent execute '!/usr/bin/curl -fLo' . s:vim_plug_manager . ' --create-dirs ' . s:vim_plug_url
     let s:is_vim_plug_already_installed = 1
     augroup vimplug
         autocmd!
@@ -81,8 +87,7 @@ endif
 " == == == == == == == == == == == == == == == == == == == == == == == == == ==
 
 "{{{ set vim configuration paths
-let s:vim_config="~/.vim/"
-let s:vim_custom_config = "~/.vim/config/"
+let s:vim_custom_config = s:vim_osx_home . '/config/'
 let s:bundled_plugins = 'bundled_plugins.vim'
 let s:bundled_plugins_path = s:vim_custom_config . 'plugins' . '/' . s:bundled_plugins
 "}}}
@@ -91,20 +96,20 @@ let s:bundled_plugins_path = s:vim_custom_config . 'plugins' . '/' . s:bundled_p
 "{{{ custom vim function declaration
 "    function to load settings from a file
 function! s:LoadVimSettings(base, cfg)
-    let l:vfpath = s:vim_config . a:base . '/' . a:cfg
+    let l:vfpath = s:vim_osx_home . '/' . a:base . '/' . a:cfg
     if filereadable(l:vfpath)
         execute 'source ' . l:vfpath
     endif
 endfunction
 
-"    function to load vim core and plugin settings
+"    function to load vim core, plugin, custom and misc configurations
 function! s:LoadVimConfigs(base, cfg)
     let l:vpath = s:vim_custom_config
     execute 'source ' . l:vpath . a:base . '/' . a:cfg
 endfunction
 "}}}
 
-"{{{ laod any personalized settings if available
+"{{{ laod any pre personalized settings if available
 call s:LoadVimSettings('personal','personal_config.vim')
 "}}}
 
@@ -116,10 +121,10 @@ call s:LoadVimConfigs("core", "core_settings.vim")
 " ########################    Plugin conf start   ########################
 " ########################################################################
 
-let g:plug_dir = expand('~/.vim/plugged')
+let g:plug_dir = expand(s:vim_osx_home . '/plugged')
 if empty(glob(g:plug_dir))
-    echo "> plugged directory empty/missing, press enter to install the plugins..."
-    echo ">"
+    echo "> Empty/Missing plugged directory, press enter to install all the plugins..."
+    echo "> "
     augroup vimplug
         autocmd!
         autocmd VimEnter * PlugInstall
@@ -128,7 +133,6 @@ endif
 
 call plug#begin(g:plug_dir)
 if filereadable(expand(s:bundled_plugins_path))
-    "source ~/.vim/bundled_plugins.vim
     call s:LoadVimConfigs("plugins", s:bundled_plugins)
 endif
 call plug#end()
@@ -140,6 +144,7 @@ call plug#end()
 "{{{    install the listed plugins, when loading the first time
 if s:is_vim_plug_already_installed
     echo "> Installing bundled plugins... ignore errors for key map..."
+    echo "> "
     :PlugInstall
 endif
 "}}}
@@ -152,10 +157,14 @@ endif
 " == == == == == == == == == == == == == == == == == == == == == == == == ==
 let g:plugins_config = "~/.vim/config/layers/"
 
+" load custom functions
+call s:LoadVimConfigs("custom", "custom_functions.vim")
+" load custom settings
+call s:LoadVimConfigs("custom", "custom_settings.vim")
+" load all the plugin settings
 call s:LoadVimConfigs("plugins", "plugin_settings.vim")
-call s:LoadVimConfigs("core", "custom_functions.vim")
-call s:LoadVimConfigs("core", "insert_templates.vim")
-call s:LoadVimConfigs("core", "custom_settings.vim")
+" load the template definitions
+call s:LoadVimConfigs("misc", "insert_templates.vim")
 
 
 "   ╔══════════════════════════════════════════════════════════════════════╗

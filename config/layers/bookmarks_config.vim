@@ -4,23 +4,32 @@ if has_key(g:plugs, 'vim-bookmarks')
     let g:bookmark_sign = '♥'
     let g:bookmark_highlight_lines = 1
 
-    "nmap <Leader>bt <Plug>BookmarkToggle
-    "nmap <Leader>ba <Plug>BookmarkAnnotate
-    "nmap <Leader>bs <Plug>BookmarkShowAll
-    "nmap <Leader>bn <Plug>BookmarkNext
-    "nmap <Leader>bp <Plug>BookmarkPrev
-    "nmap <Leader>bc <Plug>BookmarkClear
-    "nmap <Leader>bx <Plug>BookmarkClearAll
     " for bookmarks key mappings using vim-leader-map
     let g:lmap = get(g:, 'lmap', {})
     let g:lmap.b  = {
-                \ 'name' : 'Bookmark Tools',
-                \ 't'    : ['<Plug>BookmarkToggle', 'BookmarkToggle'],
-                \ 'a'    : ['<Plug>BookmarkAnnotate', 'BookmarkAnnotate'],
-                \ 's'    : ['<Plug>BookmarkShowAll', 'BookmarkShowAll'],
-                \ 'n'    : ['<Plug>BookmarkNext', 'BookmarkNext'],
-                \ 'p'    : ['<Plug>BookmarkPrev', 'BookmarkPrev'],
-                \ 'c'    : ['<Plug>BookmarkClear', 'BookmarkClear'],
-                \ 'x'    : ['<Plug>BookmarkClearAll', 'BookmarkClearAll'],
+                \ 'name' : 'Bookmark Tools'    ,
+                \ 't'    : ['BookmarkToggle'   , 'BookmarkToggle'],
+                \ 'a'    : ['BookmarkAnnotate' , 'BookmarkAnnotate'],
+                \ 's'    : ['BookmarkShowAll'  , 'BookmarkShowAll'],
+                \ 'n'    : ['BookmarkNext'     , 'BookmarkNext'],
+                \ 'p'    : ['BookmarkPrev'     , 'BookmarkPrev'],
+                \ 'c'    : ['BookmarkClear'    , 'BookmarkClear'],
+                \ 'x'    : ['BookmarkClearAll' , 'BookmarkClearAll'],
                 \ }
+
+    " unite menu interface
+    let g:unite_source_menu_menus.bookmarks = {
+                \ 'description' : '      bookmarks
+                \                                             ⌘ [space]m',
+                \ }
+
+    let g:unite_source_menu_menus.bookmarks.command_candidates = [
+                \ ['▷ open bookmarks', 'Unite bookmark:*'],
+                \ ['▷ add bookmark', 'UniteBookmarkAdd'],
+                \ ]
+
+    let g:unite_source_menu_menus.bookmarks.command_candidates =
+                \ custom_functions#unite_menu_gen(g:unite_source_menu_menus.bookmarks.command_candidates, [])
+
+    nnoremap <silent>[menu]m :Unite -silent menu:bookmarks<CR>
 endif

@@ -10,12 +10,12 @@ if isdirectory(expand("~/.vim/plugged/vim-airline/"))
     "{{{ vim powerline symbols to be shown in the statusbar
     let g:Powerline_symbols       = 'unicode'           " fancy | unicode
     let g:airline_powerline_fonts = 1
-        " status line and vim-airline
+    " status line and vim-airline
     set statusline=%F%m%r%h%w%=(%{&ff}/%Y)\ (line\ %l\/%L,\ col\ %c)\
     "}}}
 
     "{{{ for fugitive
-    if exists("*fugitive#statusline")
+    if !empty(glob('~/.vim/plugged/vim-fugitive'))
         set statusline+=%{fugitive#statusline()}
     endif
     "}}}
@@ -61,10 +61,10 @@ if isdirectory(expand("~/.vim/plugged/vim-airline/"))
 
     "{{{ configure which mode colors should ctrlp window use (takes effect
     "    only if the active airline theme doesn't define ctrlp colors)
-    let g:airline#extensions#ctrlp#color_template            = 'insert'
-    let g:airline#extensions#ctrlp#color_template            = 'normal'
-    let g:airline#extensions#ctrlp#color_template            = 'visual'
-    let g:airline#extensions#ctrlp#color_template            = 'replace'
+    let g:airline#extensions#ctrlp#color_template = 'insert'
+    let g:airline#extensions#ctrlp#color_template = 'normal'
+    let g:airline#extensions#ctrlp#color_template = 'visual'
+    let g:airline#extensions#ctrlp#color_template = 'replace'
     "}}}
 
     "{{{ using the powerline fonts for vim-airline to display the glyphs
@@ -116,10 +116,10 @@ if isdirectory(expand("~/.vim/plugged/vim-airline/"))
         call airline#parts#define_accent('S', 'red')
         call airline#parts#define_accent('a', 'green')
         call airline#parts#define_accent('M', 'blue')
-        call airline#parts#define_accent('p', 'yellow')
+        call airline#parts#define_accent('P', 'pink')
         call airline#parts#define_accent('A', 'orange')
         call airline#parts#define_accent('t', 'purple')
-        call airline#parts#define_accent('H', 'bold')
+        call airline#parts#define_accent('H', 'gold')
         let g:airline_section_a = airline#section#create(keys)
     endfunction
     "autocmd VimEnter * call AccentDemo()
