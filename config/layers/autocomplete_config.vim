@@ -17,6 +17,7 @@ augroup Completions
     autocmd FileType java          setlocal omnifunc=javacomplete#Complete
     autocmd FileType java          setlocal completefunc=javacomplete#CompleteParamsInfo
     autocmd Filetype erlang        setlocal omnifunc=erlang_complete#Complete
+    autocmd Filetype ruby          setlocal omnifunc=rubycomplete#Complete
     
     "autocmd FileType c set omnifunc=ccomplete#Complete
     " using tern completion instead of CompleteJS
