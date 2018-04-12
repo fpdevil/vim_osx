@@ -42,8 +42,9 @@ if has_key(g:plugs, 'vim-go')
     let g:go_auto_type_info              = 1
     let g:go_list_type                   = "quickfix"
     let g:go_snippet_engine              = "neosnippet"
+
     " syntastic checking for go
-    if has_key(g:plugs, 'syntastic')
+    if exists(':SyntasticCheck')
         "let g:syntastic_go_checkers = ['go', 'golint', 'errcheck']
         let g:syntastic_go_chckers   = ['golint', 'govet', 'errcheck']
         let g:syntastic_mode_map     = { 'mode': 'active', 'passive_filetypes': ['go'] }
