@@ -6,7 +6,8 @@ if has_key(g:plugs, 'ale')
     let g:ale_sign_column_always         = 1
     let g:ale_change_sign_column_color   = 1
     let g:ale_open_list                  = 1
-    let g:ale_list_window_size           = 2
+    let g:ale_keep_list_window_open      = 0
+    let g:ale_list_window_size           = 6
     let g:ale_sign_error                 = '✖'
     let g:ale_sign_warning               = '⚑'
     let g:airline#extensions#ale#enabled = 1
@@ -19,12 +20,12 @@ if has_key(g:plugs, 'ale')
     let g:ale_fixers                     = {
                 \ 'javascript': ['prettier'],
                 \ 'scss': ['stylelint'],
-                \ 'python': ['yapf', 'isort'],
+                \ 'python': ['yapf', 'autopep8'],
                 \ }
     let g:ale_linters                    = {
-                \ 'javascript': ['eslint'],
+                \ 'javascript': ['eslint', 'flow', 'jscs', 'jshint', 'standard', 'xo'],
                 \ 'haskell': ['hlint', 'hdevtools' ],
-                \ 'haskell': ['remove_trailing_lines', 'trim_whitespace'],,
+                \ 'python': ['autopep8', 'yapf'],
                 \ }
     " Ale status line - last empty string = no message when everything is OK
     let g:ale_statusline_format = ['⨉ %d', '⚠ %d', '']
