@@ -40,7 +40,7 @@ autocmd FileType erlang setlocal completefunc=erlang_complete#Complete
 
 " for erlang development - syntax checking through syntaxerl
 "if has_key(g:plugs, 'syntastic')
-if !empty(glob('~/.vim/plugged/syntastic'))
+if exists(':SyntasticInfo')
     let g:syntastic_erlang_checkers   = ['escript', '/opt/erlang/syntaxerl/syntaxerl']
     let g:syntastic_erlc_include_path = "ebin"
 endif
