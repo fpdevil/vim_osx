@@ -20,6 +20,11 @@ if isdirectory(expand("~/.vim/plugged/vim-leader-guide/"))
     nmap <silent> <leader>fw :w<CR>
     let g:lmap.f.w = ['w', 'Write file']
 
+    " for CtrlP Family of tools
+    let g:lmap.p = {
+                \ 'name': "CtrlP Family",
+                \ }
+
     " for miscelleaneous tools
     let g:lmap.m = {
                 \ 'name': "Misc Tools",
@@ -33,6 +38,11 @@ if isdirectory(expand("~/.vim/plugged/vim-leader-guide/"))
     " for general utilities
     let g:lmap.m.u = {
                 \ 'name' : 'Utilities and Tools',
+                \ }
+
+    " completion related tools
+    let g:lmap.m.c = {
+                \ 'name' : 'Auto Completion Tools',
                 \ }
 
     " to make the guide pop up Register the description dictionary for the prefix first
