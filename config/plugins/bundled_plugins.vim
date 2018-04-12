@@ -68,12 +68,21 @@ function! YCMBuilder(info)
     endif
 endfunction
 
+" syntax checkers {{{
+if exists('g:vim_syntax_ale') && g:vim_syntax_ale
+    " --- Asynchronous Lint Engine (using only syntastic for now)
+    Plug 'w0rp/ale'
+else
+    " --- Syntastic realtime syntax checker
+    Plug 'scrooloose/syntastic', { 'do': function('InstallJsHint') }
+endif
+" }}}
 
-" --- auto-completion and syntax checkers section {{{
-Plug 'scrooloose/syntastic', { 'do': function('InstallJsHint') }                " realtime syntax checker
+" --- auto-completion and code formatters section {{{
 Plug 'Chiel92/vim-autoformat'                                                   " easy code formatting in vim
 Plug 'Shougo/neocomplete.vim'                                                   " neocompletion with cache (need lua support)
 Plug 'Shougo/neoinclude.vim'                                                    " include completion framework for neocomplete
+
 
 " deoplete will replace neocomplete some time
 Plug 'Shougo/deoplete.nvim'                                                     " dark powered neo-completion
@@ -132,18 +141,14 @@ Plug 'lifepillar/vim-wwdc17-theme'                                              
 
 
 " --- plugins for vim textual snippets supporting code auto completion {{{
-Plug 'SirVer/ultisnips', { 'on': [] }                                           " for snippets
-augroup load_ultisnips
-  autocmd!
-  autocmd InsertEnter * call plug#load('ultisnips') | autocmd! load_ultisnips
-augroup END
+Plug 'SirVer/ultisnips'                                         " for snippets
 
-Plug 'honza/vim-snippets'                                                       " vim-snippets depends on ultisnippets
-Plug 'MarcWeber/vim-addon-mw-utils'                                             " for snippets
-Plug 'garbas/vim-snipmate'                                                      " for snippets
-Plug 'shougo/neosnippet.vim'                                                    " ne snippet plugin
-Plug 'shougo/neosnippet-snippets'                                               " neo snippets repository
-Plug 'tomtom/tlib_vim'                                                          " for snippets
+Plug 'honza/vim-snippets'                                       " vim-snippets depends on ultisnippets
+Plug 'MarcWeber/vim-addon-mw-utils'                             " for snippets
+Plug 'garbas/vim-snipmate'                                      " for snippets
+Plug 'shougo/neosnippet.vim'                                    " ne snippet plugin
+Plug 'shougo/neosnippet-snippets'                               " neo snippets repository
+Plug 'tomtom/tlib_vim'                                          " for snippets
 " }}}
 
 
@@ -406,7 +411,6 @@ Plug 'sgur/ctrlp-extensions.vim',      { 'on': [
 Plug 'pielgrzym/ctrlp-sessions',       { 'on': ['CtrlPSessions', 'MkS'] }       " vim sessions with ctrlp
 Plug 'vim-ctrlspace/vim-ctrlspace'                                              " tabs/buffers/file management
 Plug 'mattn/ctrlp-launcher',           { 'on': 'CtrlPLauncher' }                " ctrlp launcher extension
-Plug 'felikz/ctrlp-py-matcher'                                                  " fast ctrlp matcher based on python
 Plug 'h14i/vim-ctrlp-buftab',          { 'on': 'CtrlPBufTab' }                  " ctrlp buffer tab
 Plug 'mattn/ctrlp-windowselector',     { 'on': 'CtrlPWindowSelector' }          " ctrlp window
 Plug 'fisadev/vim-ctrlp-cmdpalette',   { 'on': 'CtrlPCmdPalette' }              " ctrlp cmd palette extension
@@ -417,6 +421,13 @@ Plug 'elentok/ctrlp-objects.vim',      { 'on': [
             \ 'CtrlPTemplates',
             \ 'CtrlPPresenters' ]
             \ }
+Plug 'jasoncodes/ctrlp-modified.vim'                                            " easily open locally modified files on git
+Plug 'nmanandhar/vim-ctrlp-menu'                                                " adding custom menus of commands
+
+" install only if vim has been compiled with python support
+if has('python')
+    Plug 'felikz/ctrlp-py-matcher'                                                  " fast ctrlp matcher based on python
+endif
 " }}}
 
 
@@ -504,10 +515,6 @@ Plug 'aklt/plantuml-syntax'                                                     
 Plug 'scrooloose/vim-slumlord'                                                  " in-line preview for plantuml diagrams
 "}}}
 
-" --- Asynchronous Lint Engine (using only syntastic for now) {{{
-" Plug 'w0rp/ale'
-" }}}
-
 
 " --- YouCompleteMe being used only in gui mode for MacVim {{{
 if has("gui_running")
@@ -520,11 +527,13 @@ endif
 
 
 " --- code completion and commenting framework(s) section {{{
-if !has('gui_running')
-    " this does not go along well with ycm which is only
-    " in the gui mode, so disabling it in the gui mode
-    "Plug 'maralla/completor.vim'                                               " async completion framework
-endif
+"if !has('gui_running')
+"    " this does not go along well with ycm which is only
+"    " in the gui mode, so disabling it in the gui mode
+"    Plug 'maralla/completor.vim'                                               " async completion framework
+"endif
+
 " }}}
 
 " ############################### Plugins sections ends ##############################
+" vim: tabstop=4 shiftwidth=4 softtabstop=4 expandtab
