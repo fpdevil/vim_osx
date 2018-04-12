@@ -5,7 +5,7 @@
 
 "{{{ syntastic checker for cpp
 " syntastic checker settings for c and c++
-if has_key(g:plugs, 'syntastic')
+if exists(':SyntasticCheck')
     "let g:syntastic_c_compiler                = 'gcc'
     "let g:syntastic_cpp_compiler              = 'g++'
 
