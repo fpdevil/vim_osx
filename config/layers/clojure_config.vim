@@ -87,5 +87,5 @@ function! GetReplDoc(symbol)
     exec "Eval (clojure.repl/doc) " a:symbol ")"
 endfunction
 
-nnoremap <silent> RD :call <SID>ReplDoc(expand('<cword>'))<CR>
+nnoremap <silent> RD :call <SID>GetReplDoc(expand('<cword>'))<CR>
 " }}}
