@@ -12,5 +12,5 @@ if has_key(g:plugs,'neoinclude.vim')
     if !exists('g:neoinclude#exts')
         let g:neoinclude#exts = {}
     endif
-	let g:neoinclude#exts.cpp = ['', 'h', 'hpp', 'hxx']
+    let g:neoinclude#exts.cpp = ['', 'h', 'hpp', 'hxx']
 endif
