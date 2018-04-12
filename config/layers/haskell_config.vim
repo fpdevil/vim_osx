@@ -94,7 +94,7 @@ endif
 " ------------------------------------------------------------------------------------
 " syntax checker(s) for haskell {{{
 " ------------------------------------------------------------------------------------
-if has_key(g:plugs, 'syntastic')
+if exists(':SyntasticInfo')
     let g:syntastic_haskell_checkers = ['hdevtools', 'hlint', 'ghc_mod']
     "let g:syntastic_mode_map={'mode': 'active', 'passive_filetypes': ['haskell']}
     "let g:syntastic_mode_map={'mode': 'active', 'active_filetypes': ["haskell"], 'passive_filetypes': []}
