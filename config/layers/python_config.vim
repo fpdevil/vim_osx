@@ -23,6 +23,9 @@ endif
 autocmd FileType python setlocal omnifunc=jedi#completions
 au FileType python setlocal completeopt=preview,menu,longest
 
+" filetype indentation for python
+autocmd FileType python set tabstop=4|set shiftwidth=4|set expandtab
+
 " set the keymapping for definition browsing (-t)
 au FileType python let g:jedi#completions_enabled        = 0
 au FileType python let g:jedi#goto_definitions_command   = "<leader>t"
@@ -42,7 +45,7 @@ endif
 
 " custom settings for python through syntastic checker
 "if has_key(g:plugs, 'syntastic')
-if !empty(glob('~/.vim/plugged/syntastic'))
+if exists(':SyntasticCheck')
     let g:syntastic_enable_highlighting        = 1
     let g:syntastic_python_python_exec         = '/usr/local/bin/python3'
     let g:syntastic_python_checkers            = ['flake8', 'pyflakes', 'pylint']
