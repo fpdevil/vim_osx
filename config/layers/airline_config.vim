@@ -55,7 +55,7 @@ if isdirectory(expand("~/.vim/plugged/vim-airline/"))
 
     "{{{ custom settings
     let g:airline_skip_empty_sections               = 1
-    let g:airline_section_y                         = 'βη: %{bufnr("%")}'
+    let g:airline_section_y                         = 'β: %{bufnr("%")}'
     let g:airline_detect_paste                      = 1                     " show PASTE in paste mode
     "}}}
 
@@ -101,7 +101,7 @@ if isdirectory(expand("~/.vim/plugged/vim-airline/"))
         let g:airline_right_alt_sep                   = ''
         let g:airline_symbols.branch                  = ''
         let g:airline_symbols.readonly                = ''
-        let g:airline_symbols.linenr                  = ''
+        let g:airline_symbols.linenr                  = 'η'
     endif
     "}}}
 
