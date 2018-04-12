@@ -117,7 +117,9 @@ set tags+=/usr/local/lib/erlang/lib/tags
 " -------------------------------------------------------------------------------------
 " set cpp includes in the path
 " -------------------------------------------------------------------------------------
-set path=.,/usr/include,/usr/local/include
+"set path=.,/usr/include,/usr/local/include
+" included clang includes
+set path=.,/usr/include,/usr/local/include,/opt/software/clang+llvm-6.0.0-x86_64-apple-darwin/include/c++/v1
 
 " -------------------------------------------------------------------------------------
 " additional path settings to include opencv
@@ -173,6 +175,12 @@ augroup HiglightTODO
     autocmd!
     autocmd WinEnter,VimEnter * :silent! call matchadd('Todo', 'TODO\|FIXME', -1)
 augroup END
+
+
+" italics in comments
+let &t_ZH="\e[3m"
+let &t_ZR="\e[23m"
+highlight Comment cterm=italic gui=italic
 
 " -------------------------------------------------------------------------------------
 " Automatically reload vim config(s)
