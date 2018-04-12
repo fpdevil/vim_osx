@@ -4,6 +4,7 @@ hoogle/
 haskellmode.config
 .netrwhist
 .data/
+.cache/
 eclim/
 tags/
 backup/
