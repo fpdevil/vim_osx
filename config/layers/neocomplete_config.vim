@@ -145,8 +145,18 @@ if has_key(g:plugs, 'neocomplete.vim')
         endif
     endfunction
     
-    nnoremap <silent><Leader>ea :call ToggleNeoComplete()<CR>
+    " nnoremap <silent><Leader>ea :call ToggleNeoComplete()<CR>
+    " ------------------------------------------------------------------------------------
+    "  initialize the leader key map for misc section
+    " ------------------------------------------------------------------------------------
+    let g:lmap = get(g:, 'lmap', {})
+    let g:lmap.m.c.t = ['call ToggleNeoComplete()', 'Toggle NeoComplete on/off']
 
+
+
+    " ------------------------------------------------------------------------------------
+    "  unite menu integration for python
+    " ------------------------------------------------------------------------------------
     " Unite Menu {{{
     let g:unite_source_menu_menus.code = {
         \ 'description' : '           coding
@@ -172,4 +182,5 @@ if has_key(g:plugs, 'neocomplete.vim')
     " END Unite Menu }}}
 
 endif
+
 
