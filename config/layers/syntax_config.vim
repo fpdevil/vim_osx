@@ -4,7 +4,8 @@
 " ------------------------------------------------------------------------------------
 " -----                      syntax checkers settings                            -----
 " ------------------------------------------------------------------------------------
-if has_key(g:plugs, 'syntastic')
+"if has_key(g:plugs, 'syntastic')
+if !empty(glob('~/.vim/plugged/syntastic'))
     " to disable syntastic if really needed (:stm - :ab lists all abbreviations)
     cabbrev stm SyntasticToggleMode<CR>
     let g:syntastic_mode_map                 = {
@@ -22,97 +23,96 @@ if has_key(g:plugs, 'syntastic')
                 \ 'EVL205': 1,
                 \ 'EVL105': 1
                 \ }
-endif
 
+    " disable synastic checker for erlang as the erlang's plugin
+    " vim-erlang-compiler is conflicting with this
+    let g:syntastic_ignore_files = ['\.erl$']
 
-" disable synastic checker for erlang as the erlang's plugin
-" vim-erlang-compiler is conflicting with this
-let g:syntastic_ignore_files = ['\.erl$']
-
-" ------------------------------------------------------------------------------------
-" -------                Personal settings for Syntastic Checker               -------
-" ------- By default, Syntastic uses arrow symbols to indicate line with error -------
-" ------- To spice things up, you can specify any Unicode symbol as that error -------
-" ------------------------------------------------------------------------------------
-" getbg function
-" gets the background of a highlighting group with fallback to SignColumn group
-function! s:getbg(group)
-    if has("gui_running")
-        let l:mode       = 'gui'
-        let l:validation = '\w\+\|#\x\+'
-    else
-        let l:mode       = 'cterm'
-        let l:validation = '\w\+'
-    endif
-
-    if synIDattr(synIDtrans(hlID(a:group)), 'reverse', l:mode)
-        let l:bg = synIDattr(synIDtrans(hlID(a:group)), 'fg', l:mode)
-    else
-        let l:bg = synIDattr(synIDtrans(hlID(a:group)), 'bg', l:mode)
-    endif
-
-    if l:bg == '-1' || l:bg !~ l:validation
-        if synIDattr(synIDtrans(hlID('SignColumn')), 'reverse', l:mode)
-            let l:bg = synIDattr(synIDtrans(hlID('SignColumn')), 'fg', l:mode)
+    " ------------------------------------------------------------------------------------
+    " -------                Personal settings for Syntastic Checker               -------
+    " ------- By default, Syntastic uses arrow symbols to indicate line with error -------
+    " ------- To spice things up, you can specify any Unicode symbol as that error -------
+    " ------------------------------------------------------------------------------------
+    " getbg function
+    " gets the background of a highlighting group with fallback to SignColumn group
+    function! s:getbg(group)
+        if has("gui_running")
+            let l:mode       = 'gui'
+            let l:validation = '\w\+\|#\x\+'
         else
-            let l:bg = synIDattr(synIDtrans(hlID('SignColumn')), 'bg', l:mode)
+            let l:mode       = 'cterm'
+            let l:validation = '\w\+'
         endif
-    endif
+    
+        if synIDattr(synIDtrans(hlID(a:group)), 'reverse', l:mode)
+            let l:bg = synIDattr(synIDtrans(hlID(a:group)), 'fg', l:mode)
+        else
+            let l:bg = synIDattr(synIDtrans(hlID(a:group)), 'bg', l:mode)
+        endif
+    
+        if l:bg == '-1' || l:bg !~ l:validation
+            if synIDattr(synIDtrans(hlID('SignColumn')), 'reverse', l:mode)
+                let l:bg = synIDattr(synIDtrans(hlID('SignColumn')), 'fg', l:mode)
+            else
+                let l:bg = synIDattr(synIDtrans(hlID('SignColumn')), 'bg', l:mode)
+            endif
+        endif
+    
+        if l:bg == '-1' || l:bg !~ l:validation
+            return ''
+        endif
+    
+        return l:mode . 'bg=' . l:bg
+    endfunction
 
-    if l:bg == '-1' || l:bg !~ l:validation
-        return ''
-    endif
-
-    return l:mode . 'bg=' . l:bg
-endfunction
-
-"{{{ syntastic checker to display error and warning symbols
-let g:syntastic_enable_highlighting  = 1
-let g:syntastic_enable_signs         = 1
-let g:syntastic_error_symbol         = '❌'
-let g:syntastic_style_error_symbol   = '⁉️'
-let g:syntastic_warning_symbol       = '⚠️'
-let g:syntastic_style_warning_symbol = '💩'
-let g:sytastic_stl_format            = "[ln:%F (%t)]"
-
-"let g:syntastic_error_symbol = '✖'
-"let g:syntastic_warning_symbol = '➤'
-"let g:syntastic_info_symbol = '🛈'
-
-
-"highlight SyntasticErrorSign ctermfg=red ctermbg=237
-"highlight SyntasticWarningSign ctermfg=yellow ctermbg=237
-"highlight SyntasticStyleErrorSign ctermfg=red ctermbg=237
-"highlight SyntasticStyleWarningSign ctermfg=yellow ctermbg=237
-
-hi! link SyntasticErrorLine Visual
-hi! link SyntasticWarningLine Visual
-hi! link SyntasticErrorSign SignColumn
-hi! link SyntasticWarningSign SignColumn
-hi! link SyntasticStyleErrorSign SignColumn
-hi! link SyntasticStyleWarningSign SignColumn
-
-"}}}
+    "{{{ syntastic checker to display error and warning symbols
+    let g:syntastic_enable_highlighting  = 1
+    let g:syntastic_enable_signs         = 1
+    let g:syntastic_error_symbol         = '❌'
+    let g:syntastic_style_error_symbol   = '⁉️'
+    let g:syntastic_warning_symbol       = '⚠️'
+    let g:syntastic_style_warning_symbol = '💩'
+    let g:sytastic_stl_format            = "[ln:%F (%t)]"
+    
+    "let g:syntastic_error_symbol = '✖'
+    "let g:syntastic_warning_symbol = '➤'
+    "let g:syntastic_info_symbol = '🛈'
 
 
-"{{{ status line settings for syntastic
-"set statusline+=%#warningmsg#
-"set statusline+=%{SyntasticStatuslineFlag()}
-"set statusline+=%*
-set statusline+=\ %#warningmsg#
-set statusline+=%{exists('g:loaded_syntastic_plugin')?SyntasticStatuslineFlag():''}
-set statusline+=%*
-"}}}
+    "highlight SyntasticErrorSign ctermfg=red ctermbg=237
+    "highlight SyntasticWarningSign ctermfg=yellow ctermbg=237
+    "highlight SyntasticStyleErrorSign ctermfg=red ctermbg=237
+    "highlight SyntasticStyleWarningSign ctermfg=yellow ctermbg=237
 
-"{{{ disable syntastic on a per buffer basis (some work files blow it up)
-function! SyntasticDisableBuffer()
-    let b:syntastic_skip_checks = 1
-    SyntasticReset
-    echo 'Syntastic disabled for this buffer'
-endfunction
+    hi! link SyntasticErrorLine Visual
+    hi! link SyntasticWarningLine Visual
+    hi! link SyntasticErrorSign SignColumn
+    hi! link SyntasticWarningSign SignColumn
+    hi! link SyntasticStyleErrorSign SignColumn
+    hi! link SyntasticStyleWarningSign SignColumn
+    
+    "}}}
 
-command! SyntasticDisableBuffer call SyntasticDisableBuffer()
 
-" Toggle syntastic checking at will
-nnoremap <leader>sy :SyntasticCheck<CR> :SyntasticToggleMode<CR>
-"}}}
+    "{{{ status line settings for syntastic
+    "set statusline+=%#warningmsg#
+    "set statusline+=%{SyntasticStatuslineFlag()}
+    "set statusline+=%*
+    set statusline+=\ %#warningmsg#
+    set statusline+=%{exists('g:loaded_syntastic_plugin')?SyntasticStatuslineFlag():''}
+    set statusline+=%*
+    "}}}
+
+    "{{{ disable syntastic on a per buffer basis (some work files blow it up)
+    function! SyntasticDisableBuffer()
+        let b:syntastic_skip_checks = 1
+        SyntasticReset
+        echo 'Syntastic disabled for this buffer'
+    endfunction
+    
+    command! SyntasticDisableBuffer call SyntasticDisableBuffer()
+    
+    " Toggle syntastic checking at will
+    nnoremap <leader>sy :SyntasticCheck<CR> :SyntasticToggleMode<CR>
+    "}}}
+endif
