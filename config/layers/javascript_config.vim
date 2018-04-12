@@ -153,7 +153,7 @@ if isdirectory(expand('~/.vim/plugged/javascript-libraries-syntax.vim'))
 endif
 
 " syntax checking with syntastic
-if (has_key(g:plugs, 'syntastic'))
+if exists(':SyntasticCheck')
     " real time syntax checking with jshint lint for javascript
     " jshint will be installed as a dependency while installing the syntastic
     " vim plugin using the underlying os x npm installer
