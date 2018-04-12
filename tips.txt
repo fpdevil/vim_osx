@@ -1,119 +1,129 @@
+" == == == == == == == == == == == == == == == == == == == == == == == == == ==
+" Generic useful tips
 " https://vimgifs.com/
 " https://github.com/mhinz/vim-galore
 " https://sanctum.geek.nz/arabesque/category/vim/
+" == == == == == == == == == == == == == == == == == == == == == == == == == ==
 
-1. Change a word at multiple locations within the same file
-    search the required string with /str
-    then type cgn and type the word to be changed
-    then press . to change further
 
-   =============================================================================
-2. To check from where the filetype configurations are loaded
-    :verbose set formatoptions
-    http://peox.net/articles/vimconfig.html
+1.  Change a word at multiple locations within the same file
+	search the required string with /str
+	then type cgn and type the word to be changed
+	then press . to change further
 
    =============================================================================
-3. For updating all the python packages installed
-   first get the list of packages
-   pip3 list --format=columns |egrep -v "Package|-----------------"|awk '{print $1}' > pylist.txt
-
-   now read and update the packages
-   for i in `cat pylist.txt | xargs`;do echo "**** checking ipackage $i ****"; pip3 install $i -U --no-cache; done
+2.  To check from where the filetype configurations are loaded
+	:verbose set formatoptions
+	http://peox.net/articles/vimconfig.html
 
    =============================================================================
-4. [[ vimrc structure ]]
- 	.vimrc -- global settings
-	.vim/
-	    after/  -- files that are loaded after sourced system plugins. override
-		       system settings.
-	    ftplugin/
-	    plugin/
-	    syntax/
-	      ...
-	 autoload/ -- automatically loaded scripts.
-	 colors/   -- custom color schemes.
-	 doc/      -- plugin documentation.
-	 ftdetect/ -- filetype detection scripts.
-	 ftplugin/ -- filetype plugins (load before system files, override by system)
-	 indent/   -- indent scripts.
-	 plugin/   -- plugins.
-	 syntax/   -- syntax scripts.
+3.  For updating all the python packages installed
+	first get the list of packages
+	pip3 list --format=columns |egrep -v "Package|-----------------"|awk '{print $1}' > pylist.txt
+
+	now read and update the packages
+	for i in `cat pylist.txt | xargs`;do echo "**** checking ipackage $i ****"; pip3 install $i -U --no-cache; done
 
    =============================================================================
-5. For generating the .clang_complete, put the below entries into a shell script of choice
-      #!/bin/bash
-
-      # generate .clang_complete file using vim clang_complete plugin
-      make CC="${HOME}/.vim/plugged/clang_complete/cc_args.py g++"
+4.  [[ vimrc structure ]]
+		.vimrc -- global settings
+		.vim/
+		after/	-- files that are loaded after sourced system plugins. override
+			   system settings.
+		ftplugin/
+		plugin/
+		syntax/
+		  ...
+		 autoload/ -- automatically loaded scripts.
+		 colors/   -- custom color schemes.
+		 doc/      -- plugin documentation.
+		 ftdetect/ -- filetype detection scripts.
+		 ftplugin/ -- filetype plugins (load before system files, override by system)
+		 indent/   -- indent scripts.
+		 plugin/   -- plugins.
+		 syntax/   -- syntax scripts.
 
    =============================================================================
-6. How to insert Tab character when expandtab option is ON in VIM
+5.  For generating the .clang_complete, put the below entries into a shell script of choice
+	#!/bin/bash
 
-   You can use <CTRL-V><Tab> in "insert mode". In insert mode <CTRL-V> inserts a
-   literal copy  of your next character. If you  find you need to do  this often,
-   setting Shift+Tab to insert a real tab by
-
-      :inoremap <S-Tab> <C-V><Tab>
+	# generate .clang_complete file using vim clang_complete plugin
+	make CC="${HOME}/.vim/plugged/clang_complete/cc_args.py g++"
 
    =============================================================================
-7. vim-surround plugin shortcuts
+6.  How to insert Tab character when expandtab option is ON in VIM
+
+	You can use <CTRL-V><Tab> in "insert mode". In insert mode <CTRL-V> inserts a
+	literal copy  of your next character. If you  find you need to do  this often,
+	setting Shift+Tab to insert a real tab by
+
+	:inoremap <S-Tab> <C-V><Tab>
+
+   =============================================================================
+7.  vim-surround plugin shortcuts
 
    -----------------------------------------------------------------------------
-   ds"		"Hello World"		Hello world
-   ds(	    	(Hello World)		Hello World
-   ds)	    	(Hello World)		Hello World
-   dst	    	<p>Hello World</p>	Hello World
-   cs"'	    	"Hello World"		'Hello World'
-   cs([	    	(Hello World)		[ Hello World ]
-   cs(]	    	(Hello World)		[Hello World]
-   cs)[	    	(Hello World)		[ Hello World ]
-   cs)]	    	(Hello World)		[Hello World]
-   cst<b>	<p>Hello World</p>	<b>Hello World</b>
-   ys$"		Hello World Now		Hello W"orld Now"
-   ysw'		Hello World Now		Hello W'orld' Now
-   ysiw)	Hello World Now		Hello (World) Now
-   yss"		Hello World Now		"Hello World Now"
+	ds"		"Hello World"		Hello world
+	ds(		(Hello World)		Hello World
+	ds)		(Hello World)		Hello World
+	dst		<p>Hello World</p>	Hello World
+	cs"'		"Hello World"		'Hello World'
+	cs([		(Hello World)		[ Hello World ]
+	cs(]		(Hello World)		[Hello World]
+	cs)[		(Hello World)		[ Hello World ]
+	cs)]		(Hello World)		[Hello World]
+	cst<b>	<p>Hello World</p>	<b>Hello World</b>
+	ys$"		Hello World Now		Hello W"orld Now"
+	ysw'		Hello World Now		Hello W'orld' Now
+	ysiw)	Hello World Now		Hello (World) Now
+	yss"		Hello World Now		"Hello World Now"
    -----------------------------------------------------------------------------
-   Visual mode surrond:
-   Enter visual mode by pressing v. Now if you type S(, the word will be surrounded
-   by spaces. However if you use the closing ) instead S) it will not be surrounded
-   by spaces.
-   This applies to all the bracket pair surroundings, <> [] {} (), not merely to ().
-   The behavior of S< is such that it expects a tag enclosure, so only S> is able to
-   surround as  <>.
+    Visual mode surrond:
+    Enter visual mode by pressing v. Now if you type S(, the word will be surrounded
+    by spaces. However if you use the closing ) instead S) it will not be surrounded
+    by spaces.
+    This applies to all the bracket pair surroundings, <> [] {} (), not merely to ().
+    The behavior of S< is such that it expects a tag enclosure, so only S> is able to
+    surround as  <>.
 
    =============================================================================
-8. Vim command window
+8.  Vim command window
 
-   q: — Open with a command history from normal mode
-   q/ — Open with a search history from normal mode (to search forward)
-   q? — Open with a search history from normal mode (to search backward)
+	q: — Open with a command history from normal mode
+	q/ — Open with a search history from normal mode (to search forward)
+	q? — Open with a search history from normal mode (to search backward)
 
    =============================================================================
-9. List all the supported filetypes known to vim
+9.  List all the supported filetypes known to vim
 
-   (i)   :echo glob($VIMRUNTIME . '/ftplugin/*.vim')
-   (ii)  :echo glob($VIMRUNTIME . '/syntax/*.vim')
-   (iii) :echo join(map(split(globpath(&rtp, 'ftplugin/*.vim'),'\n'),'fnamemodify(v:val,":t:r")'),"\n")
+	(i)   :echo glob($VIMRUNTIME . '/ftplugin/*.vim')
+	(ii)  :echo glob($VIMRUNTIME . '/syntax/*.vim')
+	(iii) :echo join(map(split(globpath(&rtp, 'ftplugin/*.vim'),'\n'),'fnamemodify(v:val,":t:r")'),"\n")
 
    =============================================================================
 10. git ignore and remove an existing directory
-   git rm -r --cached elpa
-   git commit -m 'Purge the now ignored "elpa"'
-   git push -u origin master
+	git rm -r --cached elpa
+	git commit -m 'Purge the now ignored "elpa"'
+	git push -u origin master
 
    =============================================================================
 11. vim profiling
-   Start vim as below and check the generated log
-   vim --startuptime profile.log
+	Start vim as below and check the generated log
+	vim --startuptime profile.log
 
    =============================================================================
-12. For FUN - to do auto complete without any plugins
-    Start plain vim with `vim -u NONE`
-    :set filetype plugin on
-    :syntax on
-    :set completeopt=longest,menuone,menu
-    :set omnifunc=syntaxcomplete#Complete
-    :highlight Pmenu guibg=brown gui=bold
+12. For FUN - to do auto complete without any external plugins
+	Start plain vim with `vim -u NONE`
+	:set filetype plugin on
+	:syntax on
+	:set completeopt=longest,menuone,menu
+	:set omnifunc=syntaxcomplete#Complete
+	:highlight Pmenu guibg=brown gui=bold
 
-    Now use <C-x><C-o>
+	Now use <C-x><C-o>
+
+   =============================================================================
+13. For getting all certificate details from a url with gnu-tls
+
+	gnutls-cli --insecure --port 443 --print-cert --verbose <url>
+   =============================================================================
