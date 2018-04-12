@@ -8,7 +8,7 @@ if !empty(glob('~/.vim/plugged/vim-scala'))
 endif
 
 "if has_key(g:plugs, 'syntastic')
-if !empty(glob('~/.vim/plugged/syntastic'))
+if exists(':SyntasticCheck')
     let g:syntastic_scala_checkers = ['scalac']
     let g:syntastic_scala_checkers = ['fsc']
 endif
