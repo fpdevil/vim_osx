@@ -17,38 +17,56 @@
 " ##    syntastic needs jshint for checking the javascript and inorder to include   ##
 " ##    the dependency, a function is defined here to handle the npm installation   ##
 " ####################################################################################
+scriptencoding utf-8
 
 " custom installation helper functions
 function! InstallJsHint(info)
-    if a:info.status == 'installed' || a:info.force
+    if a:info.status ==# 'installed' || a:info.force
         !npm install -g jshint
     endif
 endfunction
 
+function! MakeInstall(info)
+    if a:info.status ==# 'installed' || a:info.force
+        !make install
+    endif
+endfunction
+
 function! GitRecurse(info)
-    if a:info.status == 'installed' || a:info.force
+    if a:info.status ==# 'installed' || a:info.force
         !git submodule update --init --recursive
     endif
 endfunction
 
 function! InstallJsBeautify(info)
-    if a:info.status == 'installed' || a:info.force
+    if a:info.status ==# 'installed' || a:info.force
         !git submodule update --init --recursive
         !npm install js-beautify
     endif
 endfunction
 
 function! BuildTern(info)
-    if a:info.status == 'installed' || a:info.force
+    if a:info.status ==# 'installed' || a:info.force
         !npm install
         !npm install -g tern
     endif
 endfunction
 
 function! GetImport(info)
-    if a:info.status == 'installed' || a:info.force
+    if a:info.status ==# 'installed' || a:info.force
         !npm install
         !npm install -g import-js
+    endif
+endfunction
+
+"Function: InstallTS
+"Desc: Install TypeScript node binaries
+"
+"Arguments: info
+" check if installed or not
+function! InstallTS(info)
+    if a:info.status ==# 'installed' || a:info.force
+        !npm install -g clausreinke/typescript-tools typescript
     endif
 endfunction
 
@@ -58,7 +76,7 @@ function! YCMBuilder(info)
     " -- name: name of plugin
     " -- status: 'installed', 'updated', 'unchanged'
     " -- force: set with PlugInstall! or PlugUpdate!
-    if a:info.status == 'installed' || a:info.force
+    if a:info.status ==# 'installed' || a:info.force
         let $EXTRA_CMAKE_ARGS='-DEXTERNAL_LIBCLANG_PATH'
                     \ . '='
                     \ . '/opt/software/clang+llvm-6.0.0-x86_64-apple-darwin/lib/libclang.dylib'
@@ -95,7 +113,7 @@ Plug 'roxma/vim-hug-neovim-rpc'                                                 
 "     for vimproc you have to go to .vim/plugin/vimproc.vim and run a ./make
 Plug 'Shougo/vimproc.vim', { 'do': 'make -j4' }                                 " vimproc asynchronous
 Plug 'benizi/vim-automkdir'                                                     " create dir as required
-Plug 'bronson/vim-trailing-whitespace'                                          " remove trailing white spaces
+Plug 'bronson/vim-trailing-whitespace', { 'on': 'FixWhitespace' }               " remove trailing white spaces
 Plug 'mhinz/vim-startify'                                                       " fancy start screen for vim
 Plug 'easymotion/vim-easymotion'                                                " vim motions on speed
 Plug 'Yggdroot/indentLine'                                                      " display the indention levels
@@ -122,7 +140,15 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } | Plug 'junegu
 "}}}
 
 " --- shell/terminal utilities for vim {{{
-Plug 'shougo/vimshell.vim'                                                      " shell in vim
+" shell in vim
+Plug 'shougo/vimshell.vim'
+
+" immediate-window for Vim script
+Plug 'rbtnn/vimconsole.vim', { 'on': [
+            \ 'VimConsoleLog', 'VimConsoleOpen', 'VimConsoleWarn', 'VimConsoleError',
+            \ 'VimConsoleError', 'VimConsoleToggle', 'VimConsoleClear', 'VimConsoleRedraw',
+            \ ],
+            \ }
 " }}}
 
 
@@ -149,6 +175,8 @@ Plug 'garbas/vim-snipmate'                                      " for snippets
 Plug 'shougo/neosnippet.vim'                                    " ne snippet plugin
 Plug 'shougo/neosnippet-snippets'                               " neo snippets repository
 Plug 'tomtom/tlib_vim'                                          " for snippets
+
+Plug 'letientai299/vim-react-snippets', { 'branch': 'es6' }     " react js snippets
 " }}}
 
 
@@ -159,17 +187,20 @@ Plug 'junegunn/limelight.vim'                                                   
 
 
 " --- unite family plugins and extensions {{{
-"Plug 'shougo/denite.nvim'                                                      " nexgen unite
-Plug 'Shougo/unite.vim'                                                         " unite color changer helper
-Plug 'Shougo/unite-outline'                                                     " outline source for unite
-Plug 'ujihisa/unite-colorscheme'                                                " Unite color scheme browser
-Plug 'Shougo/neomru.vim'                                                        " includes unite.vim MRU sources
-Plug 'mattn/unite-vim_advent-calendar'                                          " unite source for calendar
-Plug 'mattn/webapi-vim'                                                         " vim interface to web api
-Plug 'mattn/wwwrenderer-vim'                                                    " vim renderer
-Plug 'thinca/vim-openbuf'                                                       " open and manage buffers
-Plug 'choplin/unite-vim_hacks'                                                  " this needs above 3 plugins
-Plug 'osyo-manga/unite-option'                                                  " output vim options
+"Plug 'shougo/denite.nvim'                                  " nexgen unite
+Plug 'Shougo/unite.vim'                                     " unite color changer helper
+Plug 'Shougo/unite-outline'                                 " outline source for unite
+Plug 'ujihisa/unite-colorscheme'                            " Unite color scheme browser
+Plug 'Shougo/neomru.vim'                                    " includes unite.vim MRU sources
+Plug 'mattn/unite-vim_advent-calendar'                      " unite source for calendar
+Plug 'mattn/webapi-vim'                                     " vim interface to web api
+Plug 'mattn/wwwrenderer-vim'                                " vim renderer
+Plug 'thinca/vim-openbuf'                                   " open and manage buffers
+Plug 'choplin/unite-vim_hacks'                              " this needs above 3 plugins
+Plug 'osyo-manga/unite-option'                              " output vim options
+Plug 'tsukkee/unite-help'                                   " help source for unite.vim
+Plug 'osyo-manga/unite-quickfix'                            " outputs from quickfix
+Plug 'zhaocai/unite-scriptnames'                            " extension for runtime scriptnames
 " }}}
 
 
@@ -258,7 +289,11 @@ Plug 'vim-airline/vim-airline-themes'                                           
 Plug 'osyo-manga/unite-airline_themes'                                          " preview airline themes
 Plug 'majutsushi/tagbar'                                                        " tagbar support
 Plug 'kien/rainbow_parentheses.vim'                                             " rainbow parenthesis color brackets
-Plug 'jaxbot/semantic-highlight.vim'                                            " semantic highlighting
+Plug 'jaxbot/semantic-highlight.vim', { 'on' : [
+            \ 'SemanticHighlight',
+            \ 'SemanticHighlightRevert',
+            \ 'SemanticHighlightToggle' 
+            \ ] }                                                               " semantic highlighting
 Plug 'rakr/vim-two-firewatch'                                                   " duotone light and firewatch for atom
 "Plug 'bling/vim-bufferline'                                                    " show number of buffers
 "Plug 'bling/vim-airline'                                                       " using vim-airline repo
@@ -269,17 +304,22 @@ Plug 'rakr/vim-two-firewatch'                                                   
 "     specific auto-completion, syntax and formatting sections
 Plug 'thinca/vim-ft-clojure'     , { 'for': 'clojure' }         " ft plugin for clojure
 Plug 'venantius/vim-eastwood'    , { 'for': 'clojure' }         " clojure lint tool
-Plug 'kovisoft/paredit'          , { 'for': 'clojure' }       " clojure support
+Plug 'kovisoft/paredit'          , { 'for': 'clojure' }         " clojure support
 Plug 'tpope/vim-fireplace'       , { 'for': 'clojure' }         " clojure support
-Plug 'tpope/vim-salve'           , { 'on': [ 'Console' ] }      " static support for Leiningen
 Plug 'guns/vim-clojure-highlight'                               " clojure syntax hl support
 Plug 'guns/vim-clojure-static'                                  " clojure synax hl support
 Plug 'venantius/vim-cljfmt'                                     " clojure formatting tool
 
 "Plug 'ujihisa/neoclojure.vim'    , { 'for': 'clojure' }        " clojure completion
 "Plug 'clojure-vim/async-clj-omni' , { 'for': 'clojure' }       " async completion with deoplete
+"Plug 'tpope/vim-salve'           , { 'on': [ 'Console' ] }     " static support for Leiningen
 " }}}
 
+
+" --- Java language section {{{
+Plug 'artur-shaik/vim-javacomplete2', { 'for': 'java' }         " for java completion
+Plug 'airblade/vim-rooter'          , { 'for': 'java' }         " change to project directory
+"  }}}
 
 
 " --- GO language section {{{
@@ -290,43 +330,61 @@ Plug 'nsf/gocode'                   , { 'rtp': 'vim', 'do': '~/.vim/plugged/goco
 
 
 " --- javascript syntax check and auto-completions section {{{
-Plug 'maksimr/vim-jsbeautify', { 
+Plug 'maksimr/vim-jsbeautify', {
             \ 'do' : function('InstallJsBeautify'),
-            \ 'for': ['javascript', 'html'] }                                    " beautify js
-Plug 'maxmellon/vim-jsx-pretty',     { 'for': ['javascript', 'javascript.jsx'] } " pretty hl for js[x]
-Plug 'jelera/vim-javascript-syntax', { 'for': 'javascript' }                     " enhanced js syntax
-Plug 'othree/yajs.vim',              { 'for': 'javascript' }                     " yet another js
-Plug 'othree/es.next.syntax.vim',    { 'for': 'javascript' }                     " syntax for ECMA
-Plug 'othree/jsdoc-syntax.vim',      { 'for': 'javascript' }                     " standalone jsdoc syntax
-Plug 'heavenshell/vim-jsdoc',        { 'for': 'javascript' }                     " Generate JSDoc to your JavaScript code
+            \ 'for': ['javascript', 'html'] }                                     " beautify js
+Plug 'maxmellon/vim-jsx-pretty'     , { 'for': ['javascript', 'javascript.jsx'] } " pretty hl for js[x]
+Plug 'jelera/vim-javascript-syntax' , { 'for': 'javascript' }                     " enhanced js syntax
+Plug 'othree/yajs.vim'              , { 'for': 'javascript' }                     " yet another js
+Plug 'othree/es.next.syntax.vim'    , { 'for': 'javascript' }                     " syntax for ECMA
+Plug 'othree/jsdoc-syntax.vim'      , { 'for': 'javascript' }                     " standalone jsdoc syntax
+Plug 'heavenshell/vim-jsdoc'        , { 'for': 'javascript' }                     " Generate JSDoc to your JavaScript code
 
-Plug 'othree/jspc.vim', { 'for': ['javascript', 'javascript.jsx'] }             " js param complete
+Plug 'othree/jspc.vim', { 'for': ['javascript', 'javascript.jsx'] }          " js param complete
 
 "    extended syntax for js with React,jQuery,backbone,etc
-Plug 'mxw/vim-jsx'                                                              " React JSX, indenting
-Plug 'pangloss/vim-javascript', { 'for': 'javascript' }                         " syntax highlighting
-Plug 'elzr/vim-json'                                                            " json highlighting
+Plug 'mxw/vim-jsx'                                                           " React JSX, indenting
+Plug 'pangloss/vim-javascript', { 'for': ['javascript', 'javascript.jsx'] }  " syntax highlighting
+
+Plug 'elzr/vim-json'                                                        " json highlighting
+Plug 'XadillaX/json-formatter.vim'  , { 'do': 'npm install jjson -g' }      " format saved JSON file
+Plug 'rhysd/vim-fixjson'            , { 'do': 'npm install -g fixjson' }    " vim json fixer
+
 Plug 'othree/javascript-libraries-syntax.vim', { 'for': [
             \ 'javascript',
             \ 'coffee',
             \ 'ls',
             \ 'typescript']
             \ }                                                                 " js syntax check and library support
+
 Plug 'marijnh/tern_for_vim', {
             \ 'do': function('BuildTern'),
             \ 'for': ['javascript', 'javascript.jsx']}                          " tern plugin for vim js
+
 Plug 'galooshi/vim-import-js', {
             \ 'do': function('GetImport'),
-            \ 'for': ['javascript', 'javascript.vim']}                          " import js
-Plug 'shutnik/jshint2.vim', { 'for': 'javascript' }                             " JSHint integration
-Plug 'moll/vim-node', { 'for': 'javascript' }                                   " Tools & Env for node.js
-Plug 'myhere/vim-nodejs-complete', { 'for': 'javascript' }                      " nodejs omnifunc
-Plug 'mattn/jscomplete-vim', { 'for': 'javascript' }                            " vim omnifunc for JavaScript
+            \ 'on': ['ImportJSWord', 'ImportJSFix', 'ImportJSGoto']}            " import js
 
-Plug 'jbgutierrez/vim-babel'                                                    " wrapper around babel.js
-Plug 'mattn/webapi-vim'                                                         " vim interface to Web API
+Plug 'shutnik/jshint2.vim'        , { 'for': 'javascript' }    " JSHint integration
+Plug 'moll/vim-node'              , { 'for': 'javascript' }    " Tools & Env for node.js
+Plug 'myhere/vim-nodejs-complete' , { 'for': 'javascript' }    " nodejs omnifunc
+Plug 'mattn/jscomplete-vim'       , { 'for': 'javascript' }    " vim omnifunc for JavaScript
+
+Plug 'jbgutierrez/vim-babel'                                   " wrapper around babel.js
+Plug 'mattn/webapi-vim'                                        " vim interface to Web API
+
+Plug '1995eaton/vim-better-javascript-completion'              " expansion of current js
 
 "Plug 'bigfish/vim-js-context-coloring', { 'for': 'javascript' }                " js highlight, context & coloring
+" }}}
+
+
+" TypeScript development {{{
+Plug 'Quramy/tsuquyomi' , {
+            \ 'do': function('InstallTS'),
+            \ 'for': 'typescript' }                             " plugin for typescript
+Plug 'leafgarland/typescript-vim'   , { 'for': 'typescript' }   " typescript syntax files
+Plug 'Quramy/vim-js-pretty-template', { 'for': 'typescript' }   " highlight for ts
 " }}}
 
 
@@ -340,7 +398,7 @@ Plug 'vim-erlang/erlang-motions.vim'      , { 'for': 'erlang' }                 
 Plug 'vim-erlang/vim-erlang-tags'                                               " erlang tag generate for vim
 Plug 'ehamberg/vim-cute-erlang'           , { 'for': 'erlang' }                 " conceal for erlang
 Plug 'melekes/vim-erlang-spec'            , { 'for': 'erlang' }                 " erlang generate specifications
-"Plug 'oscarh/vimerl'                      , { 'for': 'erlang' }                 " erlang plugins
+"Plug 'oscarh/vimerl'                     , { 'for': 'erlang' }                 " erlang plugins
 "Plug 'ppikula/vim-wrangler'                                                     " vim wrangler plugin
 " }}}
 
@@ -361,31 +419,43 @@ Plug 'derekwyatt/vim-scala', { 'for': 'scala'}                                  
 "Plug 'megaannum/vimside'                                                       " vim scala ide
 " }}}
 
-" --- for html, xml ... syntax, validation etc. {{{
-Plug 'mattn/emmet-vim', { 'for': 'html' }                                       " emmet for vim
+" --- for html,css,xml ... syntax, validation etc. {{{
+Plug 'mattn/emmet-vim', { 'for': [ 'html', 'css', 'scss' ] }                    " emmet for vim
 Plug 'othree/html5.vim'                                                         " html5 support
 Plug 'othree/xml.vim'                                                           " xml support
 Plug 'sukima/xmledit'                                                           " xml editor
 Plug 'vim-scripts/xslt'                                                         " xslt ftplugin
 Plug 'Valloric/MatchTagAlways'                                                  " highlight matching tags on markup's
 Plug 'gko/vim-coloresque'                                                       " color preview #rrggbb or #rgb
+if has('python') || has('python3')
+    Plug 'Rykka/colorv.vim', { 
+                \ 'for': [ 'html','javascript', 'css','sass','scss','less','slim','stylus'  ]
+                \ }
+endif                                                                           " color tool in vim
 " }}}
 
 " --- for c/c++ language support (load on demand only) {{{
 Plug 'rhysd/vim-clang-format',           { 'on': 'ClangFormat' }                " format c,c++,obj-c,java,js and ts
 Plug 'vim-scripts/OmniCppComplete',      { 'for': ['c', 'cpp'] }                " cpp omni completion engine
-Plug 'justmao945/vim-clang',             { 'for': ['cpp','c'] }                 " clang completion plugin for vim
 Plug 'octol/vim-cpp-enhanced-highlight', { 'for': 'cpp' }                       " additional vim syntax highlighting
 Plug 'vim-scripts/DoxygenToolkit.vim',   { 'for': 'cpp' }                       " doxygen documentation
-Plug 'Rip-Rip/clang_complete',           { 'for': ['c', 'cpp'] }                " clang based auto complete
+
+Plug 'justmao945/vim-clang',             { 'for': ['cpp','c'] }                 " clang completion plugin for vim
+Plug 'Rip-Rip/clang_complete',
+            \ {
+            \ 'do': function('MakeInstall'),
+            \ 'for': ['c', 'cpp']
+            \ }                                                                 " clang based auto complete
+
 Plug 'derekwyatt/vim-protodef',          { 'for': ['c', 'cpp'] }                " pull c++ function prototypes
 Plug 'derekwyatt/vim-fswitch',           { 'for': ['c', 'cpp'] }                " switch between companion source files
 Plug 'vim-jp/vim-cpp',                   { 'for': [ 'c', 'cpp'] }               " c/c++ syntax files
 Plug 'osyo-manga/vim-marching',          { 'for': 'cpp' }                       " async clang code completion
 Plug 'osyo-manga/vim-reunions',          { 'for': 'cpp' }                       " dependency for vim-marching
+
 Plug 'wolfgangmehner/c-support'                                                 " same as c.vim but updated
 
-"Plug 'wolfgangmehner/c-support',         { 'for': [ 'c', 'cpp'] }              " same as c.vim but updated
+"Plug 'wolfgangmehner/c-support',        { 'for': [ 'c', 'cpp'] }              " same as c.vim but updated
 "Plug 'myint/clang-complete',            { 'for': ['cpp','c']}                  " using fork for python3 support
 "Plug 'vim-scripts/c.vim',               { 'for': ['c','cpp'] }                 " c/cpp ide
 
@@ -426,12 +496,12 @@ Plug 'nmanandhar/vim-ctrlp-menu'                                                
 
 " install only if vim has been compiled with python support
 if has('python')
-    Plug 'felikz/ctrlp-py-matcher'                                                  " fast ctrlp matcher based on python
+    Plug 'felikz/ctrlp-py-matcher'                                              " fast ctrlp matcher based on python
 endif
 " }}}
 
 
-" --- miscellaneous general utilities {{{
+" --- Miscellaneous & general utilities {{{
 Plug 'ujihisa/repl.vim'                                                " repl for langs
 Plug 'brookhong/k.vim'                                                 " run external commands
 Plug 'matze/vim-move'                                                  " move lines and selections
@@ -441,7 +511,7 @@ Plug 'jiangmiao/auto-pairs'                                            " parenth
 Plug 'tpope/vim-repeat'                                                " vim repeat the last command on
 Plug 'tpope/vim-surround'                                              " parenthesizing made simple
 Plug 'gorkunov/smartpairs.vim'                                         " fantastic selection for vim
-Plug 'beloglazov/vim-online-thesaurus', { 'on': 'OnlineThesaurusCurrentWord' }                                 
+Plug 'beloglazov/vim-online-thesaurus', { 'on': 'OnlineThesaurusCurrentWord' }
 "Plug 'Raimondi/delimitMate'                                           " auto quotes, parens, brackets, etc
                                                                        " word lookup in online thesaurus (-K)
 Plug 'thinca/vim-ref'                                                  " integrated reference viewer
@@ -450,15 +520,21 @@ Plug 'mattesgroeger/vim-bookmarks'                                     " vim boo
 Plug 'docunext/closetag.vim'                                           " close open HTML/XML tags
 Plug 'ujihisa/neco-look'                                               " look completion for english
 
-Plug 'tomtom/quickfixsigns_vim'                                        " mark quickfix and location list items
+"Plug 'tomtom/quickfixsigns_vim'                                       " mark quickfix and location list items
 
 Plug 'tpope/vim-unimpaired'                                            " pairs of handy bracket mappings
+
+Plug 'dkarter/bullets.vim'                                             " automated bullet list
+
+Plug 'bhurlow/vim-parinfer'                                            " balance your parenthesis
 
 "     vim-fireplace dependencies
 Plug 'tpope/vim-classpath'                                             " vim classpath
 "Plug 'guns/vim-sexp', { 'for': ['clojure'] }                          " vim expression support
 "Plug 'jpalardy/vim-slime'                                             " slime for vim
 "Plug 'editorconfig/editorconfig-vim'                                  " editorconfg
+
+Plug 'skywind3000/asyncrun.vim'                                        " run async commands
 " }}}
 
 
@@ -494,19 +570,19 @@ Plug 'tpope/vim-speeddating'                                                    
 
 " --- for python/python3 language auto-completion {{{
 " --- syntax checking, highlighting and more
-Plug 'vim-scripts/python.vim--Vasiliev', { 'for': 'python' }                    " enhanced python syntax highlighting
-Plug 'davidhalter/jedi-vim', { 'for': 'python' }                                " python jedi auto-completion (the best)
-Plug 'Vimjas/vim-python-pep8-indent', { 'for': 'python' }                       " python indentation style for vim
-Plug 'tell-k/vim-autopep8', { 'for': 'python' }                                 " autopep8 plugin for python
-Plug 'ehamberg/vim-cute-python', { 'for': 'python' }                            " conceal for python
-Plug 'tweekmonster/impsort.vim', { 'for': 'python' }                            " sort and highlight py imports
-Plug 'klen/python-mode', 
-            \ { 
+Plug 'vim-scripts/python.vim--Vasiliev', { 'for': [ 'python', 'python3' ] }     " enhanced python syntax highlighting
+Plug 'davidhalter/jedi-vim', { 'for': [ 'python', 'python3' ] }                 " python jedi auto-completion (the best)
+Plug 'Vimjas/vim-python-pep8-indent', { 'for': [ 'python', 'python3' ] }        " python indentation style for vim
+Plug 'tell-k/vim-autopep8', { 'for': [ 'python', 'python3' ] }                  " autopep8 plugin for python
+Plug 'ehamberg/vim-cute-python', { 'for': [ 'python', 'python3' ] }             " conceal for python
+Plug 'tweekmonster/impsort.vim', { 'for': [ 'python', 'python3' ] }             " sort and highlight py imports
+Plug 'klen/python-mode',
+            \ {
             \ 'do': function('GitRecurse'),
-            \ 'for': 'python' 
+            \ 'for': [ 'python', 'python3' ]
             \ }                                                                 " python-mode,pylint,rope,pydoc
-Plug 'plytophogy/vim-virtualenv', { 'for': 'python' }                           " for working with virtualenvs
-Plug 'python-rope/ropevim', { 'for': 'python' }                                 " rope python code assist
+Plug 'plytophogy/vim-virtualenv', { 'for': [ 'python', 'python3' ] }            " for working with virtualenvs
+Plug 'python-rope/ropevim', { 'for': [ 'python', 'python3' ] }                  " rope python code assist
 "Plug 'lambdalisue/vim-pyenv'                                                   " python virtual env (if required)
 " }}}
 
@@ -517,19 +593,22 @@ Plug 'scrooloose/vim-slumlord'                                                  
 
 
 " --- YouCompleteMe being used only in gui mode for MacVim {{{
-if has("gui_running")
+if has('gui_running')
     Plug 'valloric/youcompleteme',
-                \ { 'do': function('YCMBuilder'),
-                \ 'for': [ 'c', 'go', 'javascript', 'erlang', 'python', 'haskell' ]
+                \ {
+                \ 'do': function('YCMBuilder'),
+                \ 'for': [ 'c', 'cpp', 'go', 'javascript', 'erlang', 'python', 'haskell' ]
                 \ }
 endif
 " }}}
 
 
 " --- code completion and commenting framework(s) section {{{
-"if !has('gui_running')
+
+"if has('python')
 "    " this does not go along well with ycm which is only
 "    " in the gui mode, so disabling it in the gui mode
+"    " also it's based on python
 "    Plug 'maralla/completor.vim'                                               " async completion framework
 "endif
 
