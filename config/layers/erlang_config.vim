@@ -3,9 +3,35 @@
 " ====================================================================================
 
 " file type settings
-autocmd BufRead,BufNewFile *.erl,*.es.*.hrl,*.yaws,*.xrl set expandtab
-au BufNewFile,BufRead *.erl,*.es,*.hrl,*.yaws,*.xrl setf erlang
-autocmd FileType erlang setlocal ai sw=2 st=2 ts=2 et nofoldenable
+augroup erlang_vim
+    autocmd!
+    autocmd BufRead,BufNewFile *.erl,*.es.*.hrl,*.yaws,*.xrl set expandtab
+    au BufNewFile,BufRead *.erl,*.es,*.hrl,*.yaws,*.xrl setf erlang
+    autocmd FileType erlang setlocal ai sw=2 st=2 ts=2 et nofoldenable
+    
+    " Highlight when a comma is not followed by a space.
+    autocmd FileType erlang match SyntaxHighlight /,[ \n]\@!/
+
+    " Highlight spaces and tabs
+    au ColorScheme * highlight ExtraWhitespace guibg=#300000
+    au InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+    au InsertLeave * match ExtraWhitespace /\s\+$/
+    au BufEnter * match ExtraWhitespace /\s\+$/
+    au BufEnter * match MixTabsAndSpaces /^[ ]\+\t\+/
+    au BufEnter * match MixTabsAndSpaces /^\t\+[ ]\+/
+
+    au FileType erlang setlocal commentstring=%\ %s
+    au filetype erlang match BadTabIndentation /^[ ]*\t\+/
+    au filetype erlang inoremap <buffer> <C-z> <<>><Left><Left>
+    au filetype erlang inoremap <buffer> <C-CR> <CR>%%<Space>
+    au filetype erlang set keywordprg=erl-man
+    au filetype erlang hi link erlangAtom Normal
+    au filetype erlang setlocal indentkeys-==),=],=}
+
+    " completions for erlang
+    "autocmd FileType erlang setlocal omnifunc=erlangcomplete#Complete
+    autocmd FileType erlang setlocal completefunc=erlang_complete#Complete
+augroup END
 
 " highlight groups
 highlight BadWhitespace guibg=#300000
@@ -13,19 +39,6 @@ highlight link ExtraWhitespace BadWhitespace
 highlight link BadTabIndentation BadWhitespace
 highlight link MixTabsAndSpaces BadWhitespace
 
-au ColorScheme * highlight ExtraWhitespace guibg=#300000
-au InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
-au InsertLeave * match ExtraWhitespace /\s\+$/
-au BufEnter * match ExtraWhitespace /\s\+$/
-au BufEnter * match MixTabsAndSpaces /^[ ]\+\t\+/
-au BufEnter * match MixTabsAndSpaces /^\t\+[ ]\+/
-
-au filetype erlang match BadTabIndentation /^[ ]*\t\+/
-au filetype erlang inoremap <buffer> <C-z> <<>><Left><Left>
-au filetype erlang inoremap <buffer> <C-CR> <CR>%%<Space>
-au filetype erlang set keywordprg=erl-man
-au filetype erlang hi link erlangAtom Normal
-au filetype erlang setlocal indentkeys-==),=],=}
 hi link erlangAtom Normal
 
 " Erlang omnicomplete plugin for Vim
@@ -34,9 +47,6 @@ if !empty(glob('~/.vim/plugged/vim-erlang-omnicomplete'))
     let g:erlang_completion_preview_help = 1
 endif
 
-" completions for erlang
-"autocmd FileType erlang setlocal omnifunc=erlangcomplete#Complete
-autocmd FileType erlang setlocal completefunc=erlang_complete#Complete
 
 " for erlang development - syntax checking through syntaxerl
 "if has_key(g:plugs, 'syntastic')
@@ -45,15 +55,15 @@ if exists(':SyntasticInfo')
     let g:syntastic_erlc_include_path = "ebin"
 endif
 let g:erlangManPath               = '/usr/local/opt/erlang/lib/erlang/man'      "erlang man pages
-let g:erlangCompiler              = "erlc"
-let g:erlangWranglerPath          = "/usr/local/lib/erlang/lib/wrangler-1.2.0/" "wrangler
+let g:erlangCompiler              = 'erlc'
+let g:erlangWranglerPath          = '/usr/local/lib/erlang/lib/wrangler-1.2.0/' "wrangler
 let g:erlang_show_errors          = 1
 let g:erlang_use_conceal          = 1
 let g:erlangHighlightBif          = 1
 let g:erlangCompletionDisplayDoc  = 1
 let g:erlangCompletionGrep        = 1
 
-let erlang_path=substitute(system("which erl"), "/bin/erl", "/lib/**/src/", "")
+let g:erlang_path=substitute(system('which erl'), '/bin/erl', '/lib/**/src/', '')
 
 
 " ================= function for prettifying the erlang code ==================

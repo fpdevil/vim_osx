@@ -23,12 +23,12 @@ if !empty(glob('~/.vim/plugged/youcompleteme'))
     " =============================================================================
     " choose the python binary to select while using YouCompleteMe
     " =============================================================================
-    if has('python')
-        let g:ycm_python_binary_path        = 'python'
-        let g:ycm_server_python_interpreter = 'python'
-    else
+    if has('python3')
         let g:ycm_python_binary_path        = '/usr/local/bin/python3'
         let g:ycm_server_python_interpreter = '/usr/local/bin/python3'
+    else
+        let g:ycm_python_binary_path        = 'python'
+        let g:ycm_server_python_interpreter = 'python'
     endif
 
     if has("gui_running")
@@ -65,7 +65,8 @@ if !empty(glob('~/.vim/plugged/youcompleteme'))
     let g:ycm_show_diagnostics_ui                           = 1
     let g:ycm_collect_identifiers_from_tags_files           = 1
     let g:ycm_collect_identifiers_from_comments_and_strings = 1
-    let g:ycm_complete_in_comments                          = 1
+    let g:ycm_complete_in_comments                          = 0
+    let g:ycm_complete_in_strings                           = 0
     let g:ycm_complete_in_comments_and_strings              = 1
     let g:ycm_add_preview_to_completeopt                    = 1
     let g:ycm_autoclose_preview_window_after_completion     = 1
@@ -96,7 +97,8 @@ if !empty(glob('~/.vim/plugged/youcompleteme'))
                 \ 'cpp,objcpp' : ['->', '.', '::'],
                 \ 'cs,java,javascript,typescript,d,python,perl6,scala,vb,elixir,go' : ['.'],
                 \ 'erlang' : [':'],
-                \ 'haskell' : ['.', 'rel!.']
+                \ 'haskell' : ['.', 'rel!.'],
+                \ 'typescript' : ['.']
                 \ }
 
     " #############################################################################
@@ -115,8 +117,8 @@ if !empty(glob('~/.vim/plugged/youcompleteme'))
     " =============================================================================
     " turn off and turn on YCM
     " =============================================================================
-    nnoremap <leader>y :let g:ycm_auto_trigger=0<CR>
-    nnoremap <leader>Y :let g:ycm_auto_trigger=1<CR>
+    nnoremap <leader>ycx :let g:ycm_auto_trigger=0<CR>
+    nnoremap <leader>ycy :let g:ycm_auto_trigger=1<CR>
 
     " =============================================================================
     "    for UltiSnips, SuperTab & YCM Integration
@@ -129,9 +131,9 @@ if !empty(glob('~/.vim/plugged/youcompleteme'))
         let g:ycm_key_list_previous_completion           = ['<C-p>', '<Up>']
         let g:SuperTabDefaultCompletionType              = '<C-n>'
         " better key bindings for UltiSnipsExpandTrigger
-        let g:UltiSnipsExpandTrigger                     = "<tab>"
-        let g:UltiSnipsJumpForwardTrigger                = "<tab>"
-        let g:UltiSnipsJumpBackwardTrigger               = "<s-tab>"
+        let g:UltiSnipsExpandTrigger                     = '<tab>'
+        let g:UltiSnipsJumpForwardTrigger                = '<tab>'
+        let g:UltiSnipsJumpBackwardTrigger               = '<s-tab>'
     endif
 endif
 

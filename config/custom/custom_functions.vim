@@ -26,6 +26,48 @@ function! StartifyConfig()
 endfunction
 
 " ------------------------------------------------------------------------------------
+" ------------------------------------------------------------------------------------
+"Function: ListJsLinterConfig
+"Desc: returns an associative list of mappings containing the js linters with
+"      its corresponding configuration file
+"
+"Arguments: void
+"
+function! ListJsLinterConfig()
+    return {
+                \ 'eslint' : ['.eslintrc', '.eslintrc.json', '.eslintrc.js', '.eslint.yml'],
+                \ 'jshint' : ['.jshintrc']
+                \ }
+endfunction
+
+"Function: CheckJsLintConfig
+"Desc: check if the associated configuration file for the linter exists
+"
+"Arguments: path, list of linters
+"
+function! CheckJsLintConfig(path, linters)
+    let l:dir = fnamemodify(a:path, ':p:h')
+
+    if (l:dir == '/')
+        return ['']
+    endif
+
+    for l:linter in keys(a:linters)
+        for l:linterConfig in a:linters[l:linter]
+            if filereadable(l:dir . '/' . l:linterConfig)
+                let l:localLinter = l:dir . '/node_modules/.bin/' . l:linter
+                if executable(l:localLinter)
+                    return [l:linter, l:localLinter]
+                endif
+                return [l:linter, l:linter]
+            endif
+        endfor
+    endfor
+
+    return CheckJsLintConfig(fnamemodify(l:dir, ':h'), a:linters)
+endfunction
+
+" ------------------------------------------------------------------------------------
 " define function for switching between the source and header files using the
 " ctags. this only supports '.cpp' and '.h' files
 " ------------------------------------------------------------------------------------
@@ -137,7 +179,7 @@ function! ToggleBG()
     endif
 endfunction
 
-noremap <Leader>bg :call ToggleBG()<CR>
+"noremap <Leader>bg :call ToggleBG()<CR>
 
 " -----------------------------------------------------------------------------
 " a function to toggle line numbers
@@ -169,7 +211,7 @@ function! ShowColorTheme()
     " endtry
 endfunction
 
-noremap <Leader>st :call ShowColorTheme()<CR>
+"noremap <Leader>st :call ShowColorTheme()<CR>
 
 " function to check for existence of colorscheme
 function! HasColorScheme(name)
@@ -180,6 +222,17 @@ endfunction
 " -----------------------------------------------------------------------------
 "  rotate through the color schemes with <F8>
 " -----------------------------------------------------------------------------
+"Function: s:current_colors
+"Desc: filter and get all the installed color schemes from plugin
+"Arguments: nil
+"
+function! s:current_colors(...)
+  return filter(map(filter(split(globpath(&rtp, 'colors/*.vim'), "\n"),
+        \                  'v:val !~ "^/usr/"'),
+        \           'fnamemodify(v:val, ":t:r")'),
+        \       '!a:0 || stridx(v:val, a:1) >= 0')
+endfunction
+
 "Function: s:change_colors
 "Desc: rotate through the available color schemes with F8
 "      got from some vim forum
@@ -187,7 +240,7 @@ endfunction
 "
 function! s:change_colors()
     if !exists('s:current_colors')
-        let s:current_colors = s:colors()
+        let s:current_colors = s:current_colors()
     endif
     let cname = remove(s:current_colors, 0)
     call add(s:current_colors, cname)
@@ -195,7 +248,6 @@ function! s:change_colors()
     redraw
     echo cname
 endfunction
-
 nnoremap <silent> <F8> :call <SID>change_colors()<cr>
 
 " -----------------------------------------------------------------------------

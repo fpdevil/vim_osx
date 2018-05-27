@@ -31,19 +31,19 @@ if exists(':VimFiler')
     endif
 
     call vimfiler#custom#profile('default', 'context', {
-                \ 'explorer' : 1,
-                \ 'winwidth' : 30,
+                \ 'explorer'    : 1,
+                \ 'winwidth'    : 30,
                 \ 'winminwidth' : 30,
-                \ 'toggle' : 1,
-                \ 'auto_expand': 1,
-                \ 'direction' : g:vimfiler_direction,
-                \ 'parent': 0,
-                \ 'status' : 1,
-                \ 'safe' : 0,
-                \ 'split' : 1,
-                \ 'hidden': 1,
-                \ 'no_quit' : 1,
-                \ 'force_hide' : 0,
+                \ 'toggle'      : 1,
+                \ 'auto_expand' : 1,
+                \ 'direction'   : g   : vimfiler_direction,
+                \ 'parent'      : 0,
+                \ 'status'      : 1,
+                \ 'safe'        : 0,
+                \ 'split'       : 1,
+                \ 'hidden'      : 1,
+                \ 'no_quit'     : 1,
+                \ 'force_hide'  : 0,
                 \ })
 
     nnoremap <silent> <Leader>vF :<C-U>VimFiler -buffer-name=explorer -split -simple -winwidth=35 -toggle -no-quit<CR>

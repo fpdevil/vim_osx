@@ -10,7 +10,7 @@ set ma
 command! PU PlugUpdate | PlugUpgrade
 
 " open .vimrc with a shortcut
-nnoremap <leader>vim :tabnew ~/.vim/vimrc<cr>
+" nnoremap <leader>vim :tabnew ~/.vim/vimrc<cr>
 
 " to provide a menu interface for the unite
 let g:unite_source_menu_menus = {}
@@ -20,6 +20,9 @@ nnoremap [menu] <Nop>
 nmap <LocalLeader> [menu]
 " menus menu
 nnoremap <silent>[menu]u :Unite -silent -winheight=20 menu<CR>
+
+" for keymaps using vim-leader-guide plugin
+let g:lmap = {}
 
 " ------------------------------------------------------------------------------------
 " ***           custom color highlighting and alerts in common editing             ***
@@ -119,7 +122,8 @@ set tags+=/usr/local/lib/erlang/lib/tags
 " -------------------------------------------------------------------------------------
 "set path=.,/usr/include,/usr/local/include
 " included clang includes
-set path=.,/usr/include,/usr/local/include,/opt/software/clang+llvm-6.0.0-x86_64-apple-darwin/include/c++/v1
+"set path=.,/usr/include,/usr/local/include,/opt/software/clang+llvm-6.0.0-x86_64-apple-darwin/include/c++/v1
+set path=.,/usr/include,/usr/local/include,/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1,/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.1.0/include,/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include
 
 " -------------------------------------------------------------------------------------
 " additional path settings to include opencv
@@ -176,11 +180,6 @@ augroup HiglightTODO
     autocmd WinEnter,VimEnter * :silent! call matchadd('Todo', 'TODO\|FIXME', -1)
 augroup END
 
-
-" italics in comments
-let &t_ZH="\e[3m"
-let &t_ZR="\e[23m"
-highlight Comment cterm=italic gui=italic
 
 " -------------------------------------------------------------------------------------
 " Automatically reload vim config(s)

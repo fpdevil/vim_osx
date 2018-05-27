@@ -113,8 +113,9 @@
 
    =============================================================================
 12. For FUN - to do auto complete without any external plugins
-	Start plain vim with `vim -u NONE`
-	:set filetype plugin on
+	Start plain vim with `vim -u NONE` or `vim --clean`
+
+	:filetype plugin on
 	:syntax on
 	:set completeopt=longest,menuone,menu
 	:set omnifunc=syntaxcomplete#Complete
@@ -126,4 +127,10 @@
 13. For getting all certificate details from a url with gnu-tls
 
 	gnutls-cli --insecure --port 443 --print-cert --verbose <url>
+   =============================================================================
+14. For closing and opening the quickfix window
+
+    Close the qfix   :ccl[ose]
+    Open the qfix    :cope[n]
+
    =============================================================================

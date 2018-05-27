@@ -45,13 +45,13 @@ if isdirectory(expand('~/.vim/plugged/neosnippet.vim'))
     " enable function snippet expansion
     let g:neosnippet#enable_completed_snippet = 1
 
-    " plugin key-mappings.
-    imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-    smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-    xmap <C-k>     <Plug>(neosnippet_expand_target)
+    " plugin key-mappings (type Ctrl-Z to expand)
+    imap <C-z>     <Plug>(neosnippet_expand_or_jump)
+    smap <C-z>     <Plug>(neosnippet_expand_or_jump)
+    xmap <C-z>     <Plug>(neosnippet_expand_target)
 
     smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-          \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+                \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 
     " for snippet_complete marker
     if has('conceal')

@@ -18,7 +18,7 @@ if !expand(glob('~/.vim/plugged/nerdtree'))
     " leader guide integration
     let g:lmap = get(g:, 'lmap', {})
     let g:lmap.n = {
-                \ 'name' : 'Nerdtree File Explorer',
+                \ 'name' : '+Nerdtree File Explorer',
                 \ 't'    : ['call ToggleNerdTree()', 'Togle Tree If Exists'],
                 \ 'f'    : ['NERDTreeFind', 'Find N Reveal File'],
                 \ }

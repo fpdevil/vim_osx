@@ -7,14 +7,14 @@ if has_key(g:plugs, 'vim-bookmarks')
     " for bookmarks key mappings using vim-leader-map
     let g:lmap = get(g:, 'lmap', {})
     let g:lmap.b  = {
-                \ 'name' : 'Bookmark Tools'    ,
-                \ 't'    : ['BookmarkToggle'   , 'BookmarkToggle'],
-                \ 'a'    : ['BookmarkAnnotate' , 'BookmarkAnnotate'],
-                \ 's'    : ['BookmarkShowAll'  , 'BookmarkShowAll'],
-                \ 'n'    : ['BookmarkNext'     , 'BookmarkNext'],
-                \ 'p'    : ['BookmarkPrev'     , 'BookmarkPrev'],
-                \ 'c'    : ['BookmarkClear'    , 'BookmarkClear'],
-                \ 'x'    : ['BookmarkClearAll' , 'BookmarkClearAll'],
+                \ 'name' : '+Bookmark Tools'    ,
+                \ 't'    : ['BookmarkToggle'   , 'BookmarkToggle '],
+                \ 'a'    : ['BookmarkAnnotate' , 'BookmarkAnnotate '],
+                \ 's'    : ['BookmarkShowAll'  , 'BookmarkShowAll '],
+                \ 'n'    : ['BookmarkNext'     , 'BookmarkNext '],
+                \ 'p'    : ['BookmarkPrev'     , 'BookmarkPrev '],
+                \ 'c'    : ['BookmarkClear'    , 'BookmarkClear '],
+                \ 'x'    : ['BookmarkClearAll' , 'BookmarkClearAll '],
                 \ }
 
     " unite menu interface

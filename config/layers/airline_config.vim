@@ -6,7 +6,7 @@
 "=============================================================================
 scriptencoding utf-8
 
-if isdirectory(expand("~/.vim/plugged/vim-airline/"))
+if isdirectory(expand('~/.vim/plugged/vim-airline/'))
     "{{{ vim powerline symbols to be shown in the statusbar
     let g:Powerline_symbols       = 'unicode'           " fancy | unicode
     let g:airline_powerline_fonts = 1
@@ -46,11 +46,11 @@ if isdirectory(expand("~/.vim/plugged/vim-airline/"))
     "}}}
 
     "{{{ tmux status extension for mode colors
-    let g:airline#extensions#tmuxline#enabled      = 1
-    let airline#extensions#tmuxline#color_template = 'normal'
-    let airline#extensions#tmuxline#color_template = 'insert'
-    let airline#extensions#tmuxline#color_template = 'visual'
-    let airline#extensions#tmuxline#color_template = 'replace'
+    let g:airline#extensions#tmuxline#enabled        = 1
+    let g:airline#extensions#tmuxline#color_template = 'normal'
+    let g:airline#extensions#tmuxline#color_template = 'insert'
+    let g:airline#extensions#tmuxline#color_template = 'visual'
+    let g:airline#extensions#tmuxline#color_template = 'replace'
     "}}}
 
     "{{{ custom settings

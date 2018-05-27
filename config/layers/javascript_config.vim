@@ -1,11 +1,30 @@
 " ------------------------------------------------------------------------------
-" -------        JAVASCRIPT Syntax and Completions Configuration          ------
+" -------    JAVASCRIPT | JSON Syntax and Completions Configuration       ------
 " ------------------------------------------------------------------------------
 
-"  for proper javascript indentation
-" autocmd FileType javascript setl tabstop=4|setl shiftwidth=4|setl softtabstop=4|setl expandtab|setl autoindent
-autocmd FileType javascript setlocal shiftwidth=4 tabstop=4 softtabstop=4
-au BufEnter *.js setl ai sw=4 ts=4 sts=4
+
+" ------------------------------------------------------------------------------------
+"  initialize the leader key map for misc section
+" ------------------------------------------------------------------------------------
+let g:lmap = get(g:, 'lmap', {})
+let g:lmap.j = {
+            \ 'name': '+Javascript/JSON',
+            \ }
+
+" for proper javascript indentation
+augroup vim_js
+    autocmd!
+    " autocmd FileType javascript setl tabstop=4|setl shiftwidth=4|setl softtabstop=4|setl expandtab|setl autoindent
+    autocmd FileType javascript setlocal shiftwidth=4 tabstop=4 softtabstop=4
+    au BufEnter *.js setl ai sw=4 ts=4 sts=4
+    "autocmd BufWritePost *.js AsyncRun -post=checktime eslint --fix %
+augroup end
+
+" handling jsx files
+"augroup FiletypeGroup
+"    autocmd!
+"    au BufNewFile,BufRead *.jsx set filetype=javascript.jsx
+"augroup END
 
 " {{{ for tern completions with omnifunc
 if !exists('g:neocomplete#sources#omni#functions')
@@ -18,15 +37,18 @@ let g:neocomplete#sources#omni#functions.javascript = [
             \ ]
 
 if exists('g:plugs["tern_for_vim"]')
-    let g:tern#command                      = ['tern']
-    let g:tern#arguments                    = ['--persistent']
-    let g:tern_map_keys                     = 1
-    let g:tern_show_signature_in_pum        = 1
-    let g:tern_show_argument_hints          = 'on_hold'
-    let tern#is_show_argument_hints_enabled = 1
+    let g:tern#command                        = ['tern']
+    let g:tern#arguments                      = ['--persistent']
+    let g:tern_map_keys                       = 1
+    let g:tern_show_signature_in_pum          = 1
+    let g:tern_show_argument_hints            = 'on_hold'
+    let g:tern#is_show_argument_hints_enabled = 1
 
     " set autocompletion
     autocmd FileType javascript setlocal omnifunc=tern#Complete
+
+    let g:tern#command   = ['tern']
+    let g:tern#arguments = ['--persistent']
 
     function! s:gotodef() abort
         if exists(':TernDef')
@@ -117,7 +139,8 @@ autocmd FileType javascript noremap <buffer> <c-f> :call JsBeautify()<cr>
 autocmd FileType html noremap <buffer> <c-f> :call JsBeautify()<cr>
 autocmd FileType css noremap <buffer> <c-f> :call JsBeautify()<cr>
 
-nnoremap <leader>jsf :%!js-beautify -j -q -B -f -<CR>
+" nnoremap <leader>jsf :%!js-beautify -j -q -B -f -<CR>
+
 
 " Character Concealing enable in the editor mode
 set conceallevel=1
@@ -125,23 +148,23 @@ set conceallevel=1
 " for jsdoc stntax highlight and character concealing
 " https://github.com/pangloss/vim-javascript
 if has_key(g:plugs,'vim-javascript')
-    let g:javascript_conceal_function       = "ƒ"
-    let g:javascript_conceal_null           = "ø"
-    let g:javascript_conceal_this           = "@"
-    let g:javascript_conceal_return         = "⇚"
-    let g:javascript_conceal_undefined      = "¿"
-    let g:javascript_conceal_NaN            = "ℕ"
-    let g:javascript_conceal_prototype      = "¶"
-    let g:javascript_conceal_static         = "•"
-    let g:javascript_conceal_super          = "Ω"
-    let g:javascript_conceal_arrow_function = "⇒"
+    let g:javascript_conceal_function       = 'ƒ'
+    let g:javascript_conceal_null           = 'ø'
+    let g:javascript_conceal_this           = '@'
+    let g:javascript_conceal_return         = '⇚'
+    let g:javascript_conceal_undefined      = '¿'
+    let g:javascript_conceal_NaN            = 'ℕ'
+    let g:javascript_conceal_prototype      = '¶'
+    let g:javascript_conceal_static         = '•'
+    let g:javascript_conceal_super          = 'Ω'
+    let g:javascript_conceal_arrow_function = '⇒'
 
     let g:javascript_plugin_jsdoc = 1
     let g:javascript_plugin_ngdoc = 1
     let g:javascript_plugin_flow  = 1
 endif
 
-map <leader>jcl :exec &conceallevel ? "set conceallevel=0" : "set conceallevel=1"<CR>
+" map <leader>jcl :exec &conceallevel ? "set conceallevel=0" : "set conceallevel=1"<CR>
 
 if (has_key(g:plugs, 'vim-jsx-pretty'))
     let g:vim_jsx_pretty_colorful_config = 1
@@ -151,6 +174,20 @@ endif
 if isdirectory(expand('~/.vim/plugged/javascript-libraries-syntax.vim'))
     let g:used_javascript_libs = 'underscore,angularjs,angularui,angularuirouter,react,jquery,chai,d3'
 endif
+
+if isdirectory(expand('~/.vim/plugged/vim-better-javascript-completion'))
+    let g:vimjs#casesensistive = 1
+    " Enabled by default. flip the value to make completion matches case insensitive
+
+    let g:vimjs#smartcomplete = 1
+    " Disabled by default. Enabling this will let vim complete matches at any location
+    " e.g. typing 'ocument' will suggest 'document' if enabled.
+
+    let g:vimjs#chromeapis = 1
+    " Disabled by default. Toggling this will enable completion for a number of Chrome's
+    " JavaScript extension APIs
+endif
+
 
 " syntax checking with syntastic
 if exists(':SyntasticCheck')
@@ -162,10 +199,11 @@ if exists(':SyntasticCheck')
     let g:syntastic_javascript_eslint_exec    = '/bin/ls'
     let g:syntastic_javascript_eslint_generic = 1
     let g:syntastic_javascript_eslint_args    = '-f compact'
-    let g:syntastic_javascript_checkers       = ['eslint', 'jshint', 'jslint', 'jsxhint']
     let g:syntastic_check_on_open             = 0 " show any js linting errors immediately
     let g:syntastic_javascript_jsxhint_exec   = 'jsx-jshint-wrapper'
+    "let g:syntastic_javascript_checkers       = ['eslint', 'jshint', 'jslint', 'jsxhint']
     "let g:syntastic_javascript_checkers      = ['eslint', 'jshint', 'jsxhint', 'jscs']
+    call SetSyntasticJsLinter()
 endif
 
 
@@ -173,7 +211,8 @@ endif
 if has_key(g:plugs, 'vim-jsx')
     " if 1 (default) expects jsx files to have .jsx extension
     " if 0 .js files will also be opened as filetype javascript.jsx
-    let g:jsx_ext_required = 1
+    let g:jsx_ext_required    = 1
+    let g:jsx_pragma_required = 1
 endif
 "}}}
 
@@ -181,10 +220,17 @@ endif
 " -------                settings for the jshint2 js linting                   -------
 " ------------------------------------------------------------------------------------
 if has_key(g:plugs, 'jshint2.vim')
-    let jshint2_read  = 1   " lint files after reading it
-    let jshint2_save  = 1   " lint files after saving it
-    let jshint2_close = 0   " do not automatically close orphaned error lists
+    let g:jshint2_read  = 1   " lint files after reading it
+    let g:jshint2_save  = 1   " lint files after saving it
+    let g:jshint2_close = 0   " do not automatically close orphaned error lists
 endif
+
+if executable('jshint')
+   au FileType javascript setlocal errorformat=%f:\ line\ %l\\,\ col\ %c\\,\ %m,%-G%.%#
+   au FileType javascript setlocal makeprg=jshint\ %
+endif
+au FileType javascript syntax region  javaScriptStringT start=+`+ skip=+\\\(`\|$\)+  end=+`\|$+
+au FileType javascript hi link javaScriptStringT		String
 
 " ------------------------------------------------------------------------------------
 " -----                 settings for vim-js-context-coloring                     -----
@@ -200,15 +246,22 @@ endif
 " -----                 settings for galooshi/vim-import-js                      -----
 " ------------------------------------------------------------------------------------
 if (has_key(g:plugs,'vim-import-js'))
-    nnoremap <silent><buffer> <F4> :ImportJSWord<CR>
-    nnoremap <silent><buffer> <Leader>ji :ImportJSWord<CR>
-    nnoremap <silent><buffer> <Leader>jf :ImportJSFix<CR>
-    nnoremap <silent><buffer> <Leader>jg :ImportJSGoto<CR>
+    "nnoremap <silent><buffer> <F4> :ImportJSWord<CR>
+    nnoremap <silent><buffer> <Leader>jii :ImportJSWord<CR>
+    nnoremap <silent><buffer> <Leader>jif :ImportJSFix<CR>
+    nnoremap <silent><buffer> <Leader>jig :ImportJSGoto<CR>
 
     inoremap <silent><buffer> <F4> <Esc>:ImportJSWord<CR>a
     inoremap <silent><buffer> <C-j>i <Esc>:ImportJSWord<CR>a
     inoremap <silent><buffer> <C-j>f <Esc>:ImportJSFix<CR>a
     inoremap <silent><buffer> <C-j>g <Esc>:ImportJSGoto<CR>a
+
+    let g:lmap.j.i = {
+                \ 'name': 'ImportJS Settings ',
+                \ 'i' : ['ImportJSWord', 'Import JS Word '],
+                \ 'f' : ['ImportJSFix', 'Import JS Fix for Word '],
+                \ 'g' : ['ImportJSGoto', 'Import JS Goto '],
+                \ }
 endif
 
 " ------------------------------------------------------------------------------------
@@ -228,3 +281,22 @@ highlight jsSuper ctermfg=13
 highlight jsFuncCall ctermfg=cyan
 highlight jsComment ctermfg=245 ctermbg=none
 highlight jsClassProperty ctermfg=14 cterm=bold
+
+
+" key mappings through leader key
+"map <leader>jcl :exec &conceallevel ? "set conceallevel=0" : "set conceallevel=1"<CR>
+
+let g:lmap.j.s = {
+            \ 'name': 'javascript settings',
+            \ 'f'  : ['%!js-beautify -j -q -B -f -', 'Beautify JS Buffer'],
+            \ 'c'  : ['exec &conceallevel ? ''set conceallevel=0'' : ''set conceallevel=1''', 'Conceeal Settings']
+            \ }
+
+" json format options
+" JSON Formatter Plugin for VIM
+if !empty(glob('~/.vim/plugged/json-formatter.vim'))
+    let g:lmap.j.g = {
+                \ 'name': 'JSON Stuff',
+                \ 'f': [':JSONFormatter', 'Format JSON'],
+                \ }
+endif

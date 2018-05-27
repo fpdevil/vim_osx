@@ -31,6 +31,7 @@ let g:startify_bookmarks               = [
             \ '~/.vim/vimrc',
             \ '~/.vim/config/plugins/bundled_plugins.vim',
             \ '~/.vim/config/plugins/plugin_settings.vim',
+            \ '~/.vim/personal/personal_config.vim',
             \ '~/aquamacs.d'
             \ ]
 let g:startify_list_order              = [

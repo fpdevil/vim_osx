@@ -2,7 +2,6 @@
 " ------------------------------------------------------------------------------------
 " -----------                    CtrlP customized bindings                 -----------
 " ------------------------------------------------------------------------------------
-"set wildmode=list:longest,list:full
 
 let g:ctrlp_clear_cache_on_exit = 0                             " speed up by not clearing cache evertime
 let g:ctrp_use_caching          = 500                           " enable caching
@@ -26,7 +25,19 @@ let g:ctrlp_buftags             = {
 "  initialize the leader key map for misc section
 " ------------------------------------------------------------------------------------
 let g:lmap = get(g:, 'lmap', {})
+" for CtrlP Family of tools
+let g:lmap.p = {
+            \ 'name': "+CtrlP Family ",
+            \ }
 
+let g:lmap.p.c = {
+      \ 'name': '+Core CtrlP ',
+      \ 'c': ['CtrlP', 'Invoke CtrlP in find file mode '],
+      \ 'b': ['CtrlPBuffer', 'Open CtrlP in find buffer mode '],
+      \ 'm': ['CtrlPMRUFiles', 'Recently opened files '],
+      \ 'M': ['CtrlPMixed', 'Recent buffers + files + mru '],
+      \ 'e': ['CtrlPClearCache', 'Flush cache for the CWD '],
+      \ }
 
 " ------------------------------------------------------------------------------------
 "  silver searcher settings If ag is available use it as filename list generator
@@ -81,7 +92,12 @@ endif
 "  CtrlPSessions - manage your sessions
 " ------------------------------------------------------------------------------------
 if exists(':CtrlPSessions')
-    let g:ctrlp_extensions = ['funky', 'sessions' , 'k' , 'tag', 'mixed', 'quickfix', 'undo', 'line', 'changes', 'cmdline', 'menu']
+    let g:ctrlp_extensions = [ 
+          \ 'funky', 'sessions', 'k', 
+          \ 'tag', 'mixed', 'quickfix',
+          \ 'undo', 'line', 'changes',
+          \ 'cmdline', 'menu',
+          \ ]
     let g:lmap.p.s = ['CtrlPSessions', 'Get list of files in Session directory']
 endif
 
@@ -129,6 +145,11 @@ endif
 " CtrlP Extension that allows adding custom menus of commands
 " ------------------------------------------------------------------------------------
 if &rtp =~ 'vim-ctrlp-menu'
+    let g:ctrlp_use_default_menu = 0
+
+    " unmapping CtrlpMenuMenus which is bound to <leader>m by default
+    autocmd VimEnter * nunmap <leader>m
+
     let g:ctrlp_menus={}
     let g:ctrlp_menus.colorscheme = {
                 \ '* colorscheme solarized'  : 'colorscheme solarized8',
@@ -142,6 +163,7 @@ if &rtp =~ 'vim-ctrlp-menu'
     let g:lmap.p.u = {
                 \ 'name' : 'CtrlpMenu',
                 \ 'm'    : ['CtrlpMenu', 'Show all Ctrlp Menus'],
+                \ 'M'    : ['CtrlpMenuMenus', 'Show main Menus']
                 \ }
 endif
 

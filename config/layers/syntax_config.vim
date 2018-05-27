@@ -29,6 +29,29 @@ if !empty(glob('~/.vim/plugged/syntastic'))
     let g:syntastic_ignore_files = ['\.erl$']
 
     " ------------------------------------------------------------------------------------
+    " syntax checkers if any based on the language
+    " ------------------------------------------------------------------------------------
+    " Set syntax checker for javascript {{{
+    function! SetSyntasticJsLinter()
+        let l:available_linters = ListJsLinterConfig()
+        " now look through the linter config in current dir
+        let l:jslinter = CheckJsLintConfig(expand('%:p', l:available_linters)
+        if l:jslinter[0] == ''
+            let l:jslinter = CheckJsLintConfig($HOME, l:available_linters)
+        endif
+
+        " now configure the linter
+        if l:jslinter[0] != ''
+            let g:syntastic_javascript_checkers = [l:jslinter[0]]
+            if l:jslinter[0] != l:jslinter[1]
+                exec 'let g:syntastic_javascript_' . l:jslinter[0] . '_exec = "' . l:jslinter[1] . '"'
+            endif
+            let g:syntastic_javascript_checkers = [l:jslinter[0]]
+        endif
+    endfunction
+    " }}}
+
+    " ------------------------------------------------------------------------------------
     " -------                Personal settings for Syntastic Checker               -------
     " ------- By default, Syntastic uses arrow symbols to indicate line with error -------
     " ------- To spice things up, you can specify any Unicode symbol as that error -------
@@ -113,6 +136,14 @@ if !empty(glob('~/.vim/plugged/syntastic'))
     command! SyntasticDisableBuffer call SyntasticDisableBuffer()
     
     " Toggle syntastic checking at will
-    nnoremap <leader>sy :SyntasticCheck<CR> :SyntasticToggleMode<CR>
+    "nnoremap <leader>sy :SyntasticCheck<CR> :SyntasticToggleMode<CR>
+    if has_key(g:lmap,'l')
+        let g:lmap.l.x = {
+                    \ 'name': 'Syntax Checker',
+                    \ 'c': ['SyntasticCheck', 'Check Syntax '],
+                    \ 't': ['SyntasticToggleMode', 'Toggle between Active and Passive modes '],
+                    \ 'i': ['SyntasticInfo', 'Get information about Syntax checker '],
+                    \ }
+    endif
     "}}}
 endif

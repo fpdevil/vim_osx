@@ -1,6 +1,15 @@
 " ------------------------------------------------------------------------------------
 " ---------------------- custom settings for the vim git gutter ----------------------
 " ------------------------------------------------------------------------------------
+
+" Turn on spell checking for commit messages and automatic wrapping
+" at the recommended 72 characters
+augroup filetype_gitcommit
+    autocmd!
+    autocmd Filetype gitcommit setlocal spell textwidth=72
+augroup END
+
+" highlighting sign column
 highlight clear SignColumn
 highlight SignColumn ctermbg=0
 
@@ -18,23 +27,23 @@ endif
 if !empty(glob('~/.vim/plugged/vim-fugitive'))
     let g:lmap   = get(g:, 'lmap', {})
     let g:lmap.g = {
-                \ 'name' : 'Git Tools',
-                \ 's'    : ['Gstatus',              'Git status'],
-                \ 'b'    : ['Gblame',               'Git blame'],
-                \ 'd'    : ['Gdiff',                'Git diff'],
-                \ 'e'    : ['Gedit',                'Git edit'],
-                \ 'i'    : ['Git add -p %',         'Git Interactive Add'],
-                \ 'p'    : ['Gpull',                'Git pull'],
-                \ 'q'    : ['Gpush',                'Git push'],
-                \ 'c'    : ['Gcommit',              'Git commit'],
-                \ 'w'    : ['Gwrite',               'Git write'],
-                \ 'l'    : ['Glog',                 'Git log'],
-                \ 'g'    : [':SignifyToggle',       'Toggle Signify'],
-                \ 'n'    : ['GitGutterNextHunk',    'Jump to Next Hunk'],
-                \ 'N'    : ['GitGutterPrevHunk',    'Jump to Previous Hunk'],
-                \ 'A'    : ['GitGutterStageHunk',   'Hunk Add'],
-                \ 'a'    : ['GitGutterUndoHunk',    'Hunk Undo'],
-                \ 'v'    : ['GitGutterPreviewHunk', 'Preview Hunk']
+                \ 'name' : '+Git Tools',
+                \ 's'    : ['Gstatus',              'Git status '],
+                \ 'b'    : ['Gblame',               'Git blame '],
+                \ 'd'    : ['Gdiff',                'Git diff '],
+                \ 'e'    : ['Gedit',                'Git edit '],
+                \ 'i'    : ['Git add -p %',         'Git Interactive Add '],
+                \ 'p'    : ['Gpull',                'Git pull '],
+                \ 'q'    : ['Gpush',                'Git push '],
+                \ 'c'    : ['Gcommit',              'Git commit '],
+                \ 'w'    : ['Gwrite',               'Git write '],
+                \ 'l'    : ['Glog',                 'Git log '],
+                \ 'g'    : [':SignifyToggle',       'Toggle Signify '],
+                \ 'n'    : ['GitGutterNextHunk',    'Jump to Next Hunk '],
+                \ 'N'    : ['GitGutterPrevHunk',    'Jump to Previous Hunk '],
+                \ 'A'    : ['GitGutterStageHunk',   'Hunk Add '],
+                \ 'a'    : ['GitGutterUndoHunk',    'Hunk Undo '],
+                \ 'v'    : ['GitGutterPreviewHunk', 'Preview Hunk ']
                 \ }
 endif
 

@@ -10,7 +10,7 @@ if exists('RainbowParenthesesActivate')
 endif
 
 " Clojure file options
-function SetCljFtOptions()
+function! SetCljFtOptions()
     setlocal filetype=clojure
     setlocal autoindent
     setlocal tabstop=2
@@ -63,7 +63,7 @@ if has_key(g:plugs,'neoclojure.vim')
     augroup END
     let g:neoclojure_autowarmup = 1
 else
-    setlocal omnifunc=vimclojure#OmniCompletion
+    autocmd FileType clojure setlocal omnifunc=vimclojure#OmniCompletion
 endif
 
 " REPL Settings {{{

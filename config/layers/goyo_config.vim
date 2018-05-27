@@ -65,4 +65,7 @@ augroup goyo_map
     autocmd! User GoyoLeave nested call <SID>goyo_leave()
 augroup END
 
-nnoremap <Leader>G :Goyo<CR>
+"nnoremap <Leader>G :Goyo<CR>
+if has_key(g:lmap,'w')
+    let g:lmap.w.g = ['Goyo', 'Distraction free writing with Goyo']
+endif

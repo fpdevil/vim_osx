@@ -17,29 +17,45 @@ else
     let g:loaded_jedi = 1
 endif
 
-" omnifunc for python
-" autocmd FileType python setlocal completefunc=jedi#complete
-
-autocmd FileType python setlocal omnifunc=jedi#completions
-au FileType python setlocal completeopt=preview,menu,longest
-
-" filetype indentation for python
-autocmd FileType python set tabstop=4|set shiftwidth=4|set expandtab
-
+augroup vimpy
+    autocmd!
+    " omnifunc for python
+    " autocmd FileType python setlocal completefunc=jedi#complete
+    autocmd FileType python setlocal omnifunc=jedi#completions
+    au FileType python setlocal completeopt=preview,menu,longest
+    " filetype indentation for python
+    autocmd FileType python set tabstop=4|set shiftwidth=4|set expandtab
+    autocmd BufRead *.py set smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
+augroup end
+    
 " set the keymapping for definition browsing (-t)
-au FileType python let g:jedi#completions_enabled        = 0
-au FileType python let g:jedi#goto_definitions_command   = "<leader>t"
-au FileType python let g:jedi#show_call_signatures_delay = 0
-au FileType python let g:jedi#auto_close_doc             = 1
-au FileType python let g:jedi#show_call_signatures       = 2
-au FileType python let g:jedi#auto_vim_configuration     = 0
-au FileType python let g:jedi#smart_auto_mappings        = 1
+"au FileType python let g:jedi#completions_enabled        = 0
+"au FileType python let g:jedi#goto_definitions_command   = "<leader>t"
+"au FileType python let g:jedi#show_call_signatures_delay = 0
+"au FileType python let g:jedi#auto_close_doc             = 1
+"au FileType python let g:jedi#show_call_signatures       = 2
+"au FileType python let g:jedi#auto_vim_configuration     = 0
+"au FileType python let g:jedi#smart_auto_mappings        = 1
 "au FileType python let g:jedi#popup_on_dot               = 1
+
+let g:jedi#completions_enabled        = 0
+let g:jedi#show_call_signatures_delay = 0
+let g:jedi#auto_close_doc             = 1
+let g:jedi#show_call_signatures       = 2
+let g:jedi#auto_vim_configuration     = 0
+let g:jedi#smart_auto_mappings        = 1
+let g:jedi#goto_command               = '<leader>lpg'
+let g:jedi#goto_assignments_command   = '<leader>lpa'
+let g:jedi#goto_definitions_command   = ''
+let g:jedi#documentation_command      = '<leaderlpd>'
+let g:jedi#usages_command             = '<leader>lpu'
+let g:jedi#completions_command        = '<C-Space>'
+let g:jedi#rename_command             = '<leader>lpr'
 
 "{{{ using rope for python code assist
 "if has_key(g:plugs, 'ropevim')
 if !empty(glob('~/.vim/plugged/ropevim'))
-    let ropevim_extended_complete=1
+    let g:ropevim_extended_complete=1
 endif
 "}}}
 
@@ -65,13 +81,13 @@ let g:syntastic_enable_balloons = 1
 
 "{{{  python language specific customizations
 "     enable all the python syntax highlighting features
-let python_highlight_all=1
+let g:python_highlight_all=1
 "}}}
 
 " ------------------------------------------------------------------------------------
 " ---                 ultisnips snippets for python2 and python3                   ---
 " ------------------------------------------------------------------------------------
-if has("python")
+if has('python')
     let g:UltiSnipsUsePythonVersion = 2
 else
     let g:UltiSnipsUsePythonVersion = 3
@@ -104,20 +120,26 @@ endif
 "if has_key(g:plugs,'python-mode')
 if !empty(glob('~/.vim/plugged/python-mode'))
     let g:pymode_python          = 'python3'
-    let g:pymode_breakpoint_bind = '<Leader>B'
-    
-    let g:pymode_lint          = 1
-    let g:pymode_lint_on_write = 0
-    let g:pymode_lint_checkers = ['pylint', 'pep8', 'mccabe', 'pep257']
-    let g:pymode_lint_ignore   = ''
+    let g:pymode_breakpoint_bind = '<Leader>lpb'
+
+    let g:pymode_trim_whitespaces        = 1
+    let g:pymode_options_max_line_length = 300
+    let g:pymode_options_colorcolumn     = 0
+    let g:pymode_indent                  = 1
+
     let g:pymode_virtualenv    = 1
     let g:pymode_rope          = 1
     
     let g:pymode_rope_completion      = 0
     let g:pymode_rope_complete_on_dot = 1
     
-    " Ignore missing docstring error
-    let g:pymode_lint_ignore = "C0111,D100,D101,D102,D103" 
+    let g:pymode_lint            = 1
+    let g:pymode_lint_on_write   = 0
+    let g:pymode_lint_cwindow    = 0
+    let g:pymode_lint_checkers   = [ '' ]                                     " use ALE linters
+    let g:pymode_lint_ignore     = 'C0111,D100,D101,D102,D103'                " ignore missing docstring error
+    " let g:pymode_lint_checkers = ['pylint', 'pep8', 'mccabe', 'pep257']
+    " let g:pymode_lint_ignore   = ''
 endif
 
 

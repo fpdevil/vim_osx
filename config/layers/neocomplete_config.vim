@@ -6,7 +6,7 @@
 let s:fts = ['c', 'cpp']
 
 
-if has_key(g:plugs, 'neocomplete.vim')
+if isdirectory(expand('~/.vim/plugged/neocomplete.vim'))
     let g:acp_enableAtStartup                            = 0             " for disabling the AutoComplPop
     if (has_key(g:plugs, 'youcompleteme') && index(s:fts, &filetype) != -1)
         let g:neocomplete#enable_at_startup              = 0             " do not use neocomplete at startup for c/c++ & ycm
@@ -77,6 +77,7 @@ if has_key(g:plugs, 'neocomplete.vim')
         let g:neocomplete#force_omni_input_patterns = {}
     endif
     let g:neocomplete#force_omni_input_patterns.javascript   = '[^. \t]\.\w*'
+    let g:neocomplete#force_omni_input_patterns.jsx          = '\.'
     let g:neocomplete#force_omni_input_patterns.c            = '[^.[:digit:] *\t]\%(\.\|->\)\w*'
     let g:neocomplete#force_omni_input_patterns.cpp          = '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
     let g:neocomplete#force_omni_input_patterns.erlang       = '\<[[:digit:][:alnum:]_-]\+:[[:digit:][:alnum:]_-]*'
@@ -131,7 +132,7 @@ if has_key(g:plugs, 'neocomplete.vim')
     inoremap <expr><C-e> neocomplete#cancel_popup()
     "}}}
 
-    " toggle the auto select feature
+    " toggle the neo-complete auto selection feature
     function! ToggleNeoComplete()
         if !g:neocomplete#disable_auto_complete && g:neocomplete#enable_auto_select
             let g:neocomplete#disable_auto_complete = 0
@@ -150,8 +151,9 @@ if has_key(g:plugs, 'neocomplete.vim')
     "  initialize the leader key map for misc section
     " ------------------------------------------------------------------------------------
     let g:lmap = get(g:, 'lmap', {})
-    let g:lmap.m.c.t = ['call ToggleNeoComplete()', 'Toggle NeoComplete on/off']
-
+    if has_key(g:lmap,'m')
+        let g:lmap.m.c.t = ['call ToggleNeoComplete()', 'Toggle NeoComplete auto-select on/off ']
+    endif
 
 
     " ------------------------------------------------------------------------------------

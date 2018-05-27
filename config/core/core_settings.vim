@@ -17,32 +17,33 @@ filetype off
 " ************************************************************************************
 "   let g:vimosx_leader_key='\' - this is default
 if !exists('g:vimosx_leader_key')
-   let mapleader = '-'
+   let g:mapleader = '-'
    "let mapleader = "\<Space>"
 else
-   let mapleader=g:vimosx_leader_key
+   let g:mapleader=g:vimosx_leader_key
 endif
 if !exists('g:vimosx_localleader_key')
-   let maplocalleader = '_'
+   let g:maplocalleader = '_'
 else
-   let maplocalleader=g:vimosx_localleader_key
+   let g:maplocalleader=g:vimosx_localleader_key
 endif
 
 augroup vimrc
   autocmd!
 augroup END
 
-" For UNICODE support of symbols like ⚠
-" note: set encoding BEFORE script encoding
-scriptencoding utf-8
-
 " set file encodings
 if &encoding !=? 'utf-8'
     let &termencoding = &encoding
     set encoding=utf-8
 endif
-set fileencoding=utf-8                          " file utf-8 encode
-set fileencodings=utf-8                         " file utf-8 encode
+
+" For UNICODE support of symbols like ⚠
+" note: set encoding BEFORE script encoding
+scriptencoding utf-8
+
+"set fileencoding=utf-8                          " file utf-8 encode
+"set fileencodings=utf-8                         " file utf-8 encode
 
 " allow plugins by file type (required for plugins!)
 filetype plugin indent on
@@ -53,7 +54,10 @@ filetype indent on
 "   let g:vimosx_no_autochdir = 1
 if !exists('g:vimosx_no_autochdir')
    " to always switch to the current file directory
-    autocmd BufEnter * if bufname("") !~ "^\[A-Za-z0-9\]*://" | lcd %:p:h | endif
+    augroup vimrc
+        autocmd!
+        autocmd BufEnter * if bufname("") !~ "^\[A-Za-z0-9\]*://" | lcd %:p:h | endif
+    augroup end
 endif
 
 "syntax on                                   " syntax highlighting
@@ -71,7 +75,10 @@ set completeopt+=longest                            " do not select the first va
 set backspace=indent,eol,start                      " fix backspace indent
 set hidden
 "set list
-"set listchars=tab:\|\ ,                            " sets a | char at tab
+set listchars=tab:→\ ,eol:↵,trail:·,extends:↷,precedes:↶
+" set fillchars
+set fillchars=vert:│,fold:·
+
 set grepformat=%f:%l:%c:%m,%f:%l:%m
 
 " toggle the cursor crosshairs (shows crosshairs as +)
@@ -79,6 +86,8 @@ map <silent> # :set cursorcolumn! cursorline!<CR>
 
 " show wildmenu to visual autocomplete for command menu
 set wildmenu
+
+"set wildmode=list:longest,list:full
 
 " ------------------------------------------------------------------------------------
 "  fold settings
@@ -98,9 +107,11 @@ augroup END
 
 set wildignorecase                       " ignore case while completing file names
 
-set mouse=a                              " enable mouse in all modes
 "set mouse=niv                           " enable mouse in normal, insert and visual modes
+set mouse=a                              " enable mouse in all modes
+set mousefocus                           " automatically activate window with mouse pointer
 
+set ttyfast                              " improves smoothness of redrawing
 set lazyredraw                           " do not redraw screen while executing macros; much faster
 
 set binary                               " enable binary support
@@ -119,8 +130,8 @@ set guicursor=n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50
 " ------------------------------------------------------------------------------------
 " get the system os running
 " ------------------------------------------------------------------------------------
-let os = substitute(system('uname'), '\n', '', '')
-if os == 'Darwin' || os == 'Mac'
+let g:os = substitute(system('uname'), '\n', '', '')
+if g:os ==# 'Darwin' || g:os ==# 'Mac'
     let s:sysos = 'osx'
 endif
 
@@ -137,14 +148,14 @@ if has('gui_running')
     set guioptions-=b                   " Hide bottom scrollbar
     set showtabline=0                   " Hide tabline
     set guioptions-=e                   " Hide tab
-    if s:sysos == 'osx'
+    if s:sysos ==# 'osx'
         if exists('g:vimosx_gui_font')
             exe 'set guifont=' . g:vimosx_gui_font
         else
             "set guifont=Meslo\ LG\ L\ DZ\ for\ Powerline:h12
             set guifont=Monaco\ for\ Powerline:h12
         endif
-    elseif s:sysos == 'linux'
+    elseif s:sysos ==# 'linux'
         set guifont=DejaVu\ Sans\ Mono\ 11
     endif
 endif
@@ -152,10 +163,6 @@ endif
 " show number and relative number
 set relativenumber
 set number
-
-" set fillchar
-"set fillchars+=vert:│
-hi VertSplit ctermbg=NONE guibg=NONE
 
 " ------------------------------------------------------------------------------------
 " Formatting options
@@ -166,11 +173,14 @@ set tabstop=4                               " number of visual spaces per TAB
 set softtabstop=4                           " number of spaces in tab when editing
 set shiftwidth=4
 
-set autoindent                              " copy indent from current line
 set autoread                                " read open files again if changed outside vim
+
+" indentation related
+set autoindent                              " copy indent from current line
 set smartindent
 set cindent
 set cinoptions=(0,u0,U0
+
 
 " Text auto formatting options
 set formatoptions=c,q,r,t
@@ -182,7 +192,7 @@ set formatoptions=c,q,r,t
 " +------------- Auto-wrap comments using textwidth, inserting
 "                the current comment leader automatically.
 
-set bs=2                                    " allow backspacing over everything in insert mode
+set backspace=2                                    " allow backspacing over everything in insert mode
 
 
 " ------------------------------------------------------------------------------------
@@ -212,7 +222,7 @@ if has('statusline')
    set statusline+=%=%-14.(%l,%c%V%)\ %p%%      " Right aligned file nav info
 endif
 
-" search and matching options
+" highlighting, search and matching options
 set showmatch                               " highlight matching brackets
 set hlsearch                                " highlight searches
 set incsearch                               " incremental search highlights as you type
@@ -228,11 +238,13 @@ else
     nmap <silent> <leader>/ :set invhlsearch<CR>
 endif
 
-
+highlight LineNr       ctermbg=236 ctermfg=240
+highlight CursorLineNr ctermbg=236 ctermfg=240
+highlight CursorLine   ctermbg=236
 
 
 " for 256 color terminal support
-if &term =~ '256color'
+if &term =~# '256color'
    " disable Background Color Erase (BCE) so that color schemes
    " render properly when inside 256-color tmux and GNU screen.
    " see also http://snk.tuxfamily.org/log/vim-256color-bce.html
@@ -320,8 +332,11 @@ call EnsureDirExists(&backupdir)
 call EnsureDirExists(&directory)
 
 " set current directory of file in current window
-if has("autocmd")
-    autocmd BufEnter * :lchdir %:p:h
+if has('autocmd')
+    augroup vimrc
+        autocmd!
+        autocmd BufEnter * :lchdir %:p:h
+    augroup end
 endif
 
 " keymapping to move between splits
@@ -345,7 +360,7 @@ set ttimeoutlen=50
 "  while editing a file, always jump to the last known cursor position. Don't
 "  do that when the position is invalid or when inside an event handler.
 " ------------------------------------------------------------------------------------
-if has("autocmd")
+if has('autocmd')
     autocmd BufReadPost *
                 \ if line("'\"") > 0 && line("'\"") <= line("$") |
                 \   exe "normal! g`\"" |
@@ -356,10 +371,10 @@ endif
 " ------------------------------------------------------------------------------------
 " VIM Spellchecking
 " ------------------------------------------------------------------------------------
-if has("spell") " if vim support spell checking
+if has('spell') " if vim support spell checking
     " Download the dictionaries automatically
-    if !filewritable($HOME . "/.vim/private/spell")
-        call mkdir($HOME . "/.vim/private/spell","p")
+    if !filewritable($HOME . '/.vim/private/spell')
+        call mkdir($HOME . '/.vim/private/spell', 'p')
     endif
 
     " :set spell will do checks and jump using [s or s]
@@ -370,7 +385,7 @@ if has("spell") " if vim support spell checking
     autocmd BufEnter *.txt,*.tex,*.html,*.md,*.ymd,*.lhs setlocal spelllang=en_us
 
     " better error highlighting with solarized
-    if exists('g:colors_name') && (g:colors_name == 'solarized' || g:colors_name == 'solarized8')
+    if exists('g:colors_name') && (g:colors_name ==# 'solarized' || g:colors_name ==# 'solarized8')
         highlight clear SpellBad
         highlight SpellBad term=standout ctermfg=2 term=underline cterm=underline
         highlight clear SpellCap
@@ -389,8 +404,10 @@ imap éé `                               " Easier anti-quote
 " ------------------------------------------------------------------------------------
 if (exists('+colorcolumn'))
     set colorcolumn=110
-    highlight ColorColumn ctermbg=lightgray
+    highlight ColorColumn ctermbg=237
 endif
+
+hi VertSplit ctermbg=NONE guibg=NONE
 
 " fix EOL
 if exists('&fixendofline')
@@ -400,10 +417,10 @@ endif
 " ------------------------------------------------------------------------------------
 " for MacVim specific settings - override macvim color scheme
 " ------------------------------------------------------------------------------------
-let macvim_skip_colorscheme=1
+let g:macvim_skip_colorscheme=1
 
 if has('gui_running')
-    let do_syntax_sel_menu=1
+    let g:do_syntax_sel_menu=1
 endif
 
 " #############################################################################

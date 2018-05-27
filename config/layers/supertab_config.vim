@@ -1,12 +1,13 @@
 " ------------------------------------------------------------------------------------
 " ------           SuperTab TAB Completions and Color Customizations            ------
 " ------------------------------------------------------------------------------------
-"let g:SuperTabDefaultCompletionType       = '<c-x><c-o>'
-" for working in tandem with OmniCompletion
-let g:SuperTabContextDefaultCompletionType  = '<c-n>'
-"let g:SuperTabDefaultCompletionType         = 'context'
+let g:SuperTabCrMapping                     = 0
+let g:SuperTabContextDefaultCompletionType  = '<c-n>'          " for working in tandem with OmniCompletion
+"let g:SuperTabDefaultCompletionType        = '<c-x><c-o>'
+"let g:SuperTabDefaultCompletionType        = 'context'
 let g:SuperTabDefaultCompletionType         = '<c-n>'
 let g:SuperTabContextTextMemberPatterns     = ['\.', '>\?::', '->', ':']
+let g:SuperTabCompletionContexts            = ['s:ContextText', 's:ContextDiscover']
 let g:SuperTabContextTextOmniPrecedence     = ['&omnifunc', '&completefunc']
 let g:SuperTabContextDiscoverDiscovery      = ["&completefunc:<c-x><c-u>", "&omnifunc:<c-x><c-o>"]
 

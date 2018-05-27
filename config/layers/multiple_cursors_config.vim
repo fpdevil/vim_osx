@@ -5,7 +5,7 @@
 
 if has_key(g:plugs, 'vim-multiple-cursors')
     function! Multiple_cursors_before()
-        if exists("*youcompleteme#EnableCursorMovedAutocommands")
+        if exists('*youcompleteme#EnableCursorMovedAutocommands')
             call youcompleteme#DisableCursorMovedAutocommands()
         endif
         if exists(':NeoCompleteLock') == 2
@@ -14,7 +14,7 @@ if has_key(g:plugs, 'vim-multiple-cursors')
     endfunction
 
     function! Multiple_cursors_after()
-        if exists("*youcompleteme#EnableCursorMovedAutocomm")
+        if exists('*youcompleteme#EnableCursorMovedAutocomm')
             call youcompleteme#EnableCursorMovedAutocommands()
         endif
         if exists('NeoCompleteLockUnlock') == 2
@@ -25,10 +25,19 @@ if has_key(g:plugs, 'vim-multiple-cursors')
     " default highlighting (see help :highlight and help :highlight-link)
     highlight multiple_cursors_cursor term=reverse cterm=reverse gui=reverse
     highlight link multiple_cursors_visual Visual
+
     " key bindings for multiple cursors
-    let g:multi_cursor_next_key = '<C-z>'
-    let g:multi_cursor_prev_key = '<C-m>'
-    let g:multi_cursor_skip_key = '<C-x>'
-    let g:multi_cursor_quit_key = '<Esc>'
+    let g:multi_cursor_use_default_mapping = 0
+
+    " Switch to multicursor mode with ,mc
+    let g:multi_cursor_start_key           = ',mc'
+    let g:multi_cursor_select_all_key      = ',an'
+
+    let g:multi_cursor_start_word_key      = '<C-n>'
+    let g:multi_cursor_select_all_word_key = '<A-n>'
+    let g:multi_cursor_next_key            = '<C-n>'
+    let g:multi_cursor_prev_key            = '<C-m>'
+    let g:multi_cursor_skip_key            = '<C-x>'
+    let g:multi_cursor_quit_key            = '<Esc>'
 endif
 " }}}

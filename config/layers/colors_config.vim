@@ -23,6 +23,7 @@ else " has no gui
     endif
 endif
 
+
 if exists('g:colors_name') && g:colors_name == 'solarized8'
     if has('gui_running')
         let g:solarized_diffmode     = "normal"
@@ -57,3 +58,19 @@ elseif exists('g:colors_name') && g:colors_name == 'PaperColor'
       \   }
       \ }
 endif
+
+" set shortcut for checking the current color theme
+let g:lmap = get(g:, 'lmap', {})
+if has_key(g:lmap, 't')
+    let g:lmap.t.u = {
+                \ 'name': '+UI Themes and Colors ',
+                \ 't': ['call ToggleBG()', 'Toggle the background color '],
+                \ 'c': ['call ShowColorTheme()', 'Display current color theme '],
+                \ 'b': ['set bg?', 'Display current bacground color '],
+                \ }
+endif
+
+" italics in comments
+let &t_ZH="\e[3m"
+let &t_ZR="\e[23m"
+highlight Comment cterm=italic gui=italic

@@ -62,27 +62,27 @@ if has_key(g:plugs, 'fzf.vim')
     " for FuzzyFinder FZF
     let g:lmap = get(g:, 'lmap', {})
     let g:lmap.z = {
-                \ 'name': 'Fuzzy Finder',
-                \ 'p' : ['GetPlugHelp', 'Get Help for listed Plugins'],
-                \ 'f' : [':Files', 'Preview Files'],
-                \ 'F' : [':Filetypes', 'Set File Type'],
-                \ 'c' : [':Colors', 'List Color Schemes'],
-                \ 'b' : [':Buffers', 'List Buffers'],
-                \ 'd' : [':FufFileWithCurrentBufferDir', 'Find File under CurDir'],
-                \ 'g' : [':GFiles?', 'Git files (git status)'],
-                \ 'r' : [':Ag <C-R><C-W>', 'SilverSearch'],
-                \ 'R' : [':Ag <C-R><C-A>', 'SilverSearcher'],
-                \ 'o' : ['History', 'Open Buffers and v:oldfiles'],
-                \ 'h' : ['History:', 'Cmd History'],
-                \ 'H' : ['History/', 'Search History'],
-                \ 'y' : ['y:Ag', 'SilverSearchAg'],
-                \ 'm' : [':Marks', 'Marks'],
-                \ 'w' : ['Windows', 'Windows'],
-                \ 'k' : ['Maps', 'NormalMode KeyMappings'],
-                \ 'K' : ['Commands', 'Commands Available'],
-                \ 's' : ['Snippets', 'Snippets (UltiSnips)'],
-                \ 't' : ['Commits', 'Git commits'],
-                \ 'T' : ['BCommits', 'Git commits for current buffer'],
+                \ 'name': '+Fuzzy Finder ',
+                \ 'p' : ['GetPlugHelp', 'Get Help for listed Plugins '],
+                \ 'f' : [':Files', 'Preview Files '],
+                \ 'F' : [':Filetypes', 'Set File Type '],
+                \ 'c' : [':Colors', 'List Color Schemes '],
+                \ 'b' : [':Buffers', 'List Buffers '],
+                \ 'd' : [':FufFileWithCurrentBufferDir', 'Find File under CurDir '],
+                \ 'g' : [':GFiles?', 'Git files (git status) '],
+                \ 'r' : [':Ag <C-R><C-W>', 'SilverSearch '],
+                \ 'R' : [':Ag <C-R><C-A>', 'SilverSearcher '],
+                \ 'o' : ['History', 'Open Buffers and v:oldfiles '],
+                \ 'h' : ['History:', 'Cmd History '],
+                \ 'H' : ['History/', 'Search History '],
+                \ 'y' : ['y:Ag', 'SilverSearchAg '],
+                \ 'm' : [':Marks', 'Marks '],
+                \ 'w' : ['Windows', 'Windows '],
+                \ 'k' : ['Maps', 'NormalMode KeyMappings '],
+                \ 'K' : ['Commands', 'Commands Available '],
+                \ 's' : ['Snippets', 'Snippets (UltiSnips) '],
+                \ 't' : ['Commits', 'Git commits '],
+                \ 'T' : ['BCommits', 'Git commits for current buffer '],
                 \ }
 
     " nnoremap <silent> q: :History:<CR>
@@ -98,7 +98,6 @@ if has_key(g:plugs, 'fzf.vim')
     xmap <leader><tab> <plug>(fzf-maps-x)
     omap <leader><tab> <plug>(fzf-maps-o)
 
-
 endif
 "}}}
 
@@ -107,7 +106,7 @@ endif
 "== == == == == == == == == == == == == == == == == == == == == == == == == ==
 let g:unite_source_menu_menus.fzf = {
             \ 'description' : '            FzF tools
-            \                                             ⌘ [-]z',
+            \                                             ⌘ [<leader>]z',
             \ }
 
 let g:unite_source_menu_menus.fzf.command_candidates = [

@@ -74,7 +74,7 @@ function! Run_xmllint_canon()
 endfunction
 command! XCANON call Run_xmllint_canon()
 
-function Run_xmllint_nsclean()
+function! Run_xmllint_nsclean()
 	call Run_xmllint_command("--encode UTF-8 --nsclean -")
 endfunction
 command! XNSCLEAN call Run_xmllint_nsclean()

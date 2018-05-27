@@ -124,8 +124,12 @@ augroup END
 "    available or not is kept and if that plugin is available the template is
 "    inserted by plugin
 
-
-func SetTitle()
+"Function: SetTitle
+"Desc: To insert the common comment headers for a new buffer
+"
+"Arguments: nil
+"
+function! SetTitle()
     if &filetype == 'sh'
       " for shell script file type
       call setline(1, "\#!/usr/bin/env bash")

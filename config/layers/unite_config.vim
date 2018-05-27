@@ -74,6 +74,9 @@ if isdirectory(expand("~/.vim/plugged/unite.vim/"))
                     \ --ignore ''.git'' --ignore ''.bzr'''
     endif
 
+    " for leader-map display
+    let g:lmap = get(g:, 'lmap', {})
+
     " key mappings
     nnoremap <silent><leader>ufa :<C-u>Unite -no-split
                 \ -buffer-name=Mixed -start-insert file file_mru file_rec buffer<cr>
@@ -90,20 +93,20 @@ if isdirectory(expand("~/.vim/plugged/unite.vim/"))
                 \ })
     call unite#custom#source('file_rec/async,file_rec/neovim', 'ignore_globs',
                 \ ['*.png','.git/','*.ttf', '*.eot', '*.woff', '*.svg'])
-    nnoremap <silent><leader>uff  :<C-u>Unite
+    nnoremap <silent><leader>ufe  :<C-u>Unite
                 \ -no-split -buffer-name=files -start-insert file<cr>
-    nnoremap <silent><leader>ufm :<C-u>Unite
-                \ -no-split -buffer-name=mru   -start-insert file_mru<cr>
-    nnoremap <silent><leader>ubf :<C-u>Unite
+    nnoremap <silent><leader>ufE :<C-u>Unite
+                \ -no-split -buffer-name=mru -start-insert file_mru<cr>
+    nnoremap <silent><leader>ubb :<C-u>Unite
                 \ -buffer-name=buffer  buffer<cr>
-    nnoremap <silent><leader>ubt :<C-u>Unite
+    nnoremap <silent><leader>ubB :<C-u>Unite
                 \ -buffer-name=buffer_tab  buffer_tab<cr>
     call unite#custom#profile('buffer,buffer_tab', 'context', {
                 \ 'start_insert' : 0,
                 \ 'quit'         : 1,
                 \ 'keep_focus'   : 1,
                 \ })
-    nnoremap <silent><leader>umm  :<C-u>Unite -start-insert mapping<CR>
+    nnoremap <silent><leader>umM  :<C-u>Unite -start-insert mapping<CR>
     "" grep dictionay
     """ For searching the word in the cursor in the current directory
     nnoremap <silent><leader>uwd :Unite
@@ -114,20 +117,20 @@ if isdirectory(expand("~/.vim/plugged/unite.vim/"))
     noremap <silent><leader>uwb :Unite
                 \ -auto-preview -no-split grep:%::<C-r><C-w><CR>
     """ For searching the word in the cursor in all opened buffer
-    noremap <silent><leader>uwa :Unite
+    noremap <silent><leader>uwB :Unite
                 \ -auto-preview -no-split grep:$buffers::<C-r><C-w><CR>
     nnoremap <silent><Leader>ubl :<C-u>Unite
                 \ -start-insert -buffer-name=buffer buffer<cr>
-    nnoremap <silent><Leader>ubt :<C-u>Unite -start-insert -buffer-name=tag tag<cr>
+    nnoremap <silent><Leader>ubL :<C-u>Unite -start-insert -buffer-name=tag tag<cr>
 
     " recent files
-    nnoremap <silent><leader>ufr :<C-u>Unite file_mru -default-action=split<Cr>
+    nnoremap <silent><leader>ufm :<C-u>Unite file_mru -default-action=split<Cr>
     nnoremap <silent><leader>ufb :<C-u>Unite buffer -default-action=split<Cr>
-    nnoremap <silent><leader>ufd :<C-u>UniteWithBufferDir file_rec -default-action=split<Cr>
+    nnoremap <silent><leader>ufB :<C-u>UniteWithBufferDir file_rec -default-action=split<Cr>
 
     nnoremap <silent><leader>ufo :<C-u>Unite outline -auto-preview -buffer-name=outline<Cr>
-    nnoremap <silent><leader>ufa :<C-u>Unite file_rec/async<Cr>
-    nnoremap <silent><leader>ufd :<C-u>Unite ref/man ref/hoogle ref/pydoc -default-action=split<Cr>
+    nnoremap <silent><leader>ufl :<C-u>Unite file_rec/async<Cr>
+    nnoremap <silent><leader>ufr :<C-u>Unite ref/man ref/hoogle ref/pydoc -default-action=split<Cr>
 
     " search for a string in multiple files or under a filetree
     nnoremap <silent><Leader>ufs :split<cr> :<C-u>Unite -start-insert file_rec/async<cr>
@@ -135,13 +138,84 @@ if isdirectory(expand("~/.vim/plugged/unite.vim/"))
     " search plugin
     " :Unite neobundle/search
     " for Unite menu
-    nnoremap <silent><leader>ugg :Unite -silent -start-insert menu:git<CR>
-    nnoremap <silent><leader>ugf :UniteWithCursorWord file_rec/async<CR>
-    nnoremap <silent><leader>ugt :UniteWithCursorWord tag<CR>
+    nnoremap <silent><leader>umg :Unite -silent -start-insert menu:git<CR>
+    nnoremap <silent><leader>uwf :UniteWithCursorWord file_rec/async<CR>
+    nnoremap <silent><leader>uwt :UniteWithCursorWord tag<CR>
 
     " check color themes and airline themes
-    nnoremap <silent><leader>utc :<C-u>Unite colorscheme -auto-preview<CR>
-    nnoremap <silent><leader>uta :<C-u>Unite airline_themes -auto-preview<CR>
+    "nnoremap <silent><leader>utc :<C-u>Unite colorscheme -auto-preview<CR>
+    "nnoremap <silent><leader>uta :<C-u>Unite airline_themes -auto-preview<CR>
+
+    " unite help
+    " nnoremap <silent><leader>uh :Unite -start-insert help<CR>
+   
+    if has_key(g:lmap, 'u')
+        let g:lmap.u.f = {
+                    \ 'name': '+Files ',
+                    \ 'a': ['Unite -no-split -buffer-name=Mixed -start-insert file file_mru file_rec buffer', 'Mixed search '],
+                    \ 'R': ['Unite -buffer-name=files file_rec/async:!', 'Async buffer search '],
+                    \ 'g': ['Unite -buffer-name=git-repo file_rec/git', 'Search GIT repo '],
+                    \ 'f': ['Unite file', 'Browse for a file in current working dir '],
+                    \ 'F': ['Unite -start-insert file', 'Browse for file in insert mode in cwd. '],
+                    \ 'e': ['Unite -no-split -buffer-name=files -start-insert file', 'Browse files in insert mode '],
+                    \ 'E': ['Unite -no-split -buffer-name=mru -start-insert file_mru', 'Browse recent files in insert mode '],
+                    \ 'm': ['Unite file_mru -default-action=split', 'Get recent files list '],
+                    \ 'b': ['Unite buffer -default-action=split', 'Browse list of currently open buffers '],
+                    \ 'B': ['UniteWithBufferDir file_rec -default-action=split', 'Unite with buffers '],
+                    \ 'o': ['Unite outline -auto-preview -buffer-name=outline', 'Get outline of current buffer '],
+                    \ 'l': ['Unite file_rec/async', 'Recursive list of all files under cwd '],
+                    \ 'r': ['Unite ref/man ref/hoogle ref/pydoc -default-action=split', 'Get doc references '],
+                    \ 's': ['Unite -start-insert file_rec/async', 'Search for a string in multiple files '],
+                    \ }
+
+        let g:lmap.u.w = {
+                    \ 'name': '+Word search ',
+                    \ 'f': ['UniteWithCursorWord file_rec/async', 'Word under cursor in files '],
+                    \ 't': ['UniteWithCursorWord tag', 'Word under cursor with tag '],
+                    \ 'd': ['Unite -auto-preview -no-split grep:.::<C-R><C-w>', 'Search for word in cursor in cwd '],
+                    \ 's': ['Unite -auto-preview -no-split grep:.', 'Search for a word '],
+                    \ 'b': ['Unite -auto-preview -no-split grep:%::<C-r><C-w>', 'Search for word in current buffer '],
+                    \ 'B': ['Unite -auto-preview -no-split grep:$buffers::<C-r><C-w>', 'Search for word in all open buffers '],
+                    \ }
+
+        let g:lmap.u.b = {
+                    \ 'name': '+Buffers ',
+                    \ 'l': ['Unite -start-insert -buffer-name=buffer buffer', 'Buffer list '],
+                    \ 'L': ['Unite -start-insert -buffer-name=tag tag', 'Buffer list by tag '],
+                    \ 'b': ['Unite -buffer-name=buffer  buffer', 'Browse buffers '],
+                    \ 'B': ['Unite -buffer-name=buffer_tab  buffer_tab', 'Browse open buffers '],
+                    \ }
+
+        let g:lmap.u.h = {
+                    \ 'name': '+Help ',
+                    \ 'v': ['Unite -start-insert help', 'Unite get help on ViM objects '],
+                    \ }
+
+        let g:lmap.u.t = {
+                    \ 'name': '+Themes ',
+                    \ 'c': ['Unite colorscheme -auto-preview', 'Preview the color scheme '],
+                    \ 'a': ['Unite airline_themes -auto-preview', 'Preview the airline theme '],
+                    \ }
+
+        let g:lmap.u.m = {
+                    \ 'name': '+Show Unite Menu & Mappings ',
+                    \ 'M': ['Unite -silent -start-insert menu', 'Unite Display all Menus'],
+                    \ 'g': ['Unite -silent -start-insert menu:git', 'Unite GIT menu '],
+                    \ 'v': ['Unite -silent -start-insert menu:vim', 'Unite ViM menu '],
+                    \ 's': ['Unite -silent -start-insert menu:spelling', 'Unite Spell Checking menu '],
+                    \ 'S': ['Unite -silent -start-insert menu:searching', 'Unite Search menu '],
+                    \ 'p': ['Unite -silent -start-insert menu:python', 'Unite Python menu '],
+                    \ 'h': ['Unite -silent -start-insert menu:http', 'Unite HTTP status codes menu '],
+                    \ 'H': ['Unite -silent -start-insert menu:haskell', 'Unite Haskell menu '],
+                    \ 'G': ['Unite -silent -start-insert menu:golang', 'Unite Golang menu '],
+                    \ 'f': ['Unite -silent -start-insert menu:fzf', 'Unite FuzzyFinder menu '],
+                    \ 'F': ['Unite -silent -start-insert menu:files', 'Unite Files menu '],
+                    \ 'c': ['Unite -silent -start-insert menu:code', 'Unite Code menu '],
+                    \ 'b': ['Unite -silent -start-insert menu:bookmarks', 'Unite Bookmarks menu '],
+                    \ 'k': ['<C-u>Unite -start-insert mapping', 'Unite mappings '],
+                    \ }
+    endif
+
 
     augroup unite_buffer_feature
         autocmd FileType unite call s:unite_my_settings()
@@ -197,6 +271,18 @@ function! s:unite_my_settings()
     imap <silent><buffer><expr> <C-s>     unite#do_action('split')
 endfunction
 
+
+
+" -----------------------------------------------------------------------------
+"  Source for unite.vim that shows outputs from quickfix (:Unite quickfix -wrap)
+" -----------------------------------------------------------------------------
+if has_key(g:plugs,'unite-quickfix')
+    " multiline support
+    let g:unite_quickfix_is_multiline=0
+    call unite#custom_source('quickfix', 'converters', 'converter_quickfix_highlight')
+    call unite#custom_source('location_list', 'converters', 'converter_quickfix_highlight')
+endif
+
 " -----------------------------------------------------------------------------
 " vim unite exit on esc
 " -----------------------------------------------------------------------------
@@ -216,8 +302,8 @@ au FileType unite call s:UniteSettings()
 " Unite Menu integration for all the unite commands
 "== == == == == == == == == == == == == == == == == == == == == == == == == ==
 let g:unite_source_menu_menus.files = {
-            \ 'description' : '          files & dirs
-            \                                          ⌘ [space]o',
+            \ 'description' : '          files, dirs & ViM options
+            \                             ⌘ [space]o',
             \ }
 let g:unite_source_menu_menus.files.command_candidates = [
          \ ['▷ open file                                                  ⌘ <Leader>o',
@@ -230,6 +316,8 @@ let g:unite_source_menu_menus.files.command_candidates = [
          \ 'Unite file/new'],
          \ ['▷ search directory',
          \ 'Unite directory'],
+         \ ['▷ show outputs from quickfix',
+         \ 'Unite quickfix -wrap'],
          \ ['▷ search recently used directories',
          \ 'Unite directory_mru'],
          \ ['▷ search directory with recursive search',
@@ -238,6 +326,8 @@ let g:unite_source_menu_menus.files.command_candidates = [
          \ 'Unite directory/new'],
          \ ['▷ change working directory',
          \ 'Unite -default-action=lcd directory'],
+         \ ['▷ output ViM options',
+         \ 'Unite options'],
          \ ['▷ know current working directory',
          \ 'Unite output:pwd'],
          \ ['▷ junk files                                                 ⌘ <Leader>d',
