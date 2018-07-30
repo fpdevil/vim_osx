@@ -72,7 +72,19 @@ set completeopt+=menuone                            " always show the completion
 set completeopt+=preview                            " sometimes annoying window on the top
 set completeopt+=longest                            " do not select the first variant by default
 
+set complete=.,w,b,t,i,u,k                          " completion buffers
+"            | | | | | | |
+"            | | | | | | `-dict
+"            | | | | | `-unloaded buffers
+"            | | | | `-include files
+"            | | | `-tags
+"            | | `-other loaded buffers
+"            | `-windows buffers
+"            `-the current buffer
+
 set backspace=indent,eol,start                      " fix backspace indent
+"set backspace=2                                    " allow backspacing over everything in insert mode
+
 set hidden
 "set list
 set listchars=tab:→\ ,eol:↵,trail:·,extends:↷,precedes:↶
@@ -183,16 +195,16 @@ set cinoptions=(0,u0,U0
 
 
 " Text auto formatting options
+set formatprg=par               " external program used to format with gq operator
 set formatoptions=c,q,r,t
-" | | | |
-" | | | +------- Auto-wrap text using textwidth.
-" | | +--------- Auto insert the current comment leader after
-" | |            hitting <Enter> in Insert mode.
-" | +----------- Allow formatting of comments with 'gq'.
-" +------------- Auto-wrap comments using textwidth, inserting
-"                the current comment leader automatically.
+"                 | | | |
+"                 | | | +------- Auto-wrap text using textwidth.
+"                 | | +--------- Auto insert the current comment leader after
+"                 | |            hitting <Enter> in Insert mode.
+"                 | +----------- Allow formatting of comments with 'gq'.
+"                 +------------- Auto-wrap comments using textwidth, inserting
+"                                the current comment leader automatically.
 
-set backspace=2                                    " allow backspacing over everything in insert mode
 
 
 " ------------------------------------------------------------------------------------
@@ -228,19 +240,40 @@ set hlsearch                                " highlight searches
 set incsearch                               " incremental search highlights as you type
 set ignorecase                              " case insensitive search
 set smartcase                               " unless search contains uppercase letter
+set infercase                               " case based completion
 set novisualbell                            " no beep
 
+
+
 " To clear the search highlighting, set the below option
-"   let g:vimosx_clear_search_highlight = 1
-if exists('g:vimosx_clear_search_highlight')
+if exists('g:vim_clear_search_highlight')
     nmap <silent> <leader>/ :nohlsearch<CR>
 else
     nmap <silent> <leader>/ :set invhlsearch<CR>
 endif
 
+"function! core_settings#SearchHlClear()
+"    let @/ = ''
+"endfunction
+"
+"augroup searchhighlighting
+"    autocmd!
+"    autocmd CursorHold,CursorHoldI * call core_settings#SearchHlClear()
+"augroup END
+
+"{{{ cursor line changes
 highlight LineNr       ctermbg=236 ctermfg=240
 highlight CursorLineNr ctermbg=236 ctermfg=240
-highlight CursorLine   ctermbg=236
+
+" Default Colors for CursorLine
+highlight  CursorLine ctermbg=Yellow ctermfg=None
+
+" Change Color when entering Insert Mode
+autocmd InsertEnter * highlight CursorLine guifg=white guibg=blue ctermfg=white ctermbg=blue
+
+" Revert Color to default when leaving Insert Mode
+autocmd InsertLeave * highlight CursorLine guifg=white guibg=darkblue ctermfg=white ctermbg=darkblue
+"}}}
 
 
 " for 256 color terminal support
@@ -253,7 +286,7 @@ endif
 
 
 " Use pleasant but very visible search hilighting
-hi Search ctermfg=white ctermbg=173 cterm=none guifg=#ffffff guibg=#e5786d gui=none
+hi Search term=reverse ctermfg=white ctermbg=173 cterm=none guifg=#ffffff guibg=#e5786d gui=none
 hi! link Visual Search
 
 
@@ -269,7 +302,8 @@ endfunction
 " -----------------------------------------------------------------------------
 "  cache settings - define settings for the cache directory
 " -----------------------------------------------------------------------------
-let s:cache_dir = $HOME . '/.vim/.cache/'
+"let s:cache_dir = $HOME . '/.vim/.cache/'
+let s:cache_dir = $HOME . '/.cache/'
 call EnsureDirExists(s:cache_dir)
 
 " -----------------------------------------------------------------------------
@@ -387,15 +421,18 @@ if has('spell') " if vim support spell checking
     " better error highlighting with solarized
     if exists('g:colors_name') && (g:colors_name ==# 'solarized' || g:colors_name ==# 'solarized8')
         highlight clear SpellBad
-        highlight SpellBad term=standout ctermfg=2 term=underline cterm=underline
+        highlight SpellBad term=standout ctermfg=2 term=underline cterm=underline gui=undercurl guisp=red
         highlight clear SpellCap
-        highlight SpellCap term=underline cterm=underline
+        highlight SpellCap term=underline ctermfg=1 cterm=underline gui=undercurl guisp=blue
         highlight clear SpellRare
-        highlight SpellRare term=underline cterm=underline
+        highlight SpellRare term=underline ctermfg=1 cterm=underline gui=undercurl guisp=magenta
         highlight clear SpellLocal
-        highlight SpellLocal term=underline cterm=underline
+        highlight SpellLocal term=underline ctermfg=1 cterm=underline
     endif
 endif
+
+" set dictionary
+set dictionary-=/usr/share/dict/words dictionary+=/usr/share/dict/words
 
 imap éé `                               " Easier anti-quote
 
