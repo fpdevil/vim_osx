@@ -3,14 +3,11 @@
 " #############################################################################
 
 " buffer modifiability allow
-set ma
+set modifiable
 
 " vim-plug specific
 " alias to upgrade the vim-plug after doing a plugins update
 command! PU PlugUpdate | PlugUpgrade
-
-" open .vimrc with a shortcut
-" nnoremap <leader>vim :tabnew ~/.vim/vimrc<cr>
 
 " to provide a menu interface for the unite
 let g:unite_source_menu_menus = {}
@@ -18,6 +15,7 @@ let g:unite_source_menu_menus = {}
 " menu prefix key (for all Unite menus)
 nnoremap [menu] <Nop>
 nmap <LocalLeader> [menu]
+
 " menus menu
 nnoremap <silent>[menu]u :Unite -silent -winheight=20 menu<CR>
 
@@ -40,11 +38,6 @@ highlight WideEisuu             ctermbg=brown guifg=white guibg=brown
 highlight WideSpace             ctermbg=brown guifg=white guibg=brown
 highlight BadWhitespace         ctermbg=brown guifg=white guibg=brown
 
-" Setting Italics for comments
-"highlight Comment cterm=italic
-"highlight Comment gui=italic
-highlight htmlArg cterm=italic
-
 " Searing red very visible cursor red back ground
 hi Cursor guibg=red
 
@@ -63,22 +56,22 @@ call s:highlight_general_checkstyles()
 " ------------------------------------------------------------------------------------
 " handling the cursor shapes (make a straight line in INSERT mode
 " ------------------------------------------------------------------------------------
-if has("autocmd")
-  au VimEnter,InsertLeave * silent execute '!echo -ne "\e[2 q"' | redraw!
-  au InsertEnter,InsertChange *
-    \ if v:insertmode == 'i' |
-    \   silent execute '!echo -ne "\e[6 q"' | redraw! |
-    \ elseif v:insertmode == 'r' |
-    \   silent execute '!echo -ne "\e[4 q"' | redraw! |
-    \ endif
-  au VimLeave * silent execute '!echo -ne "\e[ q"' | redraw!
-endif
+"if has('autocmd')
+"  au VimEnter,InsertLeave * silent execute '!echo -ne "\e[2 q"' | redraw!
+"  au InsertEnter,InsertChange *
+"    \ if v:insertmode == 'i' |
+"    \   silent execute '!echo -ne "\e[6 q"' | redraw! |
+"    \ elseif v:insertmode == 'r' |
+"    \   silent execute '!echo -ne "\e[4 q"' | redraw! |
+"    \ endif
+"  au VimLeave * silent execute '!echo -ne "\e[ q"' | redraw!
+"endif
 
-" define settings for the cache
-" let s:cache_dir = '~/.vim/.cache'
-" function! g:GetCacheDir(suffix)
-  " return resolve(expand(s:cache_dir . '/' . a:suffix))
-" endfunction
+" Change cursor shape between insert and normal mode in iTerm2.app
+if $TERM_PROGRAM =~ "iTerm"
+    let &t_SI = "\<Esc>]50;CursorShape=1\x7" " Vertical bar in insert mode
+    let &t_EI = "\<Esc>]50;CursorShape=0\x7" " Block in normal mode
+endif
 
 " -------------------------------------------------------------------------------------
 "  function for handling indent line plugin
@@ -97,7 +90,9 @@ function! s:ShowIndentLine()
     endif
 endfunction
 
-autocmd InsertEnter * call s:ShowIndentLine()
+augroup indent_line_group
+    autocmd InsertEnter * call s:ShowIndentLine()
+augroup END
 
 
 " *************************************************************************************
@@ -111,7 +106,6 @@ autocmd InsertEnter * call s:ShowIndentLine()
 " **** cd /usr/local/lib/erlang/lib                                                ****
 " **** ~/.vim/plugged/vim-erlang-tags/bin/vim-erlang-tags.erl                      ****
 " *************************************************************************************
-"set tags+=~/.vim/tags/opencv
 
 set tags+=~/.vim/private/tags/systags
 
@@ -120,10 +114,12 @@ set tags+=/usr/local/lib/erlang/lib/tags
 " -------------------------------------------------------------------------------------
 " set cpp includes in the path
 " -------------------------------------------------------------------------------------
-"set path=.,/usr/include,/usr/local/include
 " included clang includes
 "set path=.,/usr/include,/usr/local/include,/opt/software/clang+llvm-6.0.0-x86_64-apple-darwin/include/c++/v1
-set path=.,/usr/include,/usr/local/include,/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1,/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.1.0/include,/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include
+
+"set path=.,/usr/include,/usr/local/include,/Library/Developer/CommandLineTools/usr/include/c++/v1,/Library/Developer/CommandLineTools/usr/lib/clang/10.0.0/include,/Library/Developer/CommandLineTools/usr/include
+
+set path=.,/usr/local/include,/usr/include,/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1,/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.1.0/include,/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include
 
 " -------------------------------------------------------------------------------------
 " additional path settings to include opencv
@@ -149,7 +145,7 @@ for p in sys.path:
         # Command 'set' needs backslash before each space.
         vim.command(r"set path+=%s" % (p.replace(" ", r"\ ")))
 EOF
-endif"has('python3')
+endif "has('python3')
 
 " -------------------------------------------------------------------------------------
 " for external path setup in macvim
@@ -157,18 +153,17 @@ endif"has('python3')
 if has('gui_running')
     set path+=/usr/local/lib/python3.6/site-packages
     "let $PYTHONPATH = "/usr/local/lib/python3.6/site-packages"
-    let $PYTHON3_INCLUDE_DIR = "/usr/local/opt/python3/Frameworks/Python.framework/Versions/3.6/include/python3.6m"
-    let $PYTHON3_LIBRARY = "/usr/local/opt/python3/Frameworks/Python.framework/Versions/3.6/lib/python3.6/config-3.6m-darwin"
-    let $GOPATH = $HOME . "/sw/programming/gocode/go"
-    let $PATH = $HOME . "/usr/local/opt/go/libexec/bin:" . $PATH
+    let $PYTHON3_INCLUDE_DIR = '/usr/local/opt/python3/Frameworks/Python.framework/Versions/3.6/include/python3.6m'
+    let $PYTHON3_LIBRARY = '/usr/local/opt/python3/Frameworks/Python.framework/Versions/3.6/lib/python3.6/config-3.6m-darwin'
+    let $GOPATH = $HOME . '/sw/programming/gocode/go'
+    let $PATH = $HOME . '/usr/local/opt/go/libexec/bin:' . $PATH
 endif
 
 " -------------------------------------------------------------------------------------
 " for haskell external path setup in macvim
 " -------------------------------------------------------------------------------------
 if has('gui_running')
-  "set path+=~/Library/Haskell/bin
-  let $PATH=$PATH.':'.expand("~/Library/Haskell/bin/")
+    let $PATH=$PATH.':'.expand('~/Library/Haskell/bin/')
 endif
 
 " -------------------------------------------------------------------------------------
