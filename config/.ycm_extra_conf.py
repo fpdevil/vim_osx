@@ -1,113 +1,66 @@
-import logging
+# https://github.com/dccmx/nixfiles/blob/master/.ycm_extra_conf.py
 import os
-import os.path
 
 import ycm_core
 
-# `gcc -print-prog-name=cpp` -v
-# -isystem tag precedes all the system library paths
-# while -I precedes all the local include directories
-BASE_FLAGS = [
-        '-Wall',
-        '-Wextra',
-        '-Werror',
-        '-Wno-long-long',
-        '-Wno-variadic-macros',
-        '-fexceptions',
-        '-ferror-limit=10000',
-        '-DNDEBUG',
-        '-std=c++11',
-        '-stdlib=libc++',
-        '-xc++',
-        '-isystem',
-        '../BoostParts',
-        '-isystem', '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1',
-        '-isystem', '/usr/local/include',
-        '-isystem', '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.1.0/include',
-        '-isystem', '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include',
-        '-isystem', '/usr/include',
-        '-I',
-        '.',
-        '-I/usr/lib/',
-        '-I/usr/local/include/',
-        '-I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1',
-        '-I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.1.0/include',
-        '-I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include',
-        '-I/usr/include'
-]
+from clang_helpers import PrepareClangFlags
 
-SOURCE_EXTENSIONS = [
-        '.cpp',
-        '.cxx',
-        '.cc',
-        '.c',
-        '.m',
-        '.mm'
-]
+flags = [
+    '-Wall',
+    '-Wextra',
+    '-Werror',
+    '-std=c++14',
+    '-stdlib=libc++',
+    '-x', 'c',
 
-HEADER_EXTENSIONS = [
-        '.h',
-        '.hxx',
-        '.hpp',
-        '.hh'
+    '-isystem', '/usr/lib/c++/v1',
+    '-isystem', '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/c++/v1',
+    '-isystem', '/usr/local/include',
+    '-isystem', '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/9.1.0/include',
+    '-isystem', '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include',
+    '-isystem', '/usr/include',
+    '-isystem', '/System/Library/Frameworks',
+    '-isystem', '/Library/Frameworks',
+
+    '-I', '.',
+    '-I', './Include',
+    '-I', './Python',
+    '-I', './Objects',
+    '-I', './Parser',
+    '-I', '..',
+    '-I', '../..',
 ]
 
 # Set this to the absolute path to the folder (NOT the file!) containing the
 # compile_commands.json file to use that instead of 'flags'. See here for
 # more details: http://clang.llvm.org/docs/JSONCompilationDatabase.html
 #
+# You can get CMake to generate this file for you by adding:
+#   set( CMAKE_EXPORT_COMPILE_COMMANDS 1 )
+# to your CMakeLists.txt file.
+#
 # Most projects will NOT need to set this to anything; you can just change the
-# 'flags' list of compilation flags.
+# 'flags' list of compilation flags. Notice that YCM itself uses that approach.
 compilation_database_folder = ''
 
-if os.path.exists( compilation_database_folder ):
-  database = ycm_core.CompilationDatabase( compilation_database_folder )
+if os.path.exists(compilation_database_folder):
+    database = ycm_core.CompilationDatabase(compilation_database_folder)
 else:
-  database = None
+    database = None
+
+SOURCE_EXTENSIONS = ['.cpp', '.cxx', '.cc', '.c', '.m', '.mm']
+
 
 def DirectoryOfThisScript():
-  return os.path.dirname( os.path.abspath( __file__ ) )
+    return os.path.dirname(os.path.abspath(__file__))
 
-def IsHeaderFile(filename):
-    extension = os.path.splitext(filename)[1]
-    return extension in HEADER_EXTENSIONS
-
-def GetCompilationInfoForFile(database, filename):
-    if IsHeaderFile(filename):
-        basename = os.path.splitext(filename)[0]
-        for extension in SOURCE_EXTENSIONS:
-            replacement_file = basename + extension
-            if os.path.exists(replacement_file):
-                compilation_info = database.GetCompilationInfoForFile(replacement_file)
-                if compilation_info.compiler_flags_:
-                    return compilation_info
-        return None
-    return database.GetCompilationInfoForFile(filename)
-
-def FindNearest(path, target, build_folder):
-    candidate = os.path.join(path, target)
-    if(os.path.isfile(candidate) or os.path.isdir(candidate)):
-        logging.info("Found nearest " + target + " at " + candidate)
-        return candidate;
-
-    parent = os.path.dirname(os.path.abspath(path));
-    if(parent == path):
-        raise RuntimeError("Could not find " + target);
-
-    if(build_folder):
-        candidate = os.path.join(parent, build_folder, target)
-        if(os.path.isfile(candidate) or os.path.isdir(candidate)):
-            logging.info("Found nearest " + target + " in build folder at " + candidate)
-            return candidate;
-
-    return FindNearest(parent, target, build_folder)
 
 def MakeRelativePathsInFlagsAbsolute(flags, working_directory):
     if not working_directory:
         return list(flags)
     new_flags = []
     make_next_absolute = False
-    path_flags = [ '-isystem', '-I', '-iquote', '--sysroot=' ]
+    path_flags = ['-isystem', '-I', '-iquote', '--sysroot=']
     for flag in flags:
         new_flag = flag
 
@@ -122,7 +75,7 @@ def MakeRelativePathsInFlagsAbsolute(flags, working_directory):
                 break
 
             if flag.startswith(path_flag):
-                path = flag[ len(path_flag): ]
+                path = flag[len(path_flag):]
                 new_flag = path_flag + os.path.join(working_directory, path)
                 break
 
@@ -131,61 +84,53 @@ def MakeRelativePathsInFlagsAbsolute(flags, working_directory):
     return new_flags
 
 
-def FlagsForClangComplete(root):
-    try:
-        clang_complete_path = FindNearest(root, '.clang_complete')
-        clang_complete_flags = open(clang_complete_path, 'r').read().splitlines()
-        return clang_complete_flags
-    except:
-        return None
+def IsHeaderFile(filename):
+    extension = os.path.splitext(filename)[1]
+    return extension in ['.h', '.hxx', '.hpp', '.hh']
 
-def FlagsForInclude(root):
-    try:
-        include_path = FindNearest(root, 'include')
-        flags = []
-        for dirroot, dirnames, filenames in os.walk(include_path):
-            for dir_path in dirnames:
-                real_path = os.path.join(dirroot, dir_path)
-                flags = flags + ["-I" + real_path]
-        return flags
-    except:
-        return None
 
-def FlagsForCompilationDatabase(root, filename):
-    try:
-        # Last argument of next function is the name of the build folder for
-        # out of source projects
-        compilation_db_path = FindNearest(root, 'compile_commands.json', 'build')
-        compilation_db_dir = os.path.dirname(compilation_db_path)
-        logging.info("Set compilation database directory to " + compilation_db_dir)
-        compilation_db =  ycm_core.CompilationDatabase(compilation_db_dir)
-        if not compilation_db:
-            logging.info("Compilation database file found but unable to load")
-            return None
-        compilation_info = GetCompilationInfoForFile(compilation_db, filename)
+def GetCompilationInfoForFile(filename):
+    # The compilation_commands.json file generated by CMake does not have entries
+    # for header files. So we do our best by asking the db for flags for a
+    # corresponding source file, if any. If one exists, the flags for that file
+    # should be good enough.
+    if IsHeaderFile(filename):
+        basename = os.path.splitext(filename)[0]
+        for extension in SOURCE_EXTENSIONS:
+            replacement_file = basename + extension
+            if os.path.exists(replacement_file):
+                compilation_info = database.GetCompilationInfoForFile(
+                    replacement_file)
+                if compilation_info.compiler_flags_:
+                    return compilation_info
+        return None
+    return database.GetCompilationInfoForFile(filename)
+
+
+def FlagsForFile(filename, **kwargs):
+    if database:
+        # Bear in mind that compilation_info.compiler_flags_ does NOT return a
+        # python list, but a "list-like" StringVec object
+        compilation_info = GetCompilationInfoForFile(filename)
         if not compilation_info:
-            logging.info("No compilation info for " + filename + " in compilation database")
             return None
-        return MakeRelativePathsInFlagsAbsolute(
-                compilation_info.compiler_flags_,
-                compilation_info.compiler_working_dir_)
-    except:
-        return None
 
-def FlagsForFile(filename):
-    root = os.path.realpath(filename);
-    compilation_db_flags = FlagsForCompilationDatabase(root, filename)
-    if compilation_db_flags:
-        final_flags = compilation_db_flags
+        final_flags = MakeRelativePathsInFlagsAbsolute(
+            compilation_info.compiler_flags_,
+            compilation_info.compiler_working_dir_)
+
+        # NOTE: This is just for YouCompleteMe; it's highly likely that your project
+        # does NOT need to remove the stdlib flag. DO NOT USE THIS IN YOUR
+        # ycm_extra_conf IF YOU'RE NOT 100% SURE YOU NEED IT.
+        try:
+            final_flags.remove('-stdlib=libc++')
+        except ValueError:
+            pass
     else:
-        final_flags = BASE_FLAGS
-        clang_flags = FlagsForClangComplete(root)
-        if clang_flags:
-            final_flags = final_flags + clang_flags
-        include_flags = FlagsForInclude(root)
-        if include_flags:
-            final_flags = final_flags + include_flags
+        relative_to = DirectoryOfThisScript()
+        final_flags = MakeRelativePathsInFlagsAbsolute(flags, relative_to)
+
     return {
-            'flags': final_flags,
-            'do_cache': True
-            }
+        'flags': final_flags,
+        'do_cache': True
+    }
