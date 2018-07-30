@@ -12,7 +12,7 @@ function! StartifyConfig()
         let g:startify_list_order = [
                     \ ['   Most Recently Used Files:'], 'files',
                     \ ['   Sessions:'], 'sessions',
-                    \ ['   Bookmarks:'], 'bookmarks'
+                    \ ['   Bookmarks:'], 'bookmarks',
                     \ ]
     else
         let l:dir = substitute(getcwd(), '^' . $HOME, '~', '')
@@ -20,12 +20,13 @@ function! StartifyConfig()
                     \ ['   Most Recently Used Files:'], 'files',
                     \ ['   MRU Files in ' . l:dir . ':'], 'dir',
                     \ ['   Sessions:'], 'sessions',
-                    \ ['   Bookmarks:'], 'bookmarks'
+                    \ ['   Bookmarks:'], 'bookmarks',
                     \ ]
     endif
 endfunction
 
 " ------------------------------------------------------------------------------------
+"  js linter listing
 " ------------------------------------------------------------------------------------
 "Function: ListJsLinterConfig
 "Desc: returns an associative list of mappings containing the js linters with
@@ -48,7 +49,7 @@ endfunction
 function! CheckJsLintConfig(path, linters)
     let l:dir = fnamemodify(a:path, ':p:h')
 
-    if (l:dir == '/')
+    if (l:dir ==# '/')
         return ['']
     endif
 
@@ -72,12 +73,12 @@ endfunction
 " ctags. this only supports '.cpp' and '.h' files
 " ------------------------------------------------------------------------------------
 function! SwitchHeader()
-    if(expand("%:e") == "c" || expand("%:e") == "cpp")
-        execute ":edit " . expand("%:r") . ".h"
-    elseif(expand("%:e") == "h")
-        execute ":edit " . expand("%:r") . ".c*"
+    if(expand('%:e') ==# 'c' || expand('%:e') ==# 'cpp')
+        execute ':edit ' . expand('%:r') . '.h'
+    elseif(expand('%:e') ==# 'h')
+        execute ':edit ' . expand('%:r') . '.c*'
     else
-        echoerr "ERROR: Unknown filetype"
+        echoerr 'ERROR: Unknown filetype'
     endif
 endfunction
 nmap <silent> <Leader>fs :call SwitchHeader()<CR>
@@ -92,7 +93,7 @@ function! HighlightRepeats() range
     let lineNum=a:firstline
     while lineNum <= a:lastline
         let lineText=getline(lineNum)
-        if lineText != ""
+        if lineText !=# ""
             let lineCounts[lineText]=(has_key(lineCounts, lineText) ? lineCounts[lineText] : 0) + 1
         endif
         let lineNum=lineNum + 1
@@ -106,12 +107,13 @@ function! HighlightRepeats() range
 endfunction
 command! -range=% HighlightRepeats <line1>,<line2>call HighlightRepeats()
 
+
 " ------------------------------------------------------------------------------------
 " define function for handling the exuberant c tags
 " ------------------------------------------------------------------------------------
 function! UpdateTags()
-    execute ":!ctags -R --languages=C++ --c++-kinds=+p --fields=+iaS --extra=+q ./"
-    echohl StatusLine | echo "C/C++ tag updated" | echohl None
+    execute ':!ctags -R --languages=C++ --c++-kinds=+p --fields=+iaS --extra=+q ./'
+    echohl StatusLine | echo 'C/C++ tag updated' | echohl None
 endfunction
 
 "Function: CTags
@@ -120,7 +122,7 @@ endfunction
 "Arguments: none
 "
 function! CTags()
-    let c_cmd = globpath(&runtimepath,'plugged/vimproc.vim') != '' ? 'VimProcBang' : '!'
+    let c_cmd = globpath(&runtimepath,'plugged/vimproc.vim') !=# '' ? 'VimProcBang' : '!'
     execute c_cmd 'ctags -R'
     NeoCompleteTagMakeCache
 endfunction
@@ -139,7 +141,7 @@ function! s:locate_jshintrc(dir)
         return s:locate_jshintrc(l:parent)
     endif
 
-    return "~/.jshintrc"
+    return '~/.jshintrc'
 endfunction
 
 function! UpdJsHintConf()
@@ -152,13 +154,14 @@ endfunction
 
 au BufEnter * call UpdJsHintConf()
 
+
 " ------------------------------------------------------------------------------------
 " a function for renaming the current file
 " ------------------------------------------------------------------------------------
 function! RenameFile()
     let current_file_name = expand('%')
     let new_file_name = input('New File Name: ', expand('%'), 'file')
-    if new_file_name != '' && new_file_name != current_file_name
+    if new_file_name !=# '' && new_file_name != current_file_name
         exec ':saveas ' . new_file_name
         exec ':silent !rm ' . current_file_name
         redraw!
@@ -172,7 +175,7 @@ endfunction
 " -----------------------------------------------------------------------------
 function! ToggleBG()
     let s:togglebg = &background
-    if s:togglebg == 'dark'
+    if s:togglebg ==# 'dark'
         set background=light
     else
         set background=dark
@@ -185,7 +188,7 @@ endfunction
 " a function to toggle line numbers
 " -----------------------------------------------------------------------------
 function! ToggleNumber()
-    let s:numberPresent = &nu
+    let s:numberPresent = &number
     let s:relativeNumberPresent = &relativenumber
     if s:numberPresent && s:relativeNumberPresent
         set paste!
@@ -197,6 +200,7 @@ function! ToggleNumber()
         set relativenumber
     endif
 endfunction
+
 
 " -----------------------------------------------------------------------------
 " show current color scheme name - usage  - call ShowColorTheme()
@@ -216,7 +220,7 @@ endfunction
 " function to check for existence of colorscheme
 function! HasColorScheme(name)
     let pattern = 'colors/' . a:name . '.vim'
-    return !empty(globpath(&rtp, pattern))
+    return !empty(globpath(&l:rtp, pattern))
 endfunction
 
 " -----------------------------------------------------------------------------
@@ -225,10 +229,9 @@ endfunction
 "Function: s:current_colors
 "Desc: filter and get all the installed color schemes from plugin
 "Arguments: nil
-"
 function! s:current_colors(...)
-  return filter(map(filter(split(globpath(&rtp, 'colors/*.vim'), "\n"),
-        \                  'v:val !~ "^/usr/"'),
+  return filter(map(filter(split(globpath(&l:rtp, 'colors/*.vim'), "\n"),
+        \                  'v:val !~# "^/usr/"'),
         \           'fnamemodify(v:val, ":t:r")'),
         \       '!a:0 || stridx(v:val, a:1) >= 0')
 endfunction
@@ -237,7 +240,6 @@ endfunction
 "Desc: rotate through the available color schemes with F8
 "      got from some vim forum
 "Arguments: nil
-"
 function! s:change_colors()
     if !exists('s:current_colors')
         let s:current_colors = s:current_colors()
@@ -250,12 +252,13 @@ function! s:change_colors()
 endfunction
 nnoremap <silent> <F8> :call <SID>change_colors()<cr>
 
+
 " -----------------------------------------------------------------------------
 " a custom functions for handling the Module name of Haskell
 " The initial letter should be in upper case
 " -----------------------------------------------------------------------------
 function! Split(path)
-    if has("win32")
+    if has('win32')
         return split(a:path, '[\/]\+')
     else
         return split(a:path, '/\+')
@@ -263,27 +266,26 @@ function! Split(path)
 endfunction
 
 function! CapitalizedSuffix(ps)
-    let result=[]
-    for p in reverse(a:ps)
-        if p =~# '^[[:upper:]]'
-            let result=[p]+result
+    let l:result=[]
+    for l:p in reverse(a:ps)
+        if l:p =~# '^[[:upper:]]'
+            let l:result = [l:p] + l:result
         else
             break
         endif
     endfor
-    return result
+    return l:result
 endfunction
 
 function! g:ModuleName()
-    let ps=CapitalizedSuffix(Split(expand('%:p')))
-    let n=len(ps)
-    if n==0
+    let l:ps=CapitalizedSuffix(Split(expand('%:p')))
+    let l:n=len(l:ps)
+    if l:n==0
         return ''
     else
         " strip the extension of the last component
-        "
-        let ps[n-1]=fnamemodify(ps[n-1], ":r:t")
-        return join(ps,'.')
+        let l:ps[l:n-1]=fnamemodify(l:ps[l:n-1], ':r:t')
+        return join(l:ps,'.')
     endif
 endfunction
 
@@ -292,29 +294,30 @@ endfunction
 " a function for compiling the src code...
 " -----------------------------------------------------------------------------
 function! CompileNRun()
-    exec "w"
-    if &filetype == 'c'
-        exec "!g++ % -o %<"
-        exec "!time ./%<"
-    elseif &filetype == 'cpp'
-        exec "!g++ % -o %<"
-        exec "!time ./%<"
-    elseif &filetype == 'java'
-        exec "!javac %"
-        exec "!time java %<"
-    elseif &filetype == 'sh'
+    exec 'w'
+    if &filetype ==# 'c'
+        exec '!g++ % -o %<'
+        exec '!time ./%<'
+    elseif &filetype ==# 'cpp'
+        exec '!g++ % -o %<'
+        exec '!time ./%<'
+    elseif &filetype ==# 'java'
+        exec '!javac %'
+        exec '!time java %<'
+    elseif &filetype ==# 'sh'
         :!time bash %
-    elseif &filetype == 'python'
-        exec "!time python3 %"
-    elseif &filetype == 'html'
-        exec "!firefox % &"
-    elseif &filetype == 'go'
+    elseif &filetype ==# 'python'
+        exec '!time python3 %'
+    elseif &filetype ==# 'html'
+        exec '!firefox % &'
+    elseif &filetype ==# 'go'
         "exec "!go build %<"
-        exec "!time go run %"
+        exec '!time go run %'
+      endif
 endfunc
 
 " for unite menu
-let s:leaderKey = exists("&mapleader") ? &mapleader : ','
+let s:leaderKey = exists('&mapleader') ? &mapleader : ','
 
 function! custom_functions#unite_menu_gen(unite_menu, empty_list)
     let l:empty_list = a:empty_list
@@ -323,14 +326,14 @@ function! custom_functions#unite_menu_gen(unite_menu, empty_list)
         return l:empty_list
     endif
 
-    for entry in a:unite_menu
-        if type(entry) == 1
-            let entry = substitute(entry, '\V<Leader>\c', '\1'.s:leaderKey, 'g')
-        elseif type(entry) == 3
-            let entry = custom_functions#unite_menu_gen(entry, [])
+    for l:entry in a:unite_menu
+        if type(l:entry) == 1
+            let l:entry = substitute(l:entry, '\V<Leader>\c', '\1'.s:leaderKey, 'g')
+        elseif type(l:entry) == 3
+            let l:entry = custom_functions#unite_menu_gen(l:entry, [])
         endif
 
-        call add(l:empty_list, entry)
+        call add(l:empty_list, l:entry)
     endfor
 
     return l:empty_list
@@ -341,19 +344,21 @@ endfunction
 " count number of lines of code (requiremenet: brew -v install cloc)
 " ------------------------------------------------------------------------------------
 function! LinesOfCode()
-    echo system('cloc --quiet '.bufname("%"))
+    echo system('cloc --quiet '.bufname('%'))
 endfunction
+
 
 " ------------------------------------------------------------------------------------
 "  function to get help on new tabs
 " ------------------------------------------------------------------------------------
 function! s:GetHelpOnTab()
-    if &buftype == 'help'
+    if &buftype ==# 'help'
         wincmd T
         nnoremap <buffer> q :q<cr>
     endif
 endfunction
-autocmd vimrc BufEnter *.txt call s:GetHelpOnTab()
+
+"autocmd vimrc BufEnter *.txt call s:GetHelpOnTab()
 
 
 " ------------------------------------------------------------------------------------
@@ -363,46 +368,44 @@ autocmd vimrc BufEnter *.txt call s:GetHelpOnTab()
 "Function: VimAwesomeComplete
 "Desc: Provide an auto-completion for the plugin search by using the
 "      keyboard shortcut c-x c-v
-"
 "Arguments: void
-"
 function! VimAwesomeComplete() abort
-    let prefix = matchstr(strpart(getline('.'), 0, col('.') - 1), '[.a-zA-Z0-9_/-]*$')
+    let l:prefix = matchstr(strpart(getline('.'), 0, col('.') - 1), '[.a-zA-Z0-9_/-]*$')
     echohl WarningMsg
     echo 'Downloading plugin list from VimAwesome'
     echohl None
-    ruby << EOF
+ruby << EOF
     require 'json'
     require 'open-uri'
 
-    query = VIM::evaluate('prefix').gsub('/', '%20')
+    query = VIM::evaluate('l:prefix').gsub('/', '%20')
     items = 1.upto(max_pages = 3).map do |page|
-    Thread.new do
-    url  = "https://vimawesome.com/api/plugins?page=#{page}&query=#{query}"
-    data = open(url).read
-    json = JSON.parse(data, symbolize_names: true)
-    json[:plugins].map do |info|
-    pair = info.values_at :github_owner, :github_repo_name
-    next if pair.any? { |e| e.nil? || e.empty? }
-    {word: pair.join('/'),
-    menu: info[:category].to_s,
-    info: info.values_at(:short_desc, :author).compact.join($/)}
-end.compact
-    end
-end.each(&:join).map(&:value).inject(:+)
-VIM::command("let cands = #{JSON.dump items}")
+        Thread.new do
+            url  = "https://vimawesome.com/api/plugins?page=#{page}&query=#{query}"
+            data = open(url).read
+            json = JSON.parse(data, symbolize_names: true)
+            json[:plugins].map do |info|
+                pair = info.values_at :github_owner, :github_repo_name
+                next if pair.any? { |e| e.nil? || e.empty? }
+                {word: pair.join('/'),
+                menu: info[:category].to_s,
+                info: info.values_at(:short_desc, :author).compact.join($/)}
+            end.compact
+        end
+    end.each(&:join).map(&:value).inject(:+)
+    VIM::command("let cands = #{JSON.dump items}")
 EOF
-if !empty(cands)
-    inoremap <buffer> <c-v> <c-n>
-    augroup _VimAwesomeComplete
-        autocmd!
-        autocmd CursorMovedI,InsertLeave * iunmap <buffer> <c-v>
-                    \| autocmd! _VimAwesomeComplete
-    augroup END
+    if !empty(cands)
+        inoremap <buffer> <c-v> <c-n>
+        augroup _VimAwesomeComplete
+            autocmd!
+            autocmd CursorMovedI,InsertLeave * iunmap <buffer> <c-v>
+                        \| autocmd! _VimAwesomeComplete
+        augroup END
 
-    call complete(col('.') - strchars(prefix), cands)
-endif
-return ''
+        call complete(col('.') - strchars(l:prefix), cands)
+    endif
+    return ''
 endfunction
 
 augroup VimAwesomeComplete
@@ -410,4 +413,122 @@ augroup VimAwesomeComplete
     autocmd FileType vim inoremap <c-x><c-v> <c-r>=VimAwesomeComplete()<cr>
 augroup END
 
-" vim:set et sw=4
+" ------------------------------------------------------------------------------------
+" buffer numbering and indexing for tabs and buffers
+" ------------------------------------------------------------------------------------
+"Function:  s:create_winid2bufnr_dict
+"Desc: create a reverse dictionary by subtracting the buffer number from the window
+"Arguments: void
+function! s:create_winid2bufnr_dict() abort
+    let winid2bufnr_dict = {}
+    for bnr in filter(range(1, bufnr('$')), 'v:val')
+        for wid in win_findbuf(bnr)
+            let winid2bufnr_dict[wid] = bnr
+          endfor
+    endfor
+    return winid2bufnr_dict
+endfunction
+
+"Function: show_tab_info
+"Desc: get tab page information
+"
+"Arguments:
+function! s:show_tab_info() abort
+    echo '====== Tab Page Info ======'
+    let l:current_tnr = tabpagenr()
+    let l:winid2bufnr_dict = s:create_winid2bufnr_dict()
+    for l:tnr in range(1, tabpagenr('$'))
+        let l:current_winnr = tabpagewinnr(l:tnr)
+        echo (l:tnr == l:current_tnr ? '>' : ' ') 'Tab:' l:tnr
+        echo '    Buffer number | Window Number | Window ID | Buffer Name'
+        for l:wininfo in map(map(range(1, tabpagewinnr(l:tnr, '$')), '{"wnr": v:val, "wid": win_getid(v:val, l:tnr)}'), 'extend(v:val, {"bnr": winid2bufnr_dict[v:val.wid]})')
+            echo '   ' (l:wininfo.wnr == l:current_winnr ? '*' : ' ') printf('%11d | %13d | %9d | %s', l:wininfo.bnr, l:wininfo.wnr, l:wininfo.wid, bufname(l:wininfo.bnr))
+        endfor
+    endfor
+endfunction
+
+command! -bar TabInfo call s:show_tab_info()
+
+
+"Function: GetFileTypes
+"Desc: get a list of file types
+"Arguments: nil
+function! GetFiletypes()
+    " Get a list of all the runtime directories by taking the value of that
+    " option and splitting it using a comma as the separator.
+    let l:rtps = split(&runtimepath, ',')
+    " This will be the list of filetypes that the function returns
+    let l:filetypes = []
+
+    " Loop through each individual item in the list of runtime paths
+    for l:rtp in l:rtps
+        let l:syntax_dir = l:rtp . '/syntax'
+        " Check to see if there is a syntax directory in this runtimepath.
+        if (isdirectory(l:syntax_dir))
+            " Loop through each vimscript file in the syntax directory
+            for l:syntax_file in split(glob(l:syntax_dir . '/*.vim'), '\n')
+                " Add this file to the filetypes list with its everything
+                " except its name removed.
+                call add(l:filetypes, fnamemodify(l:syntax_file, ':t:r'))
+            endfor
+        endif
+    endfor
+
+    " This removes any duplicates and returns the resulting list.
+    " NOTE: This might not be the best way to do this, suggestions are welcome.
+    return uniq(sort(l:filetypes))
+endfunction
+
+"""""""
+"run ->
+"for f in GetFiletypes() | echo f | endfor
+
+
+" ------------------------------------------------------------------------------------
+" Browse command is used by fugitive instead of netrw, so we can get rid of
+" those Press <cr> to continue messages.
+" ------------------------------------------------------------------------------------
+let g:browser_path='/Applications/Google Chrome.app'
+function! Browse(url)
+    if filereadable(g:browser_path)
+        let cmd = g:browser_path
+    elseif has('mac')
+        let cmd = 'open'
+    else
+        let cmd = 'start'
+    endif
+    call system([cmd, a:url])
+endfunction
+command! -nargs=1 Browse :call Browse(<q-args>)
+
+"Function: DevDocs
+"Desc: do a search of the query in devdocs.io
+"
+"Arguments: query
+function! DevDocs(query)
+    let q = 'https://devdocs.io/#q=' . substitute(a:query, ' ', '%20', 'g')
+    call Browse(q)
+endfunction
+
+command! -nargs=* DevDocs :call DevDocs(<q-args>)
+
+
+"Function: DisplayFunctionKeys
+"Desc: Display function keys from F1 through F12
+"
+"Arguments: void
+function! DisplayFunctionKeys(bang)
+    for i in range(1,12)
+        redir! => map
+        exe 'silent ' . (a:bang == '!' ? 'verbose' : '') . 'map<F' . i . '>'
+        redir end
+        if map !~ 'No Mapping Found'
+            echomsg map
+        endif
+    endfor
+endfunction
+
+command! -bang DisplayFunctionKeys : call DisplayFunctionKeys(<q-bang>)
+" :DisplayFunctionKeys
+
+" vim:set et sw=4 sts=4
