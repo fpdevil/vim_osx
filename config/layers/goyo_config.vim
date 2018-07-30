@@ -61,9 +61,14 @@ function! s:goyo_leave()
 endfunction
 
 augroup goyo_map
+    autocmd! User GoyoEnter
+    autocmd! User GoyoLeave
     autocmd! User GoyoEnter nested call <SID>goyo_enter()
     autocmd! User GoyoLeave nested call <SID>goyo_leave()
 augroup END
+
+" width for goyo
+"let g:goyo_width = 115
 
 "nnoremap <Leader>G :Goyo<CR>
 if has_key(g:lmap,'w')
