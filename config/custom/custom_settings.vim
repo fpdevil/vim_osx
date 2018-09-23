@@ -109,7 +109,7 @@ augroup END
 
 set tags+=~/.vim/private/tags/systags
 
-set tags+=/usr/local/lib/erlang/lib/tags
+set tags+=/usr/local/opt/erlang/lib/erlang/lib/tags
 
 " -------------------------------------------------------------------------------------
 " set cpp includes in the path

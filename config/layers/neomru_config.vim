@@ -11,9 +11,9 @@ let s:temp_file_pat = join([
 
 if $TMP !=# ''
   let s:temp_file_pat .=
-  \  '\|^' . substitute(expand($TMP), '\', '[/\\\\]', 'g')
+        \  '\|^' . substitute(expand($TMP), '\', '[/\\\\]', 'g')
 elseif has('unix')
-  let s:temp_file_pat .= '\|^/tmp/\|^/var/tmp/'
+    let s:temp_file_pat .= '\|^/tmp/\|^/var/tmp/'
 endif
 
 if has_key(g:plugs,'neomru.vim')
@@ -23,3 +23,5 @@ if has_key(g:plugs,'neomru.vim')
     let g:neomru#file_mru_limit          = 1000
     let g:neomru#file_mru_ignore_pattern = s:temp_file_pat
 endif
+
+" vim:set et ts=4 sts=4 sw=4 tw=0:

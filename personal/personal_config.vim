@@ -2,13 +2,16 @@ scriptencoding utf-8
 
 " set the terminal vim color scheme
 " if commented, default is solarized
-let g:vim_color_scheme = 'PaperColor'
+"let g:vim_color_scheme = 'abra'
 "let g:vim_color_scheme = 'OceanicNext'
 "let g:vim_color_scheme = 'hydrangea'
+let g:vim_color_scheme = 'NeoSolarized'
 
 " color scheme in gui mode
-let g:vim_gui_color_scheme = 'solarized8_dark_flat'
+let g:vim_gui_color_scheme = 'solarized8_light'
 
+" font in the gui mode
+let g:vimosx_gui_font = 'MonacoForPowerline:h12'
 
 " terminal status line / airline theme (default: dark)
 let g:vim_airline_theme = 'aurora'

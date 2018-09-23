@@ -1,7 +1,8 @@
 " -----------------------------------------------------------------------------
 " ------               asynchronous completion framework                 ------
 " -----------------------------------------------------------------------------
-if isdirectory(expand('~/.vim/plugged/deoplete.nvim'))
+
+if has_key(g:plugs,'deoplete.nvim')
     let g:deoplete#enable_at_startup          = 1
     let g:deoplete#auto_complete_start_length = 1
     let g:deoplete#enable_yarp                = 1
@@ -19,10 +20,12 @@ if isdirectory(expand('~/.vim/plugged/deoplete.nvim'))
     let g:deoplete#omni#functions      = {}
     let g:deoplete#sources             = {}
 
+    let g:deoplete#sources._           = ['omni', 'snippet', 'tag', 'buffer']
+
     " with zchee/deoplete-clang
     let g:deoplete#sources#clang#executable    = '/opt/software/clang+llvm-6.0.0-x86_64-apple-darwin/bin/clang'
-    let g:deoplete#sources#clang#libclang_path = '/opt/software/clang+llvm-6.0.0-x86_64-apple-darwin/lib'
-    let g:deoplete#sources#clang#clang_header  = '/opt/software/clang+llvm-6.0.0-x86_64-apple-darwin/include'
+    let g:deoplete#sources#clang#libclang_path = '/opt/software/clang+llvm-6.0.0-x86_64-apple-darwin/lib/libclang.dylib'
+    let g:deoplete#sources#clang#clang_header  = '/opt/software/clang+llvm-6.0.0-x86_64-apple-darwin/include/'
     let g:deoplete#sources#clang#flags         = [
           \ '-isystem',
           \ '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/include/c++/v1',
@@ -53,10 +56,15 @@ if isdirectory(expand('~/.vim/plugged/deoplete.nvim'))
     let g:deoplete#keyword_patterns.clojure = '[\w!$%&*+/:<=>?@\^_~\-\.#]*'
 
     " accept partial fuzzy matches like YouCompleteMe
-    call deoplete#custom#source('ghc', 'sorters', ['sorter_word'])
-    call deoplete#custom#source('_', 'matchers', ['matcher_full_fuzzy'])
-    call deoplete#custom#source('_', 'converters', ['converter_remove_paren'])
-    call deoplete#custom#source('_', 'disabled_syntaxes', ['Comment', 'String'])
+    call g:deoplete#custom#source('ghc', 'sorters', ['sorter_word'])
+    call g:deoplete#custom#source('_', 'matchers', ['matcher_full_fuzzy'])
+    call g:deoplete#custom#source('_', 'converters', ['converter_remove_paren'])
+    call g:deoplete#custom#source('_', 'disabled_syntaxes', ['Comment', 'String'])
+
+    call g:deoplete#custom#source('ternjs', 'mark', 'tern')
+    call g:deoplete#custom#source('ternjs', 'rank', 9999)
+
+    call g:deoplete#custom#source('file/include', 'matchers', ['matcher_head'])
 
 
     ""use TAB as the mapping

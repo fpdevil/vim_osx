@@ -7,7 +7,7 @@ filetype plugin indent on
 " --- define a local variable for holding the plugins
 " --- configuration files location
 " --- now loaded as global variable from vimrc
-let s:plugins_config = "~/.vim/config/layers/"
+let s:plugins_config = '~/.vim/config/layers/'
 
 " --- custom function for sourcing each configuration file
 function! s:LoadConfig(cfg)
@@ -30,10 +30,8 @@ call s:LoadConfig('tabalign_config.vim')           " text/tab alignment
 call s:LoadConfig('easy_align_config.vim')         " easy text alignment configuration
 call s:LoadConfig('autocomplete_config.vim')       " neocomplete configuration for code completion
 call s:LoadConfig('neocomplete_config.vim')        " neocomplete nextgen autocomplete configuration
-"call s:LoadConfig('deoplete_config.vim')           " asynchronous code completion with deoplete
+call s:LoadConfig('deoplete_config.vim')           " asynchronous code completion with deoplete
 call s:LoadConfig('completion_sources.vim')        " syntax and completion sources
-call s:LoadConfig('completeparam_config.vim')      " complete parameter configuration
-call s:LoadConfig('async_code_completion.vim')     " configuration for asynchroonus code completion
 call s:LoadConfig('vimplugins_config.vim')         " vim-plugins assortment of c-support,vim,py etc
 call s:LoadConfig('snippets_config.vim')           " snippet plugin related configuration
 call s:LoadConfig('syntax_config.vim')             " syntastic plugin related configuration
@@ -82,8 +80,14 @@ call s:LoadConfig('operator_highlight_config.vim') " configuration settings for 
 call s:LoadConfig('vimref_config.vim')             " configuration settings for vim-ref
 call s:LoadConfig('xml_config.vim')                " configuration settings for xml
 call s:LoadConfig('autoformat_config.vim')         " configuration settings for vim-autoformat
+
+
+" --- disabled configurations ---
 " disabled had some problems with erlang
-"call s:LoadConfig('hier_config.vim')              " vim hier configuration for highlighting errors
+" call s:LoadConfig('hier_config.vim')              " vim hier configuration for highlighting errors
+" below are not used any more
+" call s:LoadConfig('completeparam_config.vim')      " complete parameter configuration
+" call s:LoadConfig('async_code_completion.vim')     " configuration for asynchroonus code completion
 
 " ####################################################################################
 " ############################## END OF PLUGIN SETTINGS ##############################

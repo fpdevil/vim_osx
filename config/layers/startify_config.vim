@@ -14,8 +14,18 @@ endif
 
 " custom display colors
 hi StartifyBracket ctermfg=240
+hi StartifyFile    ctermfg=147
+hi StartifyFooter  ctermfg=240
+hi StartifyHeader  ctermfg=114
+hi StartifyNumber  ctermfg=215
 hi StartifyPath    ctermfg=245
 hi StartifySlash   ctermfg=240
+hi StartifySpecial ctermfg=240
+
+" for a custom header showing the node version
+"let node = split('node ' . system('node -v'), '\n')
+"let npm = split('npm ' . system('npm -v'), '\n')
+"let g:startify_custom_header = map(node + npm, '"   ". v:val')
 
 "let g:startify_custom_header          = startify#fortune#boxed()
 let g:startify_fortune_use_unicode     = 0
@@ -32,7 +42,7 @@ let g:startify_bookmarks               = [
             \ '~/.vim/config/plugins/bundled_plugins.vim',
             \ '~/.vim/config/plugins/plugin_settings.vim',
             \ '~/.vim/personal/personal_config.vim',
-            \ '~/aquamacs.d'
+            \ '~/.emacs.d'
             \ ]
 let g:startify_list_order              = [
             \ ['    My Sessions:'],

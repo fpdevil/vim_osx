@@ -1,10 +1,16 @@
 "{{{
 if has_key(g:plugs, 'fzf.vim')
     " check if its neovim
-    if has('nvim')
+    if has('gui_running')
         let $FZF_DEFAULT_OPTS .= ' --inline-info'
         " let $NVIM_TUI_ENABLE_TRUE_COLOR = 1
     endif
+
+    " for terminal buffers, hide the statusline
+    augroup fzf_vim
+        autocmd! FileType fzf
+        autocmd FileType fzf set laststatus=0 noshowmode noruler
+                    \ autocmd BufLeave <buffer> set laststatus=2 showmode ruler
 
     " preview command
     command! -bang -nargs=? -complete=dir Files

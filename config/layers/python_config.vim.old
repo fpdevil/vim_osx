@@ -1,0 +1,85 @@
+"------------------------------------------------------------------------------------
+"---------    python/python3 and JEDI syntastic integration for checking    ---------
+"----- ycm can also be used,  but pretty happy with the JEDI completion for now -----
+"------------------------------------------------------------------------------------
+" jedi auto-completion and syntax checking for python3
+" the below section first does a check on which version of python to choose
+
+if has('python')
+    let g:jedi#force_py_version        = 2
+    let g:syntastic_python_python_exec = 'python'
+    let g:pymode_python                = 'python'
+elseif has('python3')
+    let g:jedi#force_py_version        = 3
+    let g:syntastic_python_python_exec = '/usr/local/bin/python3'
+    let g:pymode_python                = '/usr/local/bin/python3'
+else
+    let g:loaded_jedi = 1
+endif
+
+augroup py
+    autocmd!
+    autocmd FileType python setlocal omnifunc=jedi#completions
+    "autocmd FileType python setlocal completefunc=jedi#completions
+
+    " call signatures
+    autocmd FileType python call jedi#configure_call_signatures()
+
+    " -- completion options display
+    au FileType python setlocal completeopt=preview,menu,longest
+
+    " -- filetype indentation for python
+    autocmd FileType python set tabstop=4|set shiftwidth=4|set expandtab
+    autocmd BufRead *.py set smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
+augroup end
+
+" set the keymapping for definition browsing (-t)
+"au FileType python let g:jedi#completions_enabled        = 0
+"au FileType python let g:jedi#goto_definitions_command   = "<leader>t"
+"au FileType python let g:jedi#show_call_signatures_delay = 0
+"au FileType python let g:jedi#auto_close_doc             = 1
+"au FileType python let g:jedi#show_call_signatures       = 2
+"au FileType python let g:jedi#auto_vim_configuration     = 0
+"au FileType python let g:jedi#smart_auto_mappings        = 1
+"au FileType python let g:jedi#popup_on_dot               = 1
+
+let g:jedi#auto_vim_configuration     = 1
+let g:jedi#completions_enabled        = 1
+let g:jedi#show_call_signatures       = 1
+let g:jedi#popup_on_dot               = 1
+"let g:jedi#show_call_signatures_delay = 0
+"let g:jedi#smart_auto_mappings        = 1
+let g:jedi#goto_command               = '<leader>lpg'
+let g:jedi#goto_assignments_command   = '<leader>lpa'
+let g:jedi#goto_definitions_command   = ''
+let g:jedi#documentation_command      = '<leaderlpd>'
+let g:jedi#usages_command             = '<leader>lpu'
+let g:jedi#rename_command             = '<leader>lpr'
+"let g:jedi#pop_select_first           = 0
+"let g:jedi#completions_command        = '<C-Space>'
+"let g:jedi#use_splits_not_buffers     = "left"
+
+
+" {{{  python language specific customizations
+"      enable all the python syntax highlighting features
+let g:python_highlight_all=1
+" }}}
+
+" ------------------------------------------------------------------------------------
+" ---                 ultisnips snippets for python2 and python3                   ---
+" ------------------------------------------------------------------------------------
+if has('python')
+    let g:UltiSnipsUsePythonVersion = 2
+else
+    let g:UltiSnipsUsePythonVersion = 3
+endif
+
+" ------------------------------------------------------------------------------
+"  for proper pep8 indentation
+" ------------------------------------------------------------------------------
+autocmd FileType python set tabstop=4|set shiftwidth=4|set shiftwidth=4|set textwidth=79|set expandtab|set autoindent
+au BufEnter *.py set ai sw=4 ts=4 sta et fo=croql
+
+"spaces for indents and text wraps
+au BufNewFile,BufRead *.py set ts=4 sw=4 textwidth=79 et ai fileformat=unix
+

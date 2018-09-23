@@ -9,7 +9,12 @@ if !empty(glob('~/.vim/plugged/vim-ctrlspace'))
         " Settings for MacVim and powerline font
         let g:CtrlSpaceSymbols = { "File": "◯", "CTab": "▣", "Tabs": "▢" }
     endif
-    hi CtrlSpaceSearch guifg=#cb4b16 guibg=NONE gui=bold ctermfg=9 ctermbg=NONE term=bold cterm=bold
+
+    hi CtrlSpaceSelected term=reverse ctermfg=187  ctermbg=23  cterm=bold
+    hi CtrlSpaceNormal   term=NONE    ctermfg=244  ctermbg=232 cterm=NONE
+    hi CtrlSpaceSearch   guifg=#cb4b16 guibg=NONE gui=bold ctermfg=9 ctermbg=NONE term=bold cterm=bold
+    hi CtrlSpaceStatus   ctermfg=230  ctermbg=234  cterm=NONE
+
     if executable("ag")
         let g:CtrlSpaceGlobCommand = 'ag -l --nocolor -g ""'
     endif

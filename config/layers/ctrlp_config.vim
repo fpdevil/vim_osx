@@ -50,14 +50,14 @@ if executable('ag')
                 \ 1: ['.git', 'git --git-dir=%s/.git ls-files -oc --exclude-standard'],
                 \ 2: ['.hg', 'hg --cwd %s locate -I .'],
                 \ },
-                \ 'fallback': 'ag %s -i --nocolor --nogroup --ignore ''.git'' --ignore ''.DS_Store'' --ignore ''node_modules'' --hidden -g ""'
+                \ 'fallback': 'ag %s --nocolor -l -g ""'
                 \ }
 endif
 
 " ------------------------------------------------------------------------------------
 "  ctrlp function navigator for python
 " ------------------------------------------------------------------------------------
-if &rtp =~ 'ctrlp-py-matcher'
+if &runtimepath =~# 'ctrlp-py-matcher'
     if !exists('g:ctrlp_match_func') && (has('python') || has('python3'))
         let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch'  }
     endif
@@ -66,7 +66,7 @@ endif
 " ------------------------------------------------------------------------------------
 "  CtrlP funky
 " ------------------------------------------------------------------------------------
-if &rtp =~ 'ctrlp-funky'
+if &runtimepath =~# 'ctrlp-funky'
     let g:ctrlp_funky_syntax_highlight = 1
     let g:ctrlp_funky_matchtype = 'path'
     " nnoremap <Leader>fu :CtrlPFunky<Cr>
@@ -92,8 +92,8 @@ endif
 "  CtrlPSessions - manage your sessions
 " ------------------------------------------------------------------------------------
 if exists(':CtrlPSessions')
-    let g:ctrlp_extensions = [ 
-          \ 'funky', 'sessions', 'k', 
+    let g:ctrlp_extensions = [
+          \ 'funky', 'sessions', 'k',
           \ 'tag', 'mixed', 'quickfix',
           \ 'undo', 'line', 'changes',
           \ 'cmdline', 'menu',
@@ -104,7 +104,7 @@ endif
 " ------------------------------------------------------------------------------------
 "  call external commands and show results in scratch window
 " ------------------------------------------------------------------------------------
-if &rtp =~ 'k.vim'
+if &runtimepath =~# 'k.vim'
     "nnoremap <silent> <leader>qe :CtrlPK<CR>
     let g:lmap.p.q = ['CtrlPK', 'Open CtrlP k.vim quick launch']
 endif
@@ -120,7 +120,7 @@ endif
 " ------------------------------------------------------------------------------------
 " Fast vim CtrlP matcher based on python
 " ------------------------------------------------------------------------------------
-if &rtp =~ 'ctrlp-py-matcher'
+if &runtimepath =~# 'ctrlp-py-matcher'
     if !has('python')
         echo 'In order to use pymatcher plugin, you need +python compiled vim'
     else
@@ -132,7 +132,7 @@ endif
 " ------------------------------------------------------------------------------------
 " Easily open locally modified files in your git-versioned projects
 " ------------------------------------------------------------------------------------
-if &rtp =~ 'ctrlp-modified.vim'
+if &runtimepath =~# 'ctrlp-modified.vim'
     let g:lmap.p.m = {
                 \ 'name' : 'CtrlP Modified' ,
                 \ 'm'    : [ 'CtrlPModified', 'Shows all files modified since your last commit' ],
@@ -144,14 +144,23 @@ endif
 " ------------------------------------------------------------------------------------
 " CtrlP Extension that allows adding custom menus of commands
 " ------------------------------------------------------------------------------------
-if &rtp =~ 'vim-ctrlp-menu'
+"if &rtp =~ 'vim-ctrlp-menu'
+if exists('g:plugs["vim-ctrlp-menu"]')
+
+    " the  plugin  creates  comman  line  abbreviations  for  CtrlpMenu  and
+    " CtrlpMenuMenus as  follows, remove them  as menu and menus  are useful
+    " elsewhere
+    " cabbrev menu CtrlpMenu
+    " cabbrev menus CtrlpMenuMenus
+    let g:ctrlpmenu_skip_abbrev = 0
+
     let g:ctrlp_use_default_menu = 0
 
     " unmapping CtrlpMenuMenus which is bound to <leader>m by default
     autocmd VimEnter * nunmap <leader>m
 
     let g:ctrlp_menus={}
-    let g:ctrlp_menus.colorscheme = {
+    let g:ctrlp_menus.colorschemes = {
                 \ '* colorscheme solarized'  : 'colorscheme solarized8',
                 \ '* colorscheme quantum'    : 'colorscheme quantum',
                 \ '* colorscheme gruvbox'    : 'colorscheme gruvbox',
@@ -162,8 +171,8 @@ if &rtp =~ 'vim-ctrlp-menu'
     " now use leader key combination -pum to see CtrlpMenu
     let g:lmap.p.u = {
                 \ 'name' : 'CtrlpMenu',
-                \ 'm'    : ['CtrlpMenu', 'Show all Ctrlp Menus'],
-                \ 'M'    : ['CtrlpMenuMenus', 'Show main Menus']
+                \ 'm'    : ['CtrlpMenu', 'Show all Ctrlp Menus '],
+                \ 'M'    : ['CtrlpMenuMenus', 'Show main Menus ']
                 \ }
 endif
 

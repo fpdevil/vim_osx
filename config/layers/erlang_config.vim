@@ -6,11 +6,11 @@
 augroup erlang_vim
     autocmd!
     autocmd BufRead,BufNewFile *.erl,*.es.*.hrl,*.yaws,*.xrl set expandtab
-    au BufNewFile,BufRead *.erl,*.es,*.hrl,*.yaws,*.xrl setf erlang
-    autocmd FileType erlang setlocal ai sw=2 st=2 ts=2 et nofoldenable
-    
+    au BufNewFile,BufRead *.erl,*.es,*.hrl,*.yaws,*.xrl,relx.config setf erlang
+    au FileType erlang set expandtab tabstop=4 softtabstop=4 shiftwidth=4 smartindent 
+
     " Highlight when a comma is not followed by a space.
-    autocmd FileType erlang match SyntaxHighlight /,[ \n]\@!/
+    "autocmd FileType erlang match SyntaxHighlight /,[ \n]\@!/
 
     " Highlight spaces and tabs
     au ColorScheme * highlight ExtraWhitespace guibg=#300000
@@ -30,7 +30,7 @@ augroup erlang_vim
 
     " completions for erlang
     "autocmd FileType erlang setlocal omnifunc=erlangcomplete#Complete
-    autocmd FileType erlang setlocal completefunc=erlang_complete#Complete
+    "autocmd FileType erlang setlocal completefunc=erlang_complete#Complete
 augroup END
 
 " highlight groups
@@ -41,9 +41,11 @@ highlight link MixTabsAndSpaces BadWhitespace
 
 hi link erlangAtom Normal
 
+set conceallevel=1
+
 " Erlang omnicomplete plugin for Vim
-"if has_key(g:plugs,'vim-erlang-omnicomplete')
-if !empty(glob('~/.vim/plugged/vim-erlang-omnicomplete'))
+"if !empty(glob('~/.vim/plugged/vim-erlang-omnicomplete'))
+if has_key(g:plugs,'vim-erlang-omnicomplete')
     let g:erlang_completion_preview_help = 1
 endif
 
@@ -78,8 +80,8 @@ endfunction
 nmap ep :execute ErlPretty()
 
 " =================== vimerl-complete for erlang completion ====================
-"if has_key(g:plugs,'vimerl-complete')
-if !empty(glob('~/.vim/plugged/vimerl-complete'))
+"if !empty(glob('~/.vim/plugged/vimerl-complete'))
+if has_key(g:plugs,'vimerl-complete')
     let g:vimerl_complete_auto        = 1
     let g:vimerl_complete_only_export = 0
 endif

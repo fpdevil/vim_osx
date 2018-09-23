@@ -12,14 +12,13 @@ if has_key(g:plugs, 'ale')
     let g:ale_list_window_size           = 6
     let g:airline#extensions#ale#enabled = 1
 
+    let g:ale_sign_column_always         = 0
     let g:ale_sign_error                 = '●'
     let g:ale_sign_warning               = '⚠'
     let g:ale_sign_info                  = 'ⓘ'
-    let g:ale_sign_column_always         = 0
-
-    let g:ale_echo_msg_error_str         = '✹ Err'
-    let g:ale_echo_msg_warning_str       = '⚠ Warn'
-    let g:ale_echo_msg_format            = '[%linter%] %s [%severity%]'
+    "let g:ale_echo_msg_error_str         = '✹ Err'
+    "let g:ale_echo_msg_warning_str       = '⚠ Warn'
+    "let g:ale_echo_msg_format            = '[%linter%] %s [%severity%]'
 
     if g:vim_lint_on_the_fly
         let g:ale_lint_on_text_changed   = 'always'         " always = on the fly syntax check
@@ -50,7 +49,7 @@ if has_key(g:plugs, 'ale')
 
     let g:ale_linters                    = {
                 \ 'jsx'        : ['stylelint', 'eslint'],
-                \ 'haskell'    : ['hlint', 'ghc', 'ghc-mod', 'stack-ghc', 'stack-ghc-mod', 'stack-build' ],
+                "\ 'haskell'    : ['hlint', 'ghc', 'ghc-mod', 'stack-ghc', 'stack-ghc-mod', 'stack-build', 'cabal_ghc' ],
                 \ 'java'       : ['javac'],
                 \ }
 

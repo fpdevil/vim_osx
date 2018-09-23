@@ -10,4 +10,5 @@ set nocompatible              " be iMproved, required
 
 call plug#begin('~/.vim/plugged')
     Plug 'tpope/vim-sensible'
+    Plug 'ajh17/VimCompletesMe'
 call plug#end()

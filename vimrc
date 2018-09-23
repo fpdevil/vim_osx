@@ -173,7 +173,7 @@ call s:LoadVimConfigs('custom', 'custom_settings.vim')
 call s:LoadVimConfigs('plugins', 'plugin_settings.vim')
 
 " load the template definitions
-"call s:LoadVimConfigs('misc', 'insert_templates.vim')
+call s:LoadVimConfigs('misc', 'insert_templates.vim')
 
 
 "   ╔══════════════════════════════════════════════════════════════════════╗

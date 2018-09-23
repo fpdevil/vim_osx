@@ -17,22 +17,22 @@ endif
 "    the line width as under 80
 let s:width = 77
 "    the email
-let s:email = "Singamsetty.Sampath@gmail.com"
+let s:email = 'Singamsetty.Sampath@gmail.com'
 "}}}
 
 "# define function for inserting header information in erlang code file {{{
 
 function! s:ErlHeader()
-    let s:comment = "%%%"
-    let s:line = "%%%" . repeat('-', s:width)
-    let s:filename = bufname("%")
-    let s:todo = "TODO <explanation>"
-    if s:usrname != ''
-        let s:author = s:comment . " @author " . s:usrname . " <" . s:email . ">"
-        let s:cpr = s:comment . " @copyright (C) " . strftime('%Y') . ", " . s:usrname
-        let s:doc = s:comment . " @doc"
-        let s:end = s:comment . " @end"
-        let s:created = s:comment . " Created : " . strftime('%d %b %Y') . " by " . s:usrname . " <>"
+    let s:comment = '%%%'
+    let s:line = '%%%' . repeat('-', s:width)
+    let s:filename = bufname('%')
+    let s:todo = 'TODO <explanation>'
+    if s:usrname !=# ''
+        let s:author = s:comment . ' @author ' . s:usrname . ' <' . s:email . '>'
+        let s:cpr = s:comment . ' @copyright (C) ' . strftime('%Y') . ', ' . s:usrname
+        let s:doc = s:comment . ' @doc'
+        let s:end = s:comment . ' @end'
+        let s:created = s:comment . ' Created : ' . strftime('%d %b %Y') . ' by ' . s:usrname . ' <>'
         call append(0, s:line)
         call append(1, s:author)
         call append(2, s:cpr)
@@ -61,9 +61,9 @@ augroup END
 "{{{ define a function for inserting header declaration in Haskell code file
 
 function! MkModuleHeader()
-  let name=ModuleName()
-  if !empty(name)
-    let a:str = "module " . name . " ( " . " ) where"
+  let l:name=ModuleName()
+  if !empty(l:name)
+    let a:str = 'module ' . l:name . ' ( ' . ' ) where'
     return a:str
   else
     return ''
@@ -71,20 +71,20 @@ function! MkModuleHeader()
 endfunction
 
 function! s:HsHeader()
-    let s:comment = "--"
-    let s:lcomment = "-- |"
+    let s:comment = '--'
+    let s:lcomment = '-- |'
     let s:modname = ModuleName()
     let s:line = repeat('-', s:width)
-    let s:filename = bufname("%")
-    let s:todo = "TODO <explanation>"
+    let s:filename = bufname('%')
+    let s:todo = 'TODO <explanation>'
     let s:stmt = MkModuleHeader()
-    if s:usrname != ''
-        let s:module = s:comment     . " Module         : " . s:modname
-        let s:copyright = s:comment  . " Copyright      :  (c) Some description... " . strftime('%Y')
-        let s:license = s:comment    . " License        : MIT (change this as needed)"
-        let s:author = s:comment     . " Author         : " . s:usrname
-        let s:maintainer = s:comment . " Maintainer     : " . s:email
-        let s:doc = s:comment        . " Description    : "
+    if s:usrname !=# ''
+        let s:module = s:comment     . ' Module         : ' . s:modname
+        let s:copyright = s:comment  . ' Copyright      :  (c) Some description... ' . strftime('%Y')
+        let s:license = s:comment    . ' License        : MIT (change this as needed)'
+        let s:author = s:comment     . ' Author         : ' . s:usrname
+        let s:maintainer = s:comment . ' Maintainer     : ' . s:email
+        let s:doc = s:comment        . ' Description    : '
         call append(0, s:line)
         call append(1, s:lcomment)
         call append(2, s:module)
@@ -130,91 +130,91 @@ augroup END
 "Arguments: nil
 "
 function! SetTitle()
-    if &filetype == 'sh'
+    if &filetype ==# 'sh'
       " for shell script file type
-      call setline(1, "\#!/usr/bin/env bash")
-      call setline(2, "")
-      call setline(3, "#" . repeat('=', 78))
-      call setline(4, "\# File Name    : ". expand("%"))
-      call setline(5, "\# Author       : ". s:usrname)
-      call setline(6, "\# mail         : ". s:email)
-      call setline(7, "\# Created Time : ". strftime("%c"))
-      call setline(8, "\# Copyright (C) ". strftime("%Y") . " " . s:usrname)
-      call setline(9, "#" . repeat('=', 78))
-      call setline(10, "")
+      call setline(1, '\#!/usr/bin/env bash')
+      call setline(2, '')
+      call setline(3, '#' . repeat('=', 78))
+      call setline(4, '\# File Name    : '. expand('%'))
+      call setline(5, '\# Author       : '. s:usrname)
+      call setline(6, '\# mail         : '. s:email)
+      call setline(7, '\# Created Time : '. strftime('%c'))
+      call setline(8, '\# Copyright (C) '. strftime('%Y') . ' ' . s:usrname)
+      call setline(9, '#' . repeat('=', 78))
+      call setline(10, '')
     endif
-    if &filetype == 'cpp'
+    if &filetype ==# 'cpp'
       if !has_key(g:plugs,'c-support')
         " for cpp file type
-        call setline(1, "/*************************************************************************")
-        call append(line("."),   "    > File Name    : ". expand("%"))
-        call append(line(".")+1, "    > Author       : ". s:usrname)
-        call append(line(".")+2, "    > Mail         : ". s:email)
-        call append(line(".")+3, "    > Created Time : ". strftime("%c"))
-        call append(line(".")+4, " ************************************************************************/")
-        call append(line(".")+5, "")
-        call append(line(".")+6, "#include <iostream>")
-        call append(line(".")+7, "")
-        call append(line(".")+8, "using namespace std;")
-        call append(line(".")+9, "")
+        call setline(1, '/*************************************************************************')
+        call append(line('.'),   '    > File Name    : '. expand('%'))
+        call append(line('.')+1, '    > Author       : '. s:usrname)
+        call append(line('.')+2, '    > Mail         : '. s:email)
+        call append(line('.')+3, '    > Created Time : '. strftime('%c'))
+        call append(line('.')+4, ' ************************************************************************/')
+        call append(line('.')+5, '')
+        call append(line('.')+6, '#include <iostream>')
+        call append(line('.')+7, '')
+        call append(line('.')+8, 'using namespace std;')
+        call append(line('.')+9, '')
       endif
     endif
-    if &filetype == 'c'
+    if &filetype ==# 'c'
       if !has_key(g:plugs,'c-support')
         " for c file type
-        call setline(1, "/*************************************************************************")
-        call append(line("."),   "    > File Name   : ".expand("%"))
-        call append(line(".")+1, "    > Author      : ". s:usrname)
-        call append(line(".")+2, "    > Mail        : ". s:email)
-        call append(line(".")+3, "    > Created Time: ".strftime("%c"))
-        call append(line(".")+4, " ************************************************************************/")
-        call append(line(".")+5, "#include <stdio.h>")
-        call append(line(".")+6, "")
+        call setline(1, '/*************************************************************************')
+        call append(line('.'),   '    > File Name   : '.expand('%'))
+        call append(line('.')+1, '    > Author      : '. s:usrname)
+        call append(line('.')+2, '    > Mail        : '. s:email)
+        call append(line('.')+3, '    > Created Time: '.strftime('%c'))
+        call append(line('.')+4, ' ************************************************************************/')
+        call append(line('.')+5, '#include <stdio.h>')
+        call append(line('.')+6, '')
       endif
     endif
-    if expand("%:e") == 'h'
+    if expand('%:e') ==# 'h'
         " for c headers
-        call append(line(".")+5, "")
-        call append(line(".")+6, "#ifndef _".toupper(expand("%:r"))."_H")
-        call append(line(".")+7, "#define _".toupper(expand("%:r"))."_H")
-        call append(line(".")+8, "#endif")
-        call append(line(".")+9, "")
+        call append(line('.')+5, '')
+        call append(line('.')+6, '#ifndef _'.toupper(expand('%:r')).'_H')
+        call append(line('.')+7, '#define _'.toupper(expand('%:r')).'_H')
+        call append(line('.')+8, '#endif')
+        call append(line('.')+9, '')
     endif
-    if expand("%:e") == 'hpp'
+    if expand('%:e') ==# 'hpp'
         " for cpp headers
-        call append(line(".")+5, "")
-        call append(line(".")+6, "#ifndef _".toupper(expand("%:r"))."_HPP")
-        call append(line(".")+7, "#define _".toupper(expand("%:r"))."_HPP")
-        call append(line(".")+8, "#endif")
-        call append(line(".")+9, "")
+        call append(line('.')+5, '')
+        call append(line('.')+6, '#ifndef _'.toupper(expand('%:r')).'_HPP')
+        call append(line('.')+7, '#define _'.toupper(expand('%:r')).'_HPP')
+        call append(line('.')+8, '#endif')
+        call append(line('.')+9, '')
     endif
-    if &filetype == 'java'
+    if &filetype ==# 'java'
         " for java files
-        call setline(1, "//coding=utf8")
-        call setline(2, "/**")
-        call setline(3, "\ * @Author       : ". s:usrname)
-        call setline(4, "\ * @Created Time : ".strftime("%c"))
-        call setline(5, "")
-        call setline(6, "\ * @File Name    : ".expand("%"))
-        call setline(7, "\ * @Description  :")
-        call setline(8, "")
-        call setline(9, " */")
-        call setline(10,"")
+        call setline(1, '//coding=utf8')
+        call setline(2, '/**')
+        call setline(3, '\ * @Author       : '. s:usrname)
+        call setline(4, '\ * @Created Time : '.strftime('%c'))
+        call setline(5, '')
+        call setline(6, '\ * @File Name    : '.expand('%'))
+        call setline(7, '\ * @Description  :')
+        call setline(8, '')
+        call setline(9, ' */')
+        call setline(10,'')
     endif
-    if &filetype == 'python'
+    if &filetype ==# 'python'
         " for python files
-        call setline(1, "\#!/usr/bin/env python")
-        call setline(2, "\# -*- coding:utf-8 -*-")
-        call setline(3, "\# Copyright (C) ". strftime("%Y"))
-        call setline(4, "")
-        call setline(5, "\# Author       : ". s:usrname)
-        call setline(6, "\# Created Time : ". strftime("%c"))
-        call setline(7, "\# File Name    : ". expand("%"))
-        call setline(8, "\# Description  : ")
-        call setline(9, "\########################################################################")
-        call setline(10, "")
+        call setline(1, '#!/usr/bin/env python')
+        call setline(2, '# -*- coding:utf-8 -*-')
+        call setline(3, '# Copyright (C) '. strftime('%Y'))
+        call setline(4, '')
+        call setline(5, '# Author       : '. s:usrname)
+        call setline(6, '# Created Time : '. strftime('%c'))
+        call setline(7, '# File Name    : '. expand('%'))
+        call setline(8, '# Description  : ')
+        call setline(9, '########################################################################')
+        call setline(10, '')
     endif
-    if &filetype == 'html'
+    if &filetype ==# 'html'
         " for html files
         call setline(1, '<!DOCTYPE html>')
         call setline(2, '<html lang="en">')

@@ -3,7 +3,7 @@
 " ------------------------------------------------------------------------------------
 scriptencoding utf-8
 
-if isdirectory(expand("~/.vim/plugged/unite.vim/"))
+if isdirectory(expand('~/.vim/plugged/unite.vim/'))
     call unite#custom#source('codesearch', 'max_candidates', 30)
     call unite#filters#matcher_default#use(['matcher_fuzzy'])
     call unite#filters#sorter_default#use(['sorter_rank'])
@@ -70,7 +70,7 @@ if isdirectory(expand("~/.vim/plugged/unite.vim/"))
                     \  '--hidden', '-g', '']
         let g:unite_source_grep_default_opts                 =
                     \'-i --vimgrep --hidden --ignore ' .
-                    \ '''.hg'' --ignore ''.svn''
+                    \ '''.hg'' --ignore ''.svn'' .
                     \ --ignore ''.git'' --ignore ''.bzr'''
     endif
 
@@ -106,7 +106,7 @@ if isdirectory(expand("~/.vim/plugged/unite.vim/"))
                 \ 'quit'         : 1,
                 \ 'keep_focus'   : 1,
                 \ })
-    nnoremap <silent><leader>umM  :<C-u>Unite -start-insert mapping<CR>
+    nnoremap <silent><leader>umM  Unite -start-insert mapping<CR>
     "" grep dictionay
     """ For searching the word in the cursor in the current directory
     nnoremap <silent><leader>uwd :Unite
@@ -212,7 +212,7 @@ if isdirectory(expand("~/.vim/plugged/unite.vim/"))
                     \ 'F': ['Unite -silent -start-insert menu:files', 'Unite Files menu '],
                     \ 'c': ['Unite -silent -start-insert menu:code', 'Unite Code menu '],
                     \ 'b': ['Unite -silent -start-insert menu:bookmarks', 'Unite Bookmarks menu '],
-                    \ 'k': ['<C-u>Unite -start-insert mapping', 'Unite mappings '],
+                    \ 'k': ['Unite -start-insert mapping', 'Unite mappings '],
                     \ }
     endif
 
@@ -276,8 +276,8 @@ endfunction
 " -----------------------------------------------------------------------------
 "  Source for unite.vim that shows outputs from quickfix (:Unite quickfix -wrap)
 " -----------------------------------------------------------------------------
-if has_key(g:plugs,'unite-quickfix')
-    " multiline support
+if isdirectory(empty('~/.vim/plugged/unite-quickfix'))
+    " multiline support and highlighting
     let g:unite_quickfix_is_multiline=0
     call unite#custom_source('quickfix', 'converters', 'converter_quickfix_highlight')
     call unite#custom_source('location_list', 'converters', 'converter_quickfix_highlight')
@@ -305,6 +305,7 @@ let g:unite_source_menu_menus.files = {
             \ 'description' : '          files, dirs & ViM options
             \                             ⌘ [space]o',
             \ }
+
 let g:unite_source_menu_menus.files.command_candidates = [
          \ ['▷ open file                                                  ⌘ <Leader>o',
          \ 'Unite -start-insert file'],

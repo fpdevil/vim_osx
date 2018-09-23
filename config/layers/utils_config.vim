@@ -10,6 +10,19 @@ let g:AutoPairsShortcutJump       = '∆' " <m-j>
 let g:AutoPairsShortcutBackInsert = '∫' " <m-b>
 
 
+if has_key(g:plugs,'echodoc')
+    let g:echodoc#enable_at_startup = 1
+    set noshowmode
+endif
+
+" ------------------------------------------------------------------------------------
+"  ** for colorv
+" ------------------------------------------------------------------------------------
+let s:color_cache_dir = GetCacheDir('.')
+let g:colorv_cache_file=s:color_cache_dir . '/colorv/vim_colorv_cache'
+let g:colorv_cache_fav=s:color_cache_dir . '/colorv/vim_colorv_cache_fav'
+
+
 " ------------------------------------------------------------------------------------
 "  key mapping/unmapping section
 " ------------------------------------------------------------------------------------
@@ -17,12 +30,14 @@ let g:AutoPairsShortcutBackInsert = '∫' " <m-b>
 " unmap key(s) for k.vim (for any curl commands in .sh file place cursor and <CR>)
 " the other features are not used any more for now so offloading them
 " unmap <leader>t which is bound by k.vim as I don't need it
-execute 'silent! au VimEnter * unmap <leader>t'
-" unmap <leader>L bound to KLoadTemp() from k.vim as I don't need it
-execute 'silent! au VimEnter * unmap <leader>L'
-" unmap <leader>r bound to RunInteractive()
-execute 'silent! au VimEnter * unmap <leader>r'
-
+"if isdirectory(expand('~/.vim/plugged/k.vim'))
+if has_key(g:plugs,'k.vim')
+    execute 'silent! au VimEnter * unmap <leader>t'
+    " unmap <leader>L bound to KLoadTemp() from k.vim as I don't need it
+    execute 'silent! au VimEnter * unmap <leader>L'
+    " unmap <leader>r bound to RunInteractive()
+    execute 'silent! au VimEnter * unmap <leader>r'
+endif
 "}}}
 
 
@@ -44,6 +59,8 @@ endif
 " Vim plugin for automated bullet lists
 " ------------------------------------------------------------------------------------
 if !empty(glob('~/.vim/plugged/bullets.vim'))
+    " disable default mappings (CR)
+    let g:bullets_set_mappings = 0
     let g:bullets_enabled_file_types = [
                 \ 'markdown',
                 \ 'text',

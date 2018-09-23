@@ -37,7 +37,7 @@ let g:neocomplete#sources#omni#functions.javascript = [
             \ ]
 
 if exists('g:plugs["tern_for_vim"]')
-    let g:tern#command                        = ['tern']
+    let g:tern#command                        = ['/usr/local/bin/tern']
     let g:tern#arguments                      = ['--persistent']
     let g:tern_map_keys                       = 1
     let g:tern_show_signature_in_pum          = 1
@@ -85,7 +85,8 @@ endfunction
 "}}}
 
 " ternjs with deoplete
-if isdirectory(expand('~/.vim/plugged/deoplete.nvim'))
+"if isdirectory(expand('~/.vim/plugged/deoplete.nvim'))
+if has_key(g:plugs,'deoplete.vim')
     " Set bin if you have many instalations
     let g:deoplete#sources#ternjs#tern_bin = '/usr/local/bin/tern'
     let g:deoplete#sources#ternjs#timeout  = 1
@@ -135,9 +136,10 @@ endif
 " ------------------------------------------------------------------------------------
 " -----------      javascript code beautifying & character concealing      -----------
 " ------------------------------------------------------------------------------------
-autocmd FileType javascript noremap <buffer> <c-f> :call JsBeautify()<cr>
-autocmd FileType html noremap <buffer> <c-f> :call JsBeautify()<cr>
-autocmd FileType css noremap <buffer> <c-f> :call JsBeautify()<cr>
+autocmd FileType javascript nnoremap <buffer> <c-f> :call JsBeautify()<cr>
+autocmd FileType json nnoremap <buffer> <c-f> :call JsonBeautify()<cr>
+autocmd FileType html nnoremap <buffer> <c-f> :call HtmlBeautify()<cr>
+autocmd FileType css nnoremap <buffer> <c-f> :call CSSBeautify()<cr>
 
 " nnoremap <leader>jsf :%!js-beautify -j -q -B -f -<CR>
 
@@ -251,10 +253,10 @@ if (has_key(g:plugs,'vim-import-js'))
     nnoremap <silent><buffer> <Leader>jif :ImportJSFix<CR>
     nnoremap <silent><buffer> <Leader>jig :ImportJSGoto<CR>
 
-    inoremap <silent><buffer> <F4> <Esc>:ImportJSWord<CR>a
-    inoremap <silent><buffer> <C-j>i <Esc>:ImportJSWord<CR>a
-    inoremap <silent><buffer> <C-j>f <Esc>:ImportJSFix<CR>a
-    inoremap <silent><buffer> <C-j>g <Esc>:ImportJSGoto<CR>a
+    "inoremap <silent><buffer> <F4> <Esc>:ImportJSWord<CR>a
+    "inoremap <silent><buffer> <C-j>i <Esc>:ImportJSWord<CR>a
+    "inoremap <silent><buffer> <C-j>f <Esc>:ImportJSFix<CR>a
+    "inoremap <silent><buffer> <C-j>g <Esc>:ImportJSGoto<CR>a
 
     let g:lmap.j.i = {
                 \ 'name': 'ImportJS Settings ',

@@ -262,17 +262,19 @@ endif
 "augroup END
 
 "{{{ cursor line changes
+
 highlight LineNr       ctermbg=236 ctermfg=240
 highlight CursorLineNr ctermbg=236 ctermfg=240
 
 " Default Colors for CursorLine
-highlight  CursorLine ctermbg=Yellow ctermfg=None
+"highlight  CursorLine ctermbg=Yellow ctermfg=None
 
 " Change Color when entering Insert Mode
-autocmd InsertEnter * highlight CursorLine guifg=white guibg=blue ctermfg=white ctermbg=blue
+"autocmd InsertEnter * highlight CursorLine guifg=white guibg=blue ctermfg=white ctermbg=blue
 
 " Revert Color to default when leaving Insert Mode
-autocmd InsertLeave * highlight CursorLine guifg=white guibg=darkblue ctermfg=white ctermbg=darkblue
+"autocmd InsertLeave * highlight CursorLine guifg=white guibg=darkblue ctermfg=white ctermbg=darkblue
+
 "}}}
 
 
