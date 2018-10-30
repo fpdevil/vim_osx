@@ -166,6 +166,9 @@ let g:plugins_config = '~/.vim/config/layers/'
 " load custom functions
 call s:LoadVimConfigs('custom', 'custom_functions.vim')
 
+" load custom color schemes and settings
+call s:LoadVimConfigs('colors', 'color_settings.vim')
+
 " load custom settings
 call s:LoadVimConfigs('custom', 'custom_settings.vim')
 
