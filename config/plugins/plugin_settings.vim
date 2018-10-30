@@ -18,7 +18,6 @@ endfunction
 
 call s:LoadConfig('leader_guide_config.vim')       " configuration for vim leader guide
 call s:LoadConfig('unite_config.vim')              " UNITE plugin(s) configuration
-call s:LoadConfig('colors_config.vim')             " required color scheme
 call s:LoadConfig('rainbow_config.vim')            " rainbow parenthesis configuration
 call s:LoadConfig('airline_config.vim')            " Airline statusline configuration
 call s:LoadConfig('vimindent_config.vim')          " vim-indent-guides settings
@@ -36,6 +35,7 @@ call s:LoadConfig('vimplugins_config.vim')         " vim-plugins assortment of c
 call s:LoadConfig('snippets_config.vim')           " snippet plugin related configuration
 call s:LoadConfig('syntax_config.vim')             " syntastic plugin related configuration
 call s:LoadConfig('ale_config.vim')                " syntax configuration for ALE if available
+call s:LoadConfig('python_config.vim')             " python language configuration
 call s:LoadConfig('haskell_config.vim')            " Haskell language configuration
 call s:LoadConfig('vim_complete_config.vim')       " vim source completion configuration
 call s:LoadConfig('javascript_config.vim')         " JavaScript language configuration
@@ -43,7 +43,6 @@ call s:LoadConfig('typescript_config.vim')         " TypeScript language configu
 call s:LoadConfig('clojure_config.vim')            " clojure language configuration
 call s:LoadConfig('erlang_config.vim')             " erlang language configuration
 call s:LoadConfig('ycm_config.vim')                " YouCompleteMe configuration
-call s:LoadConfig('python_config.vim')             " python language configuration
 call s:LoadConfig('cpp_config.vim')                " c/c++ language configuration
 call s:LoadConfig('scala_config.vim')              " scala language configuration
 call s:LoadConfig('golang_config.vim')             " GO language configuration
