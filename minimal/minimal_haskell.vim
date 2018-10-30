@@ -10,6 +10,7 @@ set nocompatible              " be iMproved, required
 
 call plug#begin('~/.vim/plugged')
     Plug 'tpope/vim-sensible'
+    Plug 'mhinz/vim-startify'
     Plug 'Shougo/neocomplete.vim'
     Plug 'bronson/vim-trailing-whitespace'
     Plug 'Shougo/vimproc.vim'
