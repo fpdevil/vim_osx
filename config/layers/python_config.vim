@@ -7,11 +7,9 @@
 
 if has('python3')
     let g:jedi#force_py_version        = 3
-    let g:syntastic_python_python_exec = '/usr/local/bin/python3'
     let g:pymode_python                = '/usr/local/bin/python3'
 elseif has('python')
     let g:jedi#force_py_version        = 2
-    let g:syntastic_python_python_exec = 'python'
     let g:pymode_python                = 'python'
 else
     let g:loaded_jedi = 1
@@ -19,40 +17,49 @@ endif
 
 augroup py
     autocmd!
-    "autocmd FileType python setlocal omnifunc=jedi#completions
-    "autocmd FileType python setlocal completefunc=jedi#completions
-
     " -- completion options display
-    au FileType python setlocal completeopt=preview,menu,longest
-
-    " -- filetype indentation for python
-    autocmd FileType python set tabstop=4|set shiftwidth=4|set expandtab
-    autocmd BufRead *.py set smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
+    au FileType python setlocal completeopt=menu,preview,menuone,longest
+    " this is done by jedi plugin (but default python3complete#Complete coming up)
+    au FileType python setlocal omnifunc=jedi#completions
+    "au FileType python setlocal completefunc=jedi#completions
+    " -- filetype indentation for python (proper pep8)
+    au FileType python set tabstop=4|set shiftwidth=4|set shiftwidth=4|set textwidth=79|set expandtab|set autoindent
+    au BufRead *.py set smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
+    au BufEnter *.py set ai sw=4 ts=4 sta et fo=croql
+    "spaces for indents and text wraps
+    au BufNewFile,BufRead *.py set ts=4 sw=4 textwidth=79 et ai fileformat=unix
 augroup end
 
+" ------------------------------------------------------------------------------
+"  vim-jedi options
+" ------------------------------------------------------------------------------
 " set the keymapping for definition browsing (-t)
-"au FileType python let g:jedi#completions_enabled        = 0
 "au FileType python let g:jedi#goto_definitions_command   = "<leader>t"
-"au FileType python let g:jedi#show_call_signatures_delay = 0
-"au FileType python let g:jedi#auto_close_doc             = 1
-"au FileType python let g:jedi#show_call_signatures       = 2
-"au FileType python let g:jedi#auto_vim_configuration     = 0
-"au FileType python let g:jedi#smart_auto_mappings        = 1
-"au FileType python let g:jedi#popup_on_dot               = 1
 
-let g:jedi#auto_vim_configuration     = 1
-let g:jedi#completions_enabled        = 1
-let g:jedi#goto_command               = '<leader>lpg'
+"let g:jedi#auto_vim_configuration = 1
+"let g:jedi#completions_enabled    = 1
+"let g:jedi#popup_select_first     = 0
+
+let g:jedi#auto_vim_configuration = 0
+let g:jedi#completions_enabled    = 1
+
 let g:jedi#goto_assignments_command   = '<leader>lpa'
-let g:jedi#goto_definitions_command   = ''
-let g:jedi#documentation_command      = '<leaderlpd>'
+let g:jedi#goto_definitions_command   = '<leader>lpg'
+let g:jedi#documentation_command      = '<leader<lpd>'
 let g:jedi#usages_command             = '<leader>lpu'
 let g:jedi#rename_command             = '<leader>lpr'
 let g:jedi#use_splits_not_buffers     = "left"
+let g:jedi#show_call_signatures  = 0
+let g:jedi#show_call_signatures = 1
+if &rtp =~ '\<jedi\>'
+    augroup JediSetup
+        au!
+        au FileType python call jedi#configure_call_signatures()
+    augroup END
+endif
 
 " if ropevim is enabled and used for python code assist
-"if has_key(g:plugs, 'ropevim')
-if !empty(glob('~/.vim/plugged/ropevim'))
+if has_key(g:plugs, 'ropevim')
     let g:ropevim_extended_complete=1
 endif
 
@@ -61,7 +68,6 @@ endif
 " if has_key(g:plugs, 'syntastic')
 if exists(':SyntasticCheck')
     let g:syntastic_enable_highlighting        = 1
-    let g:syntastic_python_python_exec         = '/usr/local/bin/python3'
     let g:syntastic_python_checkers            = ['flake8', 'pyflakes', 'pylint']
     let g:syntastic_python_flake8_args         = '--max-line-length=80 ' .
                 \ '--max-complexity=10 ' .
@@ -72,6 +78,11 @@ if exists(':SyntasticCheck')
     " let g:syntastic_python_pylint_args         = '--disable=C0103'
     " show balloon with mouse hovering over an error
     let g:syntastic_enable_balloons              = 1
+    if has('python3')
+        let g:syntastic_python_python_exec = '/usr/local/bin/python3'
+    elseif has('python')
+        let g:syntastic_python_python_exec = 'python'
+    endif
 endif
 
 
@@ -88,14 +99,6 @@ else
     let g:UltiSnipsUsePythonVersion = 2
 endif
 
-" ------------------------------------------------------------------------------
-"  for proper pep8 indentation
-" ------------------------------------------------------------------------------
-autocmd FileType python set tabstop=4|set shiftwidth=4|set shiftwidth=4|set textwidth=79|set expandtab|set autoindent
-au BufEnter *.py set ai sw=4 ts=4 sta et fo=croql
-
-"spaces for indents and text wraps
-au BufNewFile,BufRead *.py set ts=4 sw=4 textwidth=79 et ai fileformat=unix
 
 " ------------------------------------------------------------------------------
 "  Sort and highlight Python imports in Vim
@@ -115,41 +118,44 @@ if has_key(g:plugs,'vim-virtualenv')
 endif
 
 
+" ------------------------------------------------------------------------------
 " for python-mode
+" ------------------------------------------------------------------------------
 " as per https://github.com/davidhalter/jedi-vim
 " python-mode VIM plugin seems to  conflict with jedi-vim, therefore you
 " should disable it before enabling jedi-vim
 
 "if !empty(glob('~/.vim/plugged/python-mode'))
 if has_key(g:plugs,'python-mode')
-    let g:pymode_python          = 'python3'
-    let g:pymode_breakpoint_bind = '<Leader>lpb'
+    let g:pymode_python                  = 'python3'
+    let g:pymode_breakpoint_bind         = '<Leader>lpb'
 
     let g:pymode_trim_whitespaces        = 1
     let g:pymode_options_max_line_length = 300
     let g:pymode_options_colorcolumn     = 0
-    let g:pymode_indent                  = 1
+    let g:pymode_indent                  = 0        " use vim-python-pep8-indent (upstream of pymode)
 
-    let g:pymode_virtualenv    = 1
-    let g:pymode_rope          = 0        " better coordination with jedi
+    let g:pymode_virtualenv              = 0        " use virtualenv plugin (may be required for pylint?)
+    let g:pymode_rope                    = 0        " better coordination with jedi
 
-    let g:pymode_rope_completion      = 0
-    let g:pymode_rope_complete_on_dot = 1
-    let g:pymode_rope_lookup_project  = 0
+    let g:pymode_rope_completion         = 0
+    let g:pymode_rope_complete_on_dot    = 0
+    let g:pymode_rope_lookup_project     = 0
 
-    let g:pymode_lint            = 1
-    let g:pymode_lint_on_write   = 0
-    let g:pymode_lint_cwindow    = 0
-    let g:pymode_lint_checkers   = [ '' ]                                     " use ALE linters
-    let g:pymode_lint_config     = '$HOME/.pylintrc'
-    let g:pymode_lint_ignore     = 'C0111,D100,D101,D102,D103'                " ignore missing docstring error
-    " let g:pymode_lint_checkers = ['pylint', 'pep8', 'mccabe', 'pep257']
-    " let g:pymode_lint_ignore   = ''
+    let g:pymode_lint                    = 0        " prefer Syntastic or ALE
+    let g:pymode_lint_on_write           = 0
+    let g:pymode_lint_cwindow            = 0
+    let g:pymode_lint_checkers           = [ '' ]                                  " use ALE linters
+    let g:pymode_lint_config             = '$HOME/.pylintrc'
+    let g:pymode_lint_ignore             = 'C0111,D100,D101,D102,D103'             " ignore missing docstring error
+    " let g:pymode_lint_checkers         = ['pylint', 'pep8', 'mccabe', 'pep257']
+    " let g:pymode_lint_ignore           = ''
+    
+    let g:pymode_breakpoint              = 0
 
-    let g:pymode_syntax     = 1
-    let g:pymode_syntax_all = 1
-
-    let g:pymode_folding    = 1
+    let g:pymode_syntax                  = 1
+    let g:pymode_syntax_all              = 1
+    let g:pymode_folding                 = 1
 endif
 
 " ------------------------------------------------------------------------------
