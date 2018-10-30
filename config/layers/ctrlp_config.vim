@@ -1,10 +1,30 @@
-" vim: tabstop=4 shiftwidth=4 softtabstop=4 expandtab
 " ------------------------------------------------------------------------------------
-" -----------                    CtrlP customized bindings                 -----------
+" -----------                        CtrlP customizations                  -----------
 " ------------------------------------------------------------------------------------
 
-let g:ctrlp_clear_cache_on_exit = 0                             " speed up by not clearing cache evertime
-let g:ctrp_use_caching          = 500                           " enable caching
+"  silver searcher settings If ag is available use it as filename list generator
+"  instead of 'find'
+"
+if executable('ag')
+  set grepprg=ag\ --nogroup\ --nocolor
+  let g:ctrlp_user_command = 'ag %s -i --nocolor --nogroup --hidden
+        \ --ignore .git
+        \ --ignore .svn
+        \ --ignore .hg
+        \ --ignore .DS_Store
+        \ -g ""'
+  "let g:ctrlp_user_command = {
+  "            \ 'types': {
+  "            \ 1: ['.git', 'git --git-dir=%s/.git ls-files -oc --exclude-standard'],
+  "            \ 2: ['.hg', 'hg --cwd %s locate -I .'],
+  "            \ },
+  "            \ 'fallback': 'ag %s --nocolor -l -g ""'
+  "            \ }
+  " since ag is fast enough, we don't need caching
+  let g:ctrlp_clear_cache_on_exit = 1         " speed up by not clearing cache evertime
+  let g:ctrp_use_caching          = 0         " enable caching (0 | 1)
+endif
+
 let g:ctrlp_max_files           = 2000                          " if 0 then no limit on files
 let g:ctrlp_match_window        = 'bottom,order:btt,min:1,max:20,results:20'
 let g:ctrlp_follow_symlinks     = 1
@@ -39,20 +59,6 @@ let g:lmap.p.c = {
       \ 'e': ['CtrlPClearCache', 'Flush cache for the CWD '],
       \ }
 
-" ------------------------------------------------------------------------------------
-"  silver searcher settings If ag is available use it as filename list generator
-"  instead of 'find'
-" ------------------------------------------------------------------------------------
-if executable('ag')
-    set grepprg=ag\ --nogroup\ --nocolor
-    let g:ctrlp_user_command = {
-                \ 'types': {
-                \ 1: ['.git', 'git --git-dir=%s/.git ls-files -oc --exclude-standard'],
-                \ 2: ['.hg', 'hg --cwd %s locate -I .'],
-                \ },
-                \ 'fallback': 'ag %s --nocolor -l -g ""'
-                \ }
-endif
 
 " ------------------------------------------------------------------------------------
 "  ctrlp function navigator for python
@@ -181,3 +187,4 @@ augroup Fix_command_in_help_buffer
   autocmd FileType help exec 'nnoremap <buffer><silent><c-p> :<c-u>CtrlP ' . getcwd() .'<cr>'
   au FileType help exec "nnoremap <silent><buffer> q :q<CR>"
 augroup END
+" vim: tabstop=4 shiftwidth=4 softtabstop=4 expandtab
