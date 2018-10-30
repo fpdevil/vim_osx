@@ -60,9 +60,23 @@ if !exists('g:vimosx_no_autochdir')
     augroup end
 endif
 
-"syntax on                                   " syntax highlighting
-if has('syntax')
-   syntax enable
+" syntax highlighting
+"
+"if has('syntax')
+"   syntax enable
+"endif
+if &t_Co > 2 || has("gui_running")
+    syntax on
+    if &term =~ '^rxvt-unicode\|256color'
+        set t_Co=256
+        " rxvt-unicode supports changing the cursor color on the fly.
+        let &t_SI = "\<Esc>]12;#bebebe\x7" " gray
+        let &t_EI = "\<Esc>]12;#ac7d00\x7" " dark orange
+        if exists('$TMUX')
+            let &t_SI = "\<Esc>Ptmux;\<Esc>" . &t_SI . "\<Esc>\\"
+            let &t_EI = "\<Esc>Ptmux;\<Esc>" . &t_EI . "\<Esc>\\"
+        endif
+    endif
 endif
 
 " ------------------------------------------------------------------------------------
@@ -72,15 +86,16 @@ set completeopt+=menuone                            " always show the completion
 set completeopt+=preview                            " sometimes annoying window on the top
 set completeopt+=longest                            " do not select the first variant by default
 
-set complete=.,w,b,t,i,u,k                          " completion buffers
-"            | | | | | | |
-"            | | | | | | `-dict
-"            | | | | | `-unloaded buffers
-"            | | | | `-include files
-"            | | | `-tags
-"            | | `-other loaded buffers
-"            | `-windows buffers
-"            `-the current buffer
+set complete=.,w,b,t,u
+"set complete=.,w,b,t,i,u,k                         " completion buffers
+"             | | | | | | |
+"             | | | | | | `-dict
+"             | | | | | `-unloaded buffers
+"             | | | | `-include files
+"             | | | `-tags
+"             | | `-other loaded buffers
+"             | `-windows buffers
+"             `-the current buffer
 
 set backspace=indent,eol,start                      " fix backspace indent
 "set backspace=2                                    " allow backspacing over everything in insert mode
@@ -128,6 +143,8 @@ set lazyredraw                           " do not redraw screen while executing 
 
 set binary                               " enable binary support
 set icon                                 " let vim set the text of the window icon
+
+set nomodeline                           " ignore file’s mode lines; use vimrc configurations instead
 
 silent! helptags ALL                     " generate documentation tags automatically
 
@@ -242,8 +259,10 @@ set ignorecase                              " case insensitive search
 set smartcase                               " unless search contains uppercase letter
 set infercase                               " case based completion
 set novisualbell                            " no beep
+set noerrorbells                            " disable beep on errors
 
-
+set sidescroll=10                           " minimum number of columns to scroll
+set sidescrolloff=20                        " always keep 10 columns of horizontal context
 
 " To clear the search highlighting, set the below option
 if exists('g:vim_clear_search_highlight')
@@ -461,6 +480,19 @@ let g:macvim_skip_colorscheme=1
 if has('gui_running')
     let g:do_syntax_sel_menu=1
 endif
+
+" ------------------------------------------------------------------------------------
+"  Fix path issues from vim.wikia.com/wiki/Set_working_directory_to_the_current_file
+" ------------------------------------------------------------------------------------
+let s:default_path = escape(&path, '\ ') " store default value of 'path'
+" always add the current file's directory to the path and tags list if not
+" already there. Add it to the beginning to speed up searches.
+autocmd BufRead *
+	    \ let s:tempPath=escape(escape(expand("%:p:h"), ' '), '\ ') |
+	    \ exec "set path-=".s:tempPath |
+	    \ exec "set path-=".s:default_path |
+	    \ exec "set path^=".s:tempPath |
+	    \ exec "set path^=".s:default_path
 
 " #############################################################################
 " #########################  end of core vim settings #########################
