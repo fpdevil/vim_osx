@@ -42,15 +42,15 @@ let g:ghcmod_type_highlight = 'WildMenu'
 " ------------------------------------------------------------------------------------
 "  Fix path issues from vim.wikia.com/wiki/Set_working_directory_to_the_current_file
 " ------------------------------------------------------------------------------------
-let s:default_path = escape(&path, '\ ') " store default value of 'path'
+"let s:default_path = escape(&path, '\ ') " store default value of 'path'
 " always add the current file's directory to the path and tags list if not
 " already there. Add it to the beginning to speed up searches.
-autocmd BufRead *
-	    \ let s:tempPath=escape(escape(expand("%:p:h"), ' '), '\ ') |
-	    \ exec "set path-=".s:tempPath |
-	    \ exec "set path-=".s:default_path |
-	    \ exec "set path^=".s:tempPath |
-	    \ exec "set path^=".s:default_path
+"autocmd BufRead *
+"	    \ let s:tempPath=escape(escape(expand("%:p:h"), ' '), '\ ') |
+"	    \ exec "set path-=".s:tempPath |
+"	    \ exec "set path-=".s:default_path |
+"	    \ exec "set path^=".s:tempPath |
+"	    \ exec "set path^=".s:default_path
 
 " === hdevtools ===
 " key-bindings for the haskell hdevtools type info 
