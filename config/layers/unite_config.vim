@@ -10,7 +10,6 @@ if isdirectory(expand('~/.vim/plugged/unite.vim/'))
     call unite#custom#profile('default', 'context',
                 \ {
                 \ 'safe': 0,
-                \ 'start_insert': 1,
                 \ 'ignorecase' : 1,
                 \ 'short_source_names': 1,
                 \ 'update_time': 200,
@@ -25,10 +24,6 @@ if isdirectory(expand('~/.vim/plugged/unite.vim/'))
                 \ 'candidate-icon': ' ',
                 \ 'marked_icon': '✓',
                 \ 'prompt' : '➭ '
-                \ })
-    call unite#custom#profile('source/neobundle/update', 'context',
-                \ {
-                \ 'start_insert' : 0,
                 \ })
 
     let g:unite_source_codesearch_ignore_case    = 1
@@ -54,7 +49,6 @@ if isdirectory(expand('~/.vim/plugged/unite.vim/'))
                 \ . " --exclude-dir='.git'"
                 \ . " --exclude-dir='node_modules'"
     let g:unite_launch_apps = [
-                \ 'rake',
                 \ 'make',
                 \ 'git pull',
                 \ 'git push'
@@ -91,7 +85,7 @@ if isdirectory(expand('~/.vim/plugged/unite.vim/'))
                 \ 'keep_focus'   : 1,
                 \ 'winheight'    : 20,
                 \ })
-    call unite#custom#source('file_rec/async,file_rec/neovim', 'ignore_globs',
+    call unite#custom#source('file_rec/async', 'ignore_globs',
                 \ ['*.png','.git/','*.ttf', '*.eot', '*.woff', '*.svg'])
     nnoremap <silent><leader>ufe  :<C-u>Unite
                 \ -no-split -buffer-name=files -start-insert file<cr>
@@ -216,7 +210,6 @@ if isdirectory(expand('~/.vim/plugged/unite.vim/'))
                     \ }
     endif
 
-
     augroup unite_buffer_feature
         autocmd FileType unite call s:unite_my_settings()
     augroup END
@@ -276,7 +269,7 @@ endfunction
 " -----------------------------------------------------------------------------
 "  Source for unite.vim that shows outputs from quickfix (:Unite quickfix -wrap)
 " -----------------------------------------------------------------------------
-if isdirectory(empty('~/.vim/plugged/unite-quickfix'))
+if !isdirectory(empty('~/.vim/plugged/unite-quickfix'))
     " multiline support and highlighting
     let g:unite_quickfix_is_multiline=0
     call unite#custom_source('quickfix', 'converters', 'converter_quickfix_highlight')
