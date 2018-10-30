@@ -203,17 +203,38 @@ function! SetTitle()
     endif
     if &filetype ==# 'python'
         " for python files
-        call setline(1, '#!/usr/bin/env python')
-        call setline(2, '# -*- coding:utf-8 -*-')
-        call setline(3, '# Copyright (C) '. strftime('%Y'))
-        call setline(4, '')
-        call setline(5, '# Author       : '. s:usrname)
-        call setline(6, '# Created Time : '. strftime('%c'))
-        call setline(7, '# File Name    : '. expand('%'))
-        call setline(8, '# Description  : ')
-        call setline(9, '########################################################################')
-        call setline(10, '')
+        call setline(1, '#!/usr/bin/env python3')
+        call setline(2, '# -*- coding: utf-8 -*-')
+        call setline(3, "")
+        call setline(4, '"""')
+        call setline(5, "Description")
+        call setline(6, '-----------')
+        call setline(7, '')
+        call setline(8, 'Some details here...')
+        call setline(9, '')
+        call setline(10, 'Authors: ' . s:usrname)
+        call setline(11, '')
+        call setline(12, ':module: ' . expand('%:t:r'))
+        call setline(13, ':created: ' . strftime('%c'))
+        call setline(14, ':copyright: Copyright © ' . strftime('%Y') . ' ' . s:usrname)
+        call setline(15, ':license: MIT/BSD ...')
+        call setline(16, ':moduleauthor: ' . s:usrname)
+        call setline(17, '')
+        call setline(18, '"""')
     endif
+    "if &filetype ==# 'python'
+    "    " for python files
+    "    call setline(1, '#!/usr/bin/env python3')
+    "    call setline(2, '# -*- coding: utf-8 -*-')
+    "    call setline(3, '# Copyright (C) '. strftime('%Y'))
+    "    call setline(4, '')
+    "    call setline(5, '# Author       : '. s:usrname)
+    "    call setline(6, '# Created Time : '. strftime('%c'))
+    "    call setline(7, '# File Name    : '. expand('%'))
+    "    call setline(8, '# Description  : ')
+    "    call setline(9, '########################################################################')
+    "    call setline(10, '')
+    "endif
     if &filetype ==# 'html'
         " for html files
         call setline(1, '<!DOCTYPE html>')
