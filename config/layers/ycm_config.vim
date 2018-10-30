@@ -44,7 +44,7 @@ if has_key(g:plugs, 'youcompleteme') && has('gui_macvim')
             return "\<C-P>"
         endif
     
-        return ""
+        return ''
     endfunction
 
 
