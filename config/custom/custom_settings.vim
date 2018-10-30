@@ -68,10 +68,19 @@ call s:highlight_general_checkstyles()
 "endif
 
 " Change cursor shape between insert and normal mode in iTerm2.app
-if $TERM_PROGRAM =~ "iTerm"
+if $TERM_PROGRAM =~# 'iTerm'
     let &t_SI = "\<Esc>]50;CursorShape=1\x7" " Vertical bar in insert mode
     let &t_EI = "\<Esc>]50;CursorShape=0\x7" " Block in normal mode
 endif
+
+
+" -------------------------------------------------------------------------------------
+" use italics for comments (these should come after any custom color schemes)
+" -------------------------------------------------------------------------------------
+let &t_ZH="\e[3m"
+let &t_ZR="\e[23m"
+highlight Comment cterm=italic gui=italic
+
 
 " -------------------------------------------------------------------------------------
 "  function for handling indent line plugin
@@ -119,7 +128,7 @@ set tags+=/usr/local/opt/erlang/lib/erlang/lib/tags
 
 "set path=.,/usr/include,/usr/local/include,/Library/Developer/CommandLineTools/usr/include/c++/v1,/Library/Developer/CommandLineTools/usr/lib/clang/10.0.0/include,/Library/Developer/CommandLineTools/usr/include
 
-set path=.,/usr/local/include,/usr/include,/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1,/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.1.0/include,/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include
+set path=.,/usr/local/include,/usr/include,/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1,/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/10.0.0/include,/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include
 
 " -------------------------------------------------------------------------------------
 " additional path settings to include opencv
@@ -151,10 +160,10 @@ endif "has('python3')
 " for external path setup in macvim
 " -------------------------------------------------------------------------------------
 if has('gui_running')
-    set path+=/usr/local/lib/python3.6/site-packages
-    "let $PYTHONPATH = "/usr/local/lib/python3.6/site-packages"
-    let $PYTHON3_INCLUDE_DIR = '/usr/local/opt/python3/Frameworks/Python.framework/Versions/3.6/include/python3.6m'
-    let $PYTHON3_LIBRARY = '/usr/local/opt/python3/Frameworks/Python.framework/Versions/3.6/lib/python3.6/config-3.6m-darwin'
+    set path+=/usr/local/lib/python3.7/site-packages
+    "let $PYTHONPATH = "/usr/local/lib/python3.7/site-packages"
+    let $PYTHON3_INCLUDE_DIR = '/usr/local/opt/python3/Frameworks/Python.framework/Versions/3.7/include/python3.6m'
+    let $PYTHON3_LIBRARY = '/usr/local/opt/python3/Frameworks/Python.framework/Versions/3.7/lib/python3.7/config-3.7m-darwin'
     let $GOPATH = $HOME . '/sw/programming/gocode/go'
     let $PATH = $HOME . '/usr/local/opt/go/libexec/bin:' . $PATH
 endif
