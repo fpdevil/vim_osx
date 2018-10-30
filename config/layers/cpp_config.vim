@@ -32,7 +32,7 @@ if exists(':SyntasticCheck')
     let g:syntastic_c_include_dirs            = ['include', '../include']
     let g:syntastic_cpp_include_dirs          = [
                 \ '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1',
-                \ '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/9.1.0/include',
+                \ '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/10.0.0/include',
                 \ '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include',
                 \ '/usr/include',
                 \ '/usr/local/include'
@@ -55,7 +55,7 @@ if has_key(g:plugs, 'vim-marching')
 
     set completeopt=menuone,menu,longest,preview
 
-    "let s:marching_clang_library         = '/opt/software/clang+llvm-6.0.0-x86_64-apple-darwin'
+    "let s:marching_clang_library         = '/opt/software/clang+llvm-7.0.0-x86_64-apple-darwin'
     "let s:marching_clang_library         = '/Library/Developer/CommandLineTools/usr'
     let s:marching_clang_library         = '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr'
 
@@ -68,7 +68,7 @@ if has_key(g:plugs, 'vim-marching')
                 \ '/usr/include',
                 \ '/usr/local/include',
                 \ '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1',
-                \ '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.1.0/include',
+                \ '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/10.0.0/include',
                 \ '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include',
                 \ ]
     let g:marching_enable_neocomplete     = 1
