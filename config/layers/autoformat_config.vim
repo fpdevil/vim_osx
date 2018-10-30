@@ -19,6 +19,6 @@ if has_key(g:plugs,'vim-autoformat')
         let g:formatters_python = ['autopep8']
     endif
 
-    " run format on save for python
-    au BufWrite *.py :Autoformat
+    "run format on save for python
+    "au BufWrite *.py :Autoformat
 endif
