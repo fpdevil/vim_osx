@@ -85,7 +85,7 @@ if has_key(g:plugs, 'neocomplete.vim')
         let g:neocomplete#sources#omni#functions = {}
     endif
     let g:neocomplete#sources#omni#functions.go       = 'gocomplete#Complete'
-    let g:neocomplete#sources#omni#functions.python   = 'jedi#complete'
+    let g:neocomplete#sources#omni#functions.python   = 'jedi#completions'
     "let g:neocomplete#sources#omni#functions.clojure = 'vimclojure#OmniCompletion'
 
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -113,9 +113,9 @@ if has_key(g:plugs, 'neocomplete.vim')
     let g:neocomplete#force_omni_input_patterns.c            = '[^.[:digit:] *\t]\%(\.\|->\)\w*'
     let g:neocomplete#force_omni_input_patterns.cpp          = '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
     let g:neocomplete#force_omni_input_patterns.erlang       = '\<[[:digit:][:alnum:]_-]\+:[[:digit:][:alnum:]_-]*'
-    let g:neocomplete#force_omni_input_patterns.python       = '\h\w*\|[^.\t]\.\w*'
 
-    "let g:neocomplete#force_omni_input_patterns.python       = '\%([^. \t]\.\|^\s*@\|^\s*from\s.\+import \|^\s*from \|^\s*import \)\w*'
+    "let g:neocomplete#force_omni_input_patterns.python       = '\h\w*\|[^.\t]\.\w*'
+    let g:neocomplete#force_omni_input_patterns.python       = '\%([^. \t]\.\|^\s*@\|^\s*from\s.\+import \|^\s*from \|^\s*import \)\w*'
     "let g:neocomplete#force_omni_input_patterns.haskell      = '[A-Z][a-z]*\.\w*\|import.*'
 
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -135,7 +135,6 @@ if has_key(g:plugs, 'neocomplete.vim')
         let g:neocomplete#sources = {}
     endif
     let g:neocomplete#sources._       = ['_']
-    let g:neocomplete#sources.haskell = ['_']
 
 
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -198,5 +197,3 @@ if has_key(g:plugs, 'neocomplete.vim')
     nnoremap <silent>[menu]c :Unite -silent menu:code<CR>
 
 endif
-
-
