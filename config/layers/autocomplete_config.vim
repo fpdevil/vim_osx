@@ -7,36 +7,39 @@
 
 augroup Completions
     autocmd!
-    autocmd FileType * if exists("+omnifunc") && &omnifunc == "" | setlocal omnifunc=syntaxcomplete#Complete | endif
+    "autocmd FileType * if exists("+omnifunc") && &omnifunc == "" | setlocal omnifunc=syntaxcomplete#Complete | endif
     "autocmd FileType * if exists("+completefunc") && &completefunc == "" | setlocal completefunc=syntaxcomplete#Complete | endif
 
-    autocmd FileType css           setlocal omnifunc=csscomplete#CompleteCSS
-    autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-    autocmd FileType xml           setlocal omnifunc=xmlcomplete#CompleteTags
-    autocmd Filetype erlang        setlocal omnifunc=erlang_complete#Complete
-    autocmd Filetype ruby          setlocal omnifunc=rubycomplete#Complete
-    " using tern completion instead of CompleteJS
-    autocmd FileType javascript    setlocal omnifunc=javascriptcomplete#CompleteJS
-    " for c/cpp
-    autocmd FileType c             setlocal omnifunc=ccomplete#CompleteCpp
-    "autocmd FileType c set omnifunc=ccomplete#Complete
-    " for java
-    autocmd FileType java          setlocal omnifunc=javacomplete#Complete
+    autocmd FileType css           setlocal omnifunc=csscomplete#CompleteCSS        " css
+    autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags      " html/markdown
+    autocmd FileType xml           setlocal omnifunc=xmlcomplete#CompleteTags       " xml
+    autocmd Filetype erlang        setlocal omnifunc=erlang_complete#Complete       " erlang
+    autocmd Filetype ruby          setlocal omnifunc=rubycomplete#Complete          " ruby
+    autocmd FileType javascript    setlocal omnifunc=javascriptcomplete#CompleteJS  " using tern instead
+    autocmd FileType c             setlocal omnifunc=ccomplete#CompleteCpp          " c/cpp
+    autocmd FileType java          setlocal omnifunc=javacomplete#Complete          " java
     autocmd FileType java          setlocal completefunc=javacomplete#CompleteParamsInfo
 augroup END
 
-if has('python3')
-    augroup py
-        autocmd!
-        " allow jedi and neocomp activated together
-        autocmd FileType python setlocal omnifunc=python3complete#Complete
-    augroup end
-else
-    augroup py
-        autocmd!
-        autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-    augroup end
-endif
+
+augroup py
+    autocmd!
+    if has('python3')
+        if has_key(g:plugs,'jedi-vim')
+            autocmd FileType python setlocal omnifunc=jedi#completions
+        else
+            " allow jedi and neocomp activated together
+            autocmd FileType python setlocal omnifunc=python3complete#Complete
+        endif
+    else
+        " has python 2.x.x
+        if has_key(g:plugs,'jedi-vim')
+            autocmd FileType python setlocal omnifunc=jedi#completions
+        else
+            autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+        endif
+    endif
+augroup END
 
 " color settings for popup menu's
 "hi Pmenu       guifg=white   guibg=brown gui=bold ctermbg=0 ctermfg=6
