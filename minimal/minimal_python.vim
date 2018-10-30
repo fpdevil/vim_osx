@@ -65,7 +65,10 @@ endif
 let g:neocomplete#sources._       = ['_']
 
 " jedi
-let g:jedi#force_py_version = 3
+let g:jedi#force_py_version       = 3
 let g:jedi#auto_vim_configuration = 1
+let g:jedi#popup_on_dot           = 1
+let g:jedi#completions_enabled    = 0
+let g:jedi#show_call_signatures   = 1
 
 autocmd FileType python setlocal omnifunc=jedi#completions
