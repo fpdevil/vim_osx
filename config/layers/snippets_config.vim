@@ -18,18 +18,25 @@ if isdirectory(expand('~/.vim/plugged/ultisnips'))
 
 
     " If you want :UltiSnipsEdit to split your window.
-    let g:UltiSnipsEditSplit           = 'vertical'
-    let g:UltiSnipsExpandTrigger       = '<tab>'
-    let g:UltiSnipsJumpForwardTrigger  = '<c-z>'
-    let g:UltiSnipsJumpBackwardTrigger = '<c-p>'
-    let g:UltiSnipsListSnippets        = '<c-k>' "List possible snippets based on current file
+    let g:UltiSnipsEditSplit            = 'vertical'
+    let g:UltiSnipsJumpForwardTrigger   = '<c-j>'
+    let g:UltiSnipsJumpBackwardTrigger  = '<c-k>'
+    let g:UltiSnipsListSnippets         = '<c-l>'
+    "let g:UltiSnipsExpandTrigger       = '<tab>'
+    "let g:UltiSnipsJumpForwardTrigger  = '<c-z>'
+    "let g:UltiSnipsJumpBackwardTrigger = '<c-p>'
+    "let g:UltiSnipsListSnippets        = '<c-k>' "List possible snippets based on current file
 endif
 
 " ====================================================================================
 " snipmate customization
 " ====================================================================================
-let g:snips_author             = 'Sampath Singamsetty'
-let g:snipMateAllowMatchingDot = 0
+if has_key(g:plugs, 'vim-snipmate')
+    let g:snips_author             = 'Sampath Singamsetty'
+    let g:snipMateAllowMatchingDot = 0
+    let g:snipMate = {}
+    let g:snipMate.description_in_completion = 1
+endif
 
 " ====================================================================================
 "  vim-snipmate settings for ycm running in guimode
