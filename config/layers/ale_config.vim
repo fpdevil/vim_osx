@@ -5,20 +5,18 @@ scriptencoding utf-8
 
 if has_key(g:plugs, 'ale')
     let g:ale_emit_conflict_warnings     = 0
-    let g:ale_change_sign_column_color   = 0
-    let g:ale_open_list                  = 0
+    let g:ale_change_sign_column_color   = 1
+    let g:ale_open_list                  = 1
     let g:ale_set_quickfix               = 0
     let g:ale_keep_list_window_open      = 0
     let g:ale_list_window_size           = 6
     let g:airline#extensions#ale#enabled = 1
 
-    let g:ale_sign_column_always         = 0
+    let g:ale_sign_column_always         = 1
     let g:ale_sign_error                 = '●'
     let g:ale_sign_warning               = '⚠'
     let g:ale_sign_info                  = 'ⓘ'
-    "let g:ale_echo_msg_error_str         = '✹ Err'
-    "let g:ale_echo_msg_warning_str       = '⚠ Warn'
-    "let g:ale_echo_msg_format            = '[%linter%] %s [%severity%]'
+    let g:ale_echo_msg_format            = '[%linter%] %s [%severity%]'
 
     if g:vim_lint_on_the_fly
         let g:ale_lint_on_text_changed   = 'always'         " always = on the fly syntax check
@@ -66,7 +64,7 @@ if has_key(g:plugs, 'ale')
     let g:ale_cpp_gcc_options      = '-std=c++1y -stdlib=libc++ -Wall'
 
     " for highlighting
-    highlight link ALEErrorSign Tag
-    highlight link ALEWarningSign StorageClass
-    highlight clear SignColumn
+    "highlight link ALEErrorSign Tag
+    "highlight link ALEWarningSign StorageClass
+    "highlight clear SignColumn
 endif
