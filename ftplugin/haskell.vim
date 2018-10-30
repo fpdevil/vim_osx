@@ -1,10 +1,10 @@
-setlocal showtabline=2
-setlocal tabstop=4
-setlocal shiftwidth=4
-setlocal expandtab
-setlocal softtabstop=4
-"setlocal concealcursor=nciv
-setlocal concealcursor=""           " disable conealing for active line
+set shiftwidth=4
+set tabstop=4
+set expandtab
+set softtabstop=4
+set showtabline=2
+"set concealcursor=nciv
+set concealcursor=""           " disable conealing for active line
 
 au Bufenter *.hs compiler ghc
 au Bufread,BufNewFile *.hsc set filetype=haskell
