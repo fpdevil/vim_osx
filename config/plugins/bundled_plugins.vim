@@ -79,12 +79,18 @@ function! YCMBuilder(info)
     if a:info.status ==# 'installed' || a:info.force
         let $EXTRA_CMAKE_ARGS='-DEXTERNAL_LIBCLANG_PATH'
                     \ . '='
-                    \ . '/opt/software/clang+llvm-6.0.0-x86_64-apple-darwin/lib/libclang.dylib'
+                    \ . '/opt/software/clang+llvm-7.0.0-x86_64-apple-darwin/lib/libclang.dylib'
                     "\ . '/Library/Developer/CommandLineTools/usr/lib/libclang.dylib'
         !python3 install.py --clang-completer --system-libclang --gocode-completer --tern-completer
         !cd ./third_party/ycmd/third_party/tern_runtime && npm install
     endif
 endfunction
+
+
+" ==== Core dependent plugin ====
+"      for vimproc you have to go to .vim/plugin/vimproc.vim and run a ./make
+Plug 'Shougo/vimproc.vim', { 'do': 'make -j4' }                        " vimproc asynchronous
+
 
 " ==== Plugins for syntax checking ====
 if exists('g:vim_syntax_ale') && g:vim_syntax_ale
@@ -112,8 +118,6 @@ Plug 'scrooloose/nerdcommenter'                         " intensely orgasmic com
 
 
 " ==== plugins supporting various utilities ====
-"      for vimproc you have to go to .vim/plugin/vimproc.vim and run a ./make
-Plug 'Shougo/vimproc.vim', { 'do': 'make -j4' }                        " vimproc asynchronous
 Plug 'bronson/vim-trailing-whitespace', { 'on': 'FixWhitespace' }      " remove trailing white spaces
 Plug 'mhinz/vim-startify'                                              " fancy start screen for vim
 Plug 'benizi/vim-automkdir'                                            " create dir as required
@@ -158,14 +162,15 @@ Plug 'lifepillar/vim-wwdc17-theme'   " light scheme based on Apple WWDC17
 Plug 'yuttie/hydrangea-vim'
 Plug 'yuttie/inkstained-vim'
 Plug 'iCyMind/NeoSolarized'          " solarized for better truecolor support
+Plug 'ayu-theme/ayu-vim'
 
 
 " ==== plugins for vim textual snippets supporting code auto completion ====
 Plug 'SirVer/ultisnips'                                      " for snippets
-Plug 'honza/vim-snippets'                                    " vim-snippets depends on ultisnippets
 Plug 'MarcWeber/vim-addon-mw-utils'                          " for snippets
 Plug 'tomtom/tlib_vim'                                       " snipmate dependency
 Plug 'garbas/vim-snipmate'                                   " for snippets
+Plug 'honza/vim-snippets'                                    " vim-snippets depends on ultisnippets
 Plug 'shougo/neosnippet-snippets'                            " neo snippets repository
 Plug 'shougo/neosnippet.vim'                                 " neo snippet plugin
 Plug 'letientai299/vim-react-snippets', { 'branch': 'es6' }  " react js snippets
@@ -300,7 +305,8 @@ Plug 'airblade/vim-rooter'          ,{ 'for': 'java' } " change to project direc
 " ==== plugins for GO language ====
 Plug 'fatih/vim-go'                 ,{ 'for': 'go', 'do': ':GoInstallBinaries', 'tag': '*' }
 Plug 'tweekmonster/hl-goimport.vim' ,{ 'for': 'go' }
-Plug 'nsf/gocode'                   ,{ 'rtp': 'vim', 'do': '~/.vim/plugged/gocode/vim/symlink.sh' }
+Plug 'mdempsky/gocode'              ,{ 'rtp': 'vim', 'do': '~/.vim/plugged/gocode/vim/symlink.sh' }
+"Plug 'nsf/gocode'                   ,{ 'rtp': 'vim', 'do': '~/.vim/plugged/gocode/vim/symlink.sh' }
 
 
 
@@ -516,12 +522,14 @@ Plug 'thinca/vim-quickrun'               " run commands quickly (vim-precious)
 Plug 'osyo-manga/vim-hopping'            " incrementall buffer line filtering
 Plug 'beloglazov/vim-online-thesaurus', {
             \ 'on': 'OnlineThesaurusCurrentWord' }  " word lookup in online thesaurus (-K)
+"Plug 'fmv1992/vim_dictionary'             " dictionary for ViM
+
 " ****     vim-fireplace dependencies     ****
 Plug 'tpope/vim-classpath'                         " vim classpath
 Plug 'skywind3000/asyncrun.vim'                    " run async commands
 "Plug 'jpalardy/vim-slime'                         " slime for vim
 "Plug 'editorconfig/editorconfig-vim'              " editorconfg
-"Plug 'brookhong/k.vim'                   " run external commands
+"Plug 'brookhong/k.vim'                            " run external commands
 
 
 
@@ -554,26 +562,27 @@ Plug 'vim-pandoc/vim-pandoc'                       " pandoc integration and util
 Plug 'vim-pandoc/vim-pandoc-syntax'                " pandoc markdown syntax
 Plug 'jceb/vim-orgmode'                            " org mode for vim
 Plug 'tpope/vim-speeddating'                       " for handling dates in vim
-Plug 'roxma/vim-syntax-compl-pop'                  " syntax aware completion in md
+Plug 'aklt/plantuml-syntax'                        " vim syntax for plantuml
+Plug 'scrooloose/vim-slumlord'                     " in-line preview for plantuml diagrams
+Plug 'lervag/vimtex', { 'for': 'tex' }             " editing LaTeX files
+Plug 'junegunn/goyo.vim'                           " distraction-free writing in Vim
+Plug 'junegunn/limelight.vim'                      " light theme for goyo
+
+"Plug 'roxma/vim-syntax-compl-pop'                 " syntax aware completion in md
 "Plug 'xolox/vim-notes' | Plug 'xolox/vim-misc'    " easy note taking
-Plug 'aklt/plantuml-syntax'           " vim syntax for plantuml
-Plug 'scrooloose/vim-slumlord'        " in-line preview for plantuml diagrams
-Plug 'lervag/vimtex', { 'for': 'tex' }  " editing LaTeX files
-Plug 'junegunn/goyo.vim'                " distraction-free writing in Vim
-Plug 'junegunn/limelight.vim'           " light theme for goyo
 
 
 
 " ==== Plugins for python/python3 language auto-completion
 "      syntax checking, highlighting and more
-Plug 'davidhalter/jedi-vim', { 'for': [ 'python' ] }             " python jedi auto-completion (the best)
-Plug 'vim-scripts/python.vim--Vasiliev', { 'for': [ 'python' ] } " enhanced python syntax highlighting
-Plug 'Vimjas/vim-python-pep8-indent', { 'for': [ 'python' ] }    " python indentation style for vim
-Plug 'tell-k/vim-autopep8', { 'for': [ 'python' ] }              " autopep8 plugin for python
-Plug 'ehamberg/vim-cute-python', { 'for': [ 'python' ] }         " conceal for python
-Plug 'tweekmonster/impsort.vim', { 'for': [ 'python' ] }         " sort and highlight py imports
-Plug 'plytophogy/vim-virtualenv', { 'for': [ 'python' ] }        " for working with virtualenvs
+Plug 'davidhalter/jedi-vim'              " python jedi auto-completion (the best)
+Plug 'vim-scripts/python.vim--Vasiliev'  " enhanced python syntax highlighting
+Plug 'Vimjas/vim-python-pep8-indent'     " python indentation style for vim
+Plug 'tell-k/vim-autopep8'               " autopep8 plugin for python
+Plug 'tweekmonster/impsort.vim'          " sort and highlight py imports
+Plug 'plytophogy/vim-virtualenv'         " for working with virtualenvs
 
+"Plug 'ehamberg/vim-cute-python'         " conceal for python
 "Plug 'python-rope/ropevim', { 'for': [ 'python' ] }                  " rope python code assist
 "Plug 'lambdalisue/vim-pyenv'                                         " python virtual env (if required)
 "Plug 'klen/python-mode',
@@ -581,9 +590,6 @@ Plug 'plytophogy/vim-virtualenv', { 'for': [ 'python' ] }        " for working w
 "            \ 'do': function('GitRecurse'),
 "            \ 'for': [ 'python' ]
 "            \ }                                                      " python-mode,pylint,rope,pydoc
-
-
-
 
 
 
