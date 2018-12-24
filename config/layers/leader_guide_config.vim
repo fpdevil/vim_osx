@@ -26,7 +26,7 @@ let g:lmap.t = {
 
 " for +Miscelleaneous apps and tools
 let g:lmap.m = {
-            \ 'name': "+Misc Apps ",
+            \ 'name': '+Misc Apps ',
             \ }
 
 " for +Files
@@ -54,12 +54,13 @@ let g:lmap.w = {
             \ 'name' : '+Writing/Note/Distraction free ',
             \ }
 
+
 "if isdirectory(expand('~/.vim/plugged/vim-leader-guide/'))
 if has_key(g:plugs,'vim-leader-guide')
     " to make the guide pop up Register the description dictionary for the prefix first
     call leaderGuide#register_prefix_descriptions('-', 'g:lmap')
-    nnoremap <silent> <leader> :<c-u>LeaderGuide '-'<CR>
-    vnoremap <silent> <leader> :<c-u>LeaderGuideVisual '-'<CR>
+    nnoremap <silent><nowait> <leader> :<c-u>LeaderGuide '-'<CR>
+    vnoremap <silent><nowait> <leader> :<c-u>LeaderGuideVisual '-'<CR>
 
     " Leaderguide position botright
     let g:leaderGuide_vertical         = 0

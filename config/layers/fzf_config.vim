@@ -74,6 +74,7 @@ if has_key(g:plugs, 'fzf.vim')
                 \ 'F' : [':Filetypes', 'Set File Type '],
                 \ 'c' : [':Colors', 'List Color Schemes '],
                 \ 'b' : [':Buffers', 'List Buffers '],
+                \ 'B' : [':BLines', 'Lines in the current buffer'],
                 \ 'd' : [':FufFileWithCurrentBufferDir', 'Find File under CurDir '],
                 \ 'g' : [':GFiles?', 'Git files (git status) '],
                 \ 'r' : [':Ag <C-R><C-W>', 'SilverSearch '],
@@ -81,7 +82,7 @@ if has_key(g:plugs, 'fzf.vim')
                 \ 'o' : ['History', 'Open Buffers and v:oldfiles '],
                 \ 'h' : ['History:', 'Cmd History '],
                 \ 'H' : ['History/', 'Search History '],
-                \ 'y' : ['y:Ag', 'SilverSearchAg '],
+                \ 'y' : [':Ag', 'SilverSearchAg '],
                 \ 'm' : [':Marks', 'Marks '],
                 \ 'w' : ['Windows', 'Windows '],
                 \ 'k' : ['Maps', 'NormalMode KeyMappings '],
@@ -100,9 +101,9 @@ if has_key(g:plugs, 'fzf.vim')
     imap <c-x><c-j> <plug>(fzf-complete-file-ag)
     imap <c-x><c-l> <plug>(fzf-complete-line)
 
-    nmap <leader><tab> <plug>(fzf-maps-n)
-    xmap <leader><tab> <plug>(fzf-maps-x)
-    omap <leader><tab> <plug>(fzf-maps-o)
+    "nmap <leader><tab> <plug>(fzf-maps-n)
+    "xmap <leader><tab> <plug>(fzf-maps-x)
+    "omap <leader><tab> <plug>(fzf-maps-o)
 
 endif
 "}}}

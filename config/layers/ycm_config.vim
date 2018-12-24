@@ -7,6 +7,7 @@ let s:fts = ['c', 'cpp']
 " snippet for expanding, it checks for completion window and if it's
 " shown, selects first element. If there's no completion window it tries to
 " jump to next placeholder. If there's no placeholder it just returns TAB key 
+"if has_key(g:plugs, 'youcompleteme') && (exists('g:vim_auto_complete_engine') && g:vim_auto_complete_engine ==# 'youcompleteme')
 if has_key(g:plugs, 'youcompleteme') && has('gui_macvim')
     " custom functions
     " make UltiSnips works nicely with YCM
@@ -86,7 +87,7 @@ if has_key(g:plugs, 'youcompleteme') && has('gui_macvim')
     let g:airline#extensions#ycm#enabled                    = 1
     let g:ycm_confirm_extra_conf                            = 0
     let g:ycm_global_ycm_extra_conf                         = '~/.vim/config/.ycm_extra_conf.py'
-    let g:ycm_extra_conf_globlist                           = ['~/.vim/plugged/YouCompleteMe/third_party/ycmd/cpp/ycm/*','!~/*']
+    let g:ycm_extra_conf_globlist                           = ['~/.vim/plugged/youcompleteme/third_party/ycmd/cpp/ycm/*','!~/*']
     let g:ycm_extra_conf_vim_data                           = [ '&filetype' ]
     let g:ycm_auto_trigger                                  = 1
     let g:ycm_enable_diagnostic_highlighting                = 1
@@ -110,7 +111,6 @@ if has_key(g:plugs, 'youcompleteme') && has('gui_macvim')
     let g:ycm_filepath_completion_use_working_dir           = 1   "completion for programming languages
     let g:ycm_goto_buffer_command                           = 'vertical-split'
     let g:ycm_server_log_level                              = 'debug'
-    let g:ycm_extra_conf_vim_data                           = [ '&filetype' ]
     let g:ycm_key_list_stop_completion                      = ['']
     let g:ycm_filetype_blacklist                            = {
                 \ 'tagbar'   : 1,
@@ -123,7 +123,8 @@ if has_key(g:plugs, 'youcompleteme') && has('gui_macvim')
                 \ 'mail'     : 1,
                 \ 'help'     : 1
                 \ }
-    "let g:ycm_key_invoke_completion                         = '<C-Space>'
+    "let g:ycm_key_invoke_completion  = '<C-Space>'
+    let g:ycm_extra_conf_vim_data    = [ '&filetype' ]
 
 
     " semantic triggers
@@ -189,10 +190,13 @@ if has_key(g:plugs, 'youcompleteme') && has('gui_macvim')
         let g:SuperTabCrMapping                          = 'C-n'
         " better key bindings for UltiSnipsExpandTrigger
         " remap Ultisnips for compatibility for YCM
-        let g:UltiSnipsJumpForwardTrigger = "<tab>"
-        let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
-        au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger     . " <C-R>=g:UltiSnips_Complete()<cr>"
-        au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:UltiSnips_Reverse()<cr>"
+        let g:UltiSnipsJumpForwardTrigger = '<tab>'
+        let g:UltiSnipsJumpBackwardTrigger='<s-tab>'
+        augroup ycm_ultisnips
+            autocmd!
+            au InsertEnter * exec 'inoremap <silent> ' . g:UltiSnipsExpandTrigger     . ' <C-R>=g:UltiSnips_Complete()<cr>'
+            au InsertEnter * exec 'inoremap <silent> ' . g:UltiSnipsJumpBackwardTrigger . ' <C-R>=g:UltiSnips_Reverse()<cr>'
+        augroup END
     endif
 endif
 

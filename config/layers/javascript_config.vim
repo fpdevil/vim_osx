@@ -7,7 +7,7 @@
 "  initialize the leader key map for misc section
 " ------------------------------------------------------------------------------------
 let g:lmap = get(g:, 'lmap', {})
-let g:lmap.j = {
+let g:lmap.l.j = {
             \ 'name': '+Javascript/JSON',
             \ }
 
@@ -249,16 +249,16 @@ au FileType javascript hi link javaScriptStringT		String
 " ------------------------------------------------------------------------------------
 if (has_key(g:plugs,'vim-import-js'))
     "nnoremap <silent><buffer> <F4> :ImportJSWord<CR>
-    nnoremap <silent><buffer> <Leader>jii :ImportJSWord<CR>
-    nnoremap <silent><buffer> <Leader>jif :ImportJSFix<CR>
-    nnoremap <silent><buffer> <Leader>jig :ImportJSGoto<CR>
+    nnoremap <silent><buffer> <Leader>ljii :ImportJSWord<CR>
+    nnoremap <silent><buffer> <Leader>ljif :ImportJSFix<CR>
+    nnoremap <silent><buffer> <Leader>ljig :ImportJSGoto<CR>
 
     "inoremap <silent><buffer> <F4> <Esc>:ImportJSWord<CR>a
     "inoremap <silent><buffer> <C-j>i <Esc>:ImportJSWord<CR>a
     "inoremap <silent><buffer> <C-j>f <Esc>:ImportJSFix<CR>a
     "inoremap <silent><buffer> <C-j>g <Esc>:ImportJSGoto<CR>a
 
-    let g:lmap.j.i = {
+    let g:lmap.l.j.i = {
                 \ 'name': 'ImportJS Settings ',
                 \ 'i' : ['ImportJSWord', 'Import JS Word '],
                 \ 'f' : ['ImportJSFix', 'Import JS Fix for Word '],
@@ -288,7 +288,7 @@ highlight jsClassProperty ctermfg=14 cterm=bold
 " key mappings through leader key
 "map <leader>jcl :exec &conceallevel ? "set conceallevel=0" : "set conceallevel=1"<CR>
 
-let g:lmap.j.s = {
+let g:lmap.l.j.s = {
             \ 'name': 'javascript settings',
             \ 'f'  : ['%!js-beautify -j -q -B -f -', 'Beautify JS Buffer'],
             \ 'c'  : ['exec &conceallevel ? ''set conceallevel=0'' : ''set conceallevel=1''', 'Conceeal Settings']
@@ -297,7 +297,7 @@ let g:lmap.j.s = {
 " json format options
 " JSON Formatter Plugin for VIM
 if !empty(glob('~/.vim/plugged/json-formatter.vim'))
-    let g:lmap.j.g = {
+    let g:lmap.l.j.g = {
                 \ 'name': 'JSON Stuff',
                 \ 'f': [':JSONFormatter', 'Format JSON'],
                 \ }

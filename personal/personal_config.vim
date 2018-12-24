@@ -14,7 +14,7 @@ let g:vim_gui_color_scheme = 'solarized8_light'
 let g:vimosx_gui_font = 'MonacoForPowerline:h12'
 
 " terminal status line / airline theme (default: dark)
-let g:vim_airline_theme = 'aurora'
+let g:vim_airline_theme = 'solarized_flood'
 
 " clear search highlighting {0 | 1}
 let g:vim_clear_search_highlight = 1

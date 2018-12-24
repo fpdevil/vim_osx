@@ -65,9 +65,9 @@ endif
 "if has('syntax')
 "   syntax enable
 "endif
-if &t_Co > 2 || has("gui_running")
+if &t_Co > 2 || has('gui_running')
     syntax on
-    if &term =~ '^rxvt-unicode\|256color'
+    if &term =~# '^rxvt-unicode\|256color'
         set t_Co=256
         " rxvt-unicode supports changing the cursor color on the fly.
         let &t_SI = "\<Esc>]12;#bebebe\x7" " gray
@@ -228,9 +228,19 @@ set formatoptions=c,q,r,t
 " Use Vim settings, rather than Vi settings (much better!).
 " This must be first, because it changes other options as a side effect.
 " ------------------------------------------------------------------------------------
-set viminfo='20,\"50                        " read/write a .viminfo file, don't store more
-                                            " than 50 lines of registers
-set history=10000                           " keep 100000 lines of command line history
+"           +--Disable hlsearch while loading viminfo
+"           |  +--Remember marks for last 100 files
+"           |  |    +--Remember up to 50 lines in each register
+"           |  |    |   +--Remember up to 50kB in each register
+"           |  |    |   |   +--Remember last 50 search patterns
+"           |  |    |   |   |    +---Remember last 100 commands
+"           |  |    |   |   |    |
+"           v  v    v   v   v    v
+set viminfo=h,'100,<50,s50,/50,:100
+"set viminfo='20,\"50                        " read/write a .viminfo file, don't store more
+                                             " than 50 lines of registers
+
+set history=1000                             " keep 1000 lines of command line history
 
 if has('cmdline_info')
     set ruler                               " show the cursor position all the time
@@ -435,9 +445,17 @@ if has('spell') " if vim support spell checking
     " :set spell will do checks and jump using [s or s]
     " at the word z= will show suggestions (10 at most)
     set spellsuggest=10
+
+    " set spellfile and where it should get the dictionary files
+    let g:spellfile_URL = 'http://ftp.vim.org/vim/runtime/spell'
+    set spellfile=~/.vim/spell/en.utf-8.add
+
     " spell checking for text, HTML, LaTeX, markdown and literate Haskell
-    autocmd BufEnter *.txt,*.tex,*.html,*.md,*.ymd,*.lhs setlocal spell
-    autocmd BufEnter *.txt,*.tex,*.html,*.md,*.ymd,*.lhs setlocal spelllang=en_us
+    augroup spell_check_group
+        autocmd!
+        autocmd BufEnter *.txt,*.tex,*.html,*.md,*.ymd,*.lhs setlocal spell
+        autocmd BufEnter *.txt,*.tex,*.html,*.md,*.ymd,*.lhs setlocal spelllang=en_us
+    augroup END
 
     " better error highlighting with solarized
     if exists('g:colors_name') && (g:colors_name ==# 'solarized' || g:colors_name ==# 'solarized8')

@@ -92,12 +92,12 @@ if has_key(g:plugs,'clang_complete')
 
     " set the location of the pre-built llvm-clang for osx
     "let s:xcode_usr_path  = '/Library/Developer/CommandLineTools/usr'
-    "let s:xcode_usr_path  = '/opt/software/clang+llvm-6.0.0-x86_64-apple-darwin/'
+    "let s:xcode_usr_path  = '/opt/software/clang+llvm-7.0.0-x86_64-apple-darwin/'
     let s:xcode_usr_path  = '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/'
 
     if isdirectory(s:xcode_usr_path)
         let g:clang_exec         = s:xcode_usr_path . 'bin/clang'
-        let g:clang_library_path = s:xcode_usr_path . 'lib/libclang.dylib'
+        let g:clang_library_path = s:xcode_usr_path . 'lib/'
     endif
 
     " user options for clang
@@ -120,14 +120,13 @@ if has_key(g:plugs,'clang_complete')
     let g:clang_auto_select                        = 1
     let g:clang_close_preview                      = 1
     let g:clang_use_library                        = 1
-    let g:clang_complete_copen                     = 1
-    let g:clang_hl_errors                          = 1
     let g:clang_complete_copen                     = 1  " clang errors in the quickfix
-    let g:clang_omnicppcomplete_compliance         = 0  " this makes <C-X><C-U> as main clang completion
+    let g:clang_omnicppcomplete_compliance         = 1  " this makes <C-X><C-U> as main clang completion
     let g:clang_complete_macros                    = 1
     let g:clang_complete_patterns                  = 1
     let g:clang_make_default_keymappings           = 1
     let g:clang_use_library                        = 1
+    let g:clang_debug                              = 1
 
     "let g:clang_user_options               = '-std=c++1y -I ' . s:xcode_usr_path . 'include/c++/v1 -I /usr/local/include'
 endif

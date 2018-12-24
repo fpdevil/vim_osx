@@ -21,18 +21,18 @@ if has_key(g:plugs, 'vim-easymotion')
     "map <Leader><Leader>w <Plug>(easymotion-w)
     "map <Leader><leader>l <Plug>(easymotion-lineforward)
     "map <Leader><leader>. <Plug>(easymotion-repeat)
+    "nmap <Leader>jf <Plug>(easymotion-overwin-f)
 
     " with leader map
-    if has_key(g:lmap, 'm')
-        let g:lmap.m.u.j = {
-                    \ 'name' : 'Jump/Join/Split',
-                    \ 'j' : ['<Plug>(easymotion-prefix)s', 'Jump to a character'],
-                    \ 'J' : ['<Plug>(easymotion-s2)', 'Jump to a suite of 2 characters'],
-                    \ 'l' : ['<Plug>(easymotion-bd-k)', 'Jump to a line'],
-                    \ 'w' : ['<Plug>(easymotion-bd-w)', 'Jump to a word'],
-                    \ 'f' : ['<Plug>(easymotion-bd-f)', 'Jump to a character'],
-                    \ '.' : ['<Plug>(easymotion-repeat)', 'Repeat'],
-                    \ }
-    endif
+    let g:lmap = get(g:, 'lmap', {})
+    let g:lmap.j = {
+                \ 'name': '+Jump/Join/Split ',
+                \ '.' : ['call feedkeys("\<Plug>(easymotion-repeat)")', 'EasyMotion Repeat'],
+                \ ',' : ['call feedkeys("\<Plug>(easymotion-prefix)")', 'EasyMotion Prefix'],
+                \ 's' : ['call feedkeys("\<Plug>(easymotion-overwin-s2)")', 'EasyMotion 2 char search'],
+                \ 'w' : ['call feedkeys("\<Plug>(easymotion-overwin-w)")', 'EasyMotion jump to a word'],
+                \ 'l' : ['call feedkeys("\<Plug>(easymotion-overwin-l)")', 'EasyMotion jump to a line'],
+                \ 'f' : ['call feedkeys("\<Plug>(easymotion-overwin-f)")', 'EasyMotion jump to a char'],
+                \ }
 endif
 "}}}

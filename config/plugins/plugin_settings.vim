@@ -17,6 +17,7 @@ endfunction
 
 
 call s:LoadConfig('leader_guide_config.vim')       " configuration for vim leader guide
+call s:LoadConfig('denite_config.vim')             " DENITE plugin(s) configuration
 call s:LoadConfig('unite_config.vim')              " UNITE plugin(s) configuration
 call s:LoadConfig('rainbow_config.vim')            " rainbow parenthesis configuration
 call s:LoadConfig('airline_config.vim')            " Airline statusline configuration

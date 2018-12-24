@@ -144,7 +144,16 @@
 16. VimRC generator online http://vimrc.org/
 
    =============================================================================
-17.
+17. Spell checking
+    set spell
+    and the typing z= over the word gives suggestions
    =============================================================================
-18.
+18. some generic tips...
+   (a) Testing python jedi completions in shell
+      python3 -c "import jedi; print(jedi.Script('import cv2; cv2.').completions())"
+      python3 -c "import jedi; print(jedi.Script('import sys; sys.').completions())"
+   (b) generate a base64 encoded string aka jwt?
+   echo -n fantasticjwtTokenValue | base64 | tr "+/" "-_" | tr -d "="
+   =============================================================================
+19. 
    =============================================================================

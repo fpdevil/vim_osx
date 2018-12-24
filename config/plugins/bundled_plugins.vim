@@ -111,6 +111,7 @@ if exists('g:vim_auto_complete_engine') && g:vim_auto_complete_engine ==# 'deopl
     Plug 'Shougo/deoplete.nvim'                         " dark powered neo-completion
     Plug 'roxma/nvim-yarp'                              " Yet Another Remote Plugin Framework
     Plug 'roxma/vim-hug-neovim-rpc'                     " neovim rpc client fpr vim8
+    Plug 'zchee/deoplete-jedi'                          " deoplete source for python
 endif
 Plug 'Shougo/neoinclude.vim'                            " include completion framework for neocomplete
 Plug 'Chiel92/vim-autoformat'                           " easy code formatting in vim
@@ -177,6 +178,7 @@ Plug 'letientai299/vim-react-snippets', { 'branch': 'es6' }  " react js snippets
 
 
 " ==== plugins for unite family and related extensions ====
+Plug 'Shougo/denite.nvim'
 Plug 'Shougo/unite.vim'                    " unite color changer helper
 Plug 'Shougo/unite-outline'                " outline source for unite
 Plug 'ujihisa/unite-colorscheme'           " Unite color scheme browser
@@ -223,6 +225,7 @@ Plug 'godlygeek/tabular'                              " text filtering and align
 Plug 'Shougo/neco-syntax'                             " syntax source for neocomplete
 Plug 'ujihisa/neco-look'                              " english lookup for neo
 Plug 'nathanaelkane/vim-indent-guides'                " vim indentation display
+Plug 'joom/latex-unicoder.vim'                        " type unicode chars
 
 
 " plugins for vim neocomplete source ====
@@ -402,12 +405,12 @@ Plug 'derekwyatt/vim-scala', { 'for': 'scala'}   " scala support
 " ==== plugins for html,css,xml ... syntax, validation etc.====
 Plug 'mattn/emmet-vim', { 'for':
             \ ['html', 'xhtml', 'css', 'xml', 'xls', 'markdown'] }    " emmet for vim
-Plug 'othree/html5.vim', { 'for': ['html', 'xhttml', 'css'] }   " html5 support
-Plug 'othree/xml.vim'                                           " xml support
-Plug 'sukima/xmledit'                                           " xml editor
-Plug 'vim-scripts/xslt'                                         " xslt ftplugin
-Plug 'Valloric/MatchTagAlways'                                  " highlight matching tags on markup's
-Plug 'gko/vim-coloresque'                                       " color preview #rrggbb or #rgb
+Plug 'othree/html5.vim', { 'for': ['html', 'xhttml', 'css'] }         " html5 support
+Plug 'othree/xml.vim', {'for': ['html','xhtml','xml']}                " xml support
+Plug 'sukima/xmledit', {'for': ['html','xhtml','xml']}                " xml editor
+Plug 'vim-scripts/xslt'                                               " xslt ftplugin
+Plug 'Valloric/MatchTagAlways', {'for': ['html','xhtml','xml']}       " highlight matching tags on markup's
+Plug 'gko/vim-coloresque'                                             " color preview #rrggbb or #rgb
 if has('python') || has('python3')
     Plug 'Rykka/colorv.vim', {
                 \ 'on': [
@@ -538,6 +541,7 @@ Plug 'terryma/vim-multiple-cursors'              " vim multiple cursors
 
 
 " ==== Plugins for text visualization ====
+"Plug 'RRethy/vim-illuminate'                             " highlight word under cursor
 Plug 'osyo-manga/vim-brightest'                          " highlight cursor word
 Plug 'osyo-manga/vim-over', { 'on': 'OverCommandLine' }  " preview in commandline window
 Plug 'osyo-manga/vim-over'                               " :substitute preview
@@ -562,11 +566,13 @@ Plug 'vim-pandoc/vim-pandoc'                       " pandoc integration and util
 Plug 'vim-pandoc/vim-pandoc-syntax'                " pandoc markdown syntax
 Plug 'jceb/vim-orgmode'                            " org mode for vim
 Plug 'tpope/vim-speeddating'                       " for handling dates in vim
-Plug 'aklt/plantuml-syntax'                        " vim syntax for plantuml
 Plug 'scrooloose/vim-slumlord'                     " in-line preview for plantuml diagrams
 Plug 'lervag/vimtex', { 'for': 'tex' }             " editing LaTeX files
 Plug 'junegunn/goyo.vim'                           " distraction-free writing in Vim
 Plug 'junegunn/limelight.vim'                      " light theme for goyo
+Plug 'aklt/plantuml-syntax'                        " vim syntax for plantuml
+Plug 'weirongxu/plantuml-previewer.vim'            " preview plantuml
+Plug 'tyru/open-browser.vim'                       " open uri with browser
 
 "Plug 'roxma/vim-syntax-compl-pop'                 " syntax aware completion in md
 "Plug 'xolox/vim-notes' | Plug 'xolox/vim-misc'    " easy note taking
@@ -576,12 +582,13 @@ Plug 'junegunn/limelight.vim'                      " light theme for goyo
 " ==== Plugins for python/python3 language auto-completion
 "      syntax checking, highlighting and more
 Plug 'davidhalter/jedi-vim'              " python jedi auto-completion (the best)
-Plug 'vim-scripts/python.vim--Vasiliev'  " enhanced python syntax highlighting
 Plug 'Vimjas/vim-python-pep8-indent'     " python indentation style for vim
 Plug 'tell-k/vim-autopep8'               " autopep8 plugin for python
 Plug 'tweekmonster/impsort.vim'          " sort and highlight py imports
 Plug 'plytophogy/vim-virtualenv'         " for working with virtualenvs
+Plug 'vim-python/python-syntax'          " syntax highlighting
 
+"Plug 'vim-scripts/python.vim--Vasiliev'  " enhanced python syntax highlighting
 "Plug 'ehamberg/vim-cute-python'         " conceal for python
 "Plug 'python-rope/ropevim', { 'for': [ 'python' ] }                  " rope python code assist
 "Plug 'lambdalisue/vim-pyenv'                                         " python virtual env (if required)
@@ -596,6 +603,7 @@ Plug 'plytophogy/vim-virtualenv'         " for working with virtualenvs
 " ==== Plugin for YouCompleteMe ====
 "      being used only in gui mode for MacVim
 if has('gui_macvim')
+"if exists('g:vim_auto_complete_engine') && g:vim_auto_complete_engine ==# 'youcompleteme'
     Plug 'valloric/youcompleteme',
                 \ {
                 \ 'do': function('YCMBuilder'),

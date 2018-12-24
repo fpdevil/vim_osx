@@ -5,6 +5,7 @@ scriptencoding utf-8
 
 if isdirectory(expand('~/.vim/plugged/unite.vim/'))
     call unite#custom#source('codesearch', 'max_candidates', 30)
+    call unite#custom#source('file,file/new,buffer,file_rec','matchers','matcher_fuzzy')
     call unite#filters#matcher_default#use(['matcher_fuzzy'])
     call unite#filters#sorter_default#use(['sorter_rank'])
     call unite#custom#profile('default', 'context',

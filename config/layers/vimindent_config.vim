@@ -12,8 +12,11 @@ if !empty(glob('~/.vim/plugged/vim-indent-guides'))
     let g:indent_guides_tab_guides            = 0
     let g:indent_guides_soft_pattern          = ' '
 
-    autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=red   ctermbg=3
-    autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=green ctermbg=4
+    augroup indent_color_grp
+        autocmd!
+        autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=red   ctermbg=3
+        autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=green ctermbg=4
+    augroup END
 
     "nnoremap <Leader>ti :IndentGuidesToggle<CR>
     if has_key(g:lmap,'w')

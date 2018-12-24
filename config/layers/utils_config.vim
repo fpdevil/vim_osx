@@ -16,6 +16,20 @@ if has_key(g:plugs,'echodoc')
     "set cmdheight=2
 endif
 
+
+" ------------------------------------------------------------------------------------
+"  for typing unicode latex characters in ViM
+" ------------------------------------------------------------------------------------
+if has_key(g:plugs, 'latex-unicoder.vim')
+    let g:unicoder_cancel_normal = 1
+    let g:unicoder_cancel_insert = 1
+    let g:unicoder_cancel_visual = 1
+    nnoremap <C-e> :call unicoder#start(0)<CR>
+    inoremap <C-e> <Esc>:call unicoder#start(1)<CR>
+    vnoremap <C-e> :<C-u>call unicoder#selection()<CR>
+endif
+
+
 " ------------------------------------------------------------------------------------
 "  ** for colorv
 " ------------------------------------------------------------------------------------
@@ -83,7 +97,7 @@ endif
 " ------------------------------------------------------------------------------------
 " -------                     balloon eval for gvim / gui                      -------
 " ------------------------------------------------------------------------------------
-if has("ballooneval")         " available only for gvim
+if has('ballooneval')         " available only for gvim
     set ballooneval           " balloons  act  as small hover menus
 endif
 
