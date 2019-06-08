@@ -21,7 +21,6 @@ if isdirectory(expand('~/.vim/plugged/vim-airline/'))
     "}}}
 
     "{{{ enable/disable the airline extensions
-    let g:airline#extensions#syntastic#enabled      = 1
     let g:airline#extensions#branch#enabled         = 1
     let g:airline#extensions#tagbar#enabled         = 1
     let g:airline#extensions#tabline#enabled        = 1
@@ -29,20 +28,35 @@ if isdirectory(expand('~/.vim/plugged/vim-airline/'))
     let g:airline#extensions#tabline#fnamecollapse  = 1
     let g:airline#extensions#tabline#fnametruncate  = 0
     let g:airline#extensions#tabline#buffer_nr_show = 1
-    let g:airline#extensions#hunks#non_zero_only    = 0                  " remove extra space with +/-/~ of 0
-    let g:airline#extensions#hunks#enabled          = 1
-    let g:airline#extensions#vimagit#enabled        = 1
-    let g:airline#extensions#promptline#enabled     = 1
-    let g:airline#extensions#unicode#enabled        = 1
     let g:airline#extensions#tabline#formatter      = 'unique_tail_improved'
     let g:airline#extensions#tabline#show_tab_nr    = 1
     let g:airline#extensions#tabline#tab_nr_type    = 2
     let g:airline#extensions#tabline#show_tab_type  = 1
     let g:airline#extensions#tabline#buffers_label  = 'BUFFERS'
     let g:airline#extensions#tabline#tabs_label     = 'TABS'
+    let g:airline#extensions#hunks#non_zero_only    = 0                  " remove extra space with +/-/~ of 0
+    let g:airline#extensions#hunks#enabled          = 1
+    let g:airline#extensions#vimagit#enabled        = 1
+    let g:airline#extensions#promptline#enabled     = 1
+    let g:airline#extensions#unicode#enabled        = 1
     let g:airline#extensions#quickfix#quickfix_text = 'Quickfix'
     let g:airline#extensions#quickfix#location_text = 'Location'
     let g:airline#extensions#bufferline#enabled     = 1
+    "}}}
+
+    "{{{ for buffer tab indexes
+    let g:airline#extensions#tabline#buffer_idx_format = {
+            \ '0': '➓ ',
+            \ '1': '❶ ',
+            \ '2': '❷ ',
+            \ '3': '❸ ',
+            \ '4': '❹ ',
+            \ '5': '❺ ',
+            \ '6': '❻ ',
+            \ '7': '❼ ',
+            \ '8': '❽ ',
+            \ '9': '❾ '
+            \}
     "}}}
 
     "{{{ tmux status extension for mode colors

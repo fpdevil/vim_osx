@@ -126,9 +126,7 @@ set tags+=/usr/local/opt/erlang/lib/erlang/lib/tags
 " included clang includes
 "set path=.,/usr/include,/usr/local/include,/opt/software/clang+llvm-6.0.0-x86_64-apple-darwin/include/c++/v1
 
-"set path=.,/usr/include,/usr/local/include,/Library/Developer/CommandLineTools/usr/include/c++/v1,/Library/Developer/CommandLineTools/usr/lib/clang/10.0.0/include,/Library/Developer/CommandLineTools/usr/include
-
-set path=.,/usr/local/include,/usr/include,/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1,/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/10.0.0/include,/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include
+set path=.,/usr/local/include,/usr/include,/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1,/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/10.0.1/include,/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include
 
 " -------------------------------------------------------------------------------------
 " additional path settings to include opencv
@@ -162,8 +160,8 @@ endif "has('python3')
 if has('gui_running')
     set path+=/usr/local/lib/python3.7/site-packages
     "let $PYTHONPATH = "/usr/local/lib/python3.7/site-packages"
-    let $PYTHON3_INCLUDE_DIR = '/usr/local/opt/python3/Frameworks/Python.framework/Versions/3.7/include/python3.6m'
-    let $PYTHON3_LIBRARY = '/usr/local/opt/python3/Frameworks/Python.framework/Versions/3.7/lib/python3.7/config-3.7m-darwin'
+    let $PYTHON3_INCLUDE_DIR = '/usr/local/Cellar/python/3.7.2_2/Frameworks/Python.framework/Versions/3.7/include/python3.7m'
+    let $PYTHON3_LIBRARY = '/usr/local/opt/python/Frameworks/Python.framework/Versions/3.7/lib/python3.7/config-3.7m-darwin/libpython3.7.dylib'
     let $GOPATH = $HOME . '/sw/programming/gocode/go'
     let $PATH = $HOME . '/usr/local/opt/go/libexec/bin:' . $PATH
 endif

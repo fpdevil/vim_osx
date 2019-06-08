@@ -531,4 +531,24 @@ endfunction
 command! -bang DisplayFunctionKeys : call DisplayFunctionKeys(<q-bang>)
 " :DisplayFunctionKeys
 
+"Function: Cpp_Header_Skeleton
+"Desc: Insert a basic CPP header
+"
+"Arguments: void
+function Cpp_Header_Skeleton()
+	let header_guard_name = "HEADER_HPP"
+	let str_header_guard = ["#ifndef " . header_guard_name,
+		\"#define " . header_guard_name . " 1",
+		\"",
+		\"#endif /* " . header_guard_name . " */"]
+	call setline(line("$"), str_header_guard)
+
+	" Hihglights header guard name so that it could be substituted easily.
+	call search(header_guard_name)
+	call matchadd("Search", header_guard_name)
+endfunction
+
+command InsertCppHeader :call Cpp_Header_Skeleton()
+
+
 " vim:set et sw=4 sts=4

@@ -5,17 +5,16 @@ scriptencoding utf-8
 
 if has_key(g:plugs, 'ale')
     let g:ale_emit_conflict_warnings     = 0
-    let g:ale_change_sign_column_color   = 1
+    let g:ale_change_sign_column_color   = 0
     let g:ale_open_list                  = 1
     let g:ale_set_quickfix               = 0
     let g:ale_keep_list_window_open      = 0
     let g:ale_list_window_size           = 6
     let g:airline#extensions#ale#enabled = 1
 
-    let g:ale_sign_column_always         = 1
-    let g:ale_sign_error                 = '●'
-    let g:ale_sign_warning               = '⚠'
-    let g:ale_sign_info                  = 'ⓘ'
+    ""let g:ale_sign_error                 = '●'
+    ""let g:ale_sign_warning               = '⚠'
+    ""let g:ale_sign_info                  = 'ⓘ'
     let g:ale_echo_msg_format            = '[%linter%] %s [%severity%]'
 
     if g:vim_lint_on_the_fly
@@ -37,6 +36,12 @@ if has_key(g:plugs, 'ale')
 
     let g:ale_erlang_syntaxerl_executable = '/opt/erlang/syntaxerl/syntaxerl'
 
+    " do not descend into project subdirectories before linting
+    let g:ale_python_pylint_change_directory = 0
+    let g:ale_python_flake8_change_directory = 0
+    " ignore missing library error from mypy in python files
+    let g:ale_python_mypy_options = '--ignore_missing_imports'
+
     let g:ale_fixers                     = {
                 \ 'javascript' : ['eslint', 'prettier'],
                 \ 'scss'       : ['stylelint'],
@@ -46,10 +51,11 @@ if has_key(g:plugs, 'ale')
                 \ }
 
     let g:ale_linters                    = {
-                \ 'jsx'        : ['stylelint', 'eslint'],
-                "\ 'haskell'    : ['hlint', 'ghc', 'ghc-mod', 'stack-ghc', 'stack-ghc-mod', 'stack-build', 'cabal_ghc' ],
+                \ 'jsx'        : ['stylelint','eslint'],
                 \ 'java'       : ['javac'],
                 \ }
+
+    " 'haskell'    : ['hlint', 'ghc', 'ghc-mod', 'stack-ghc', 'stack-ghc-mod', 'stack-build', 'cabal_ghc' ]
 
     let g:ale_linter_aliases = {'jsx': 'css'}
 

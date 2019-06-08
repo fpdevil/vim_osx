@@ -20,7 +20,7 @@ augroup py
     " -- completion options display
     au FileType python setlocal completeopt=menu,preview,menuone,longest
     " this is done by jedi plugin (but default python3complete#Complete coming up)
-    au FileType python setlocal omnifunc=jedi#completions
+    "au FileType python setlocal omnifunc=jedi#completions
     "au FileType python setlocal completefunc=jedi#completions
     " -- filetype indentation for python (proper pep8)
     au FileType python set tabstop=4|set shiftwidth=4|set shiftwidth=4|set textwidth=79|set expandtab|set autoindent
@@ -33,29 +33,36 @@ augroup end
 " ------------------------------------------------------------------------------
 "  vim-jedi options
 " ------------------------------------------------------------------------------
-" set the keymapping for definition browsing (-t)
-"au FileType python let g:jedi#goto_definitions_command   = "<leader>t"
+if isdirectory(expand('~/.vim/plugged/jedi-vim'))
+    " set the keymapping for definition browsing (-t)
+    "au FileType python let g:jedi#goto_definitions_command   = "<leader>t"
+    
+    "let g:jedi#auto_vim_configuration = 1
+    "let g:jedi#completions_enabled    = 1
+    "let g:jedi#popup_select_first     = 0
+    
+    let g:jedi#auto_vim_configuration = 0
+    let g:jedi#completions_enabled    = 1
+    
+    let g:jedi#goto_assignments_command   = '<leader>lpa'
+    let g:jedi#goto_definitions_command   = '<leader>lpg'
+    let g:jedi#documentation_command      = '<leader<lpd>'
+    let g:jedi#usages_command             = '<leader>lpu'
+    let g:jedi#rename_command             = '<leader>lpr'
+    let g:jedi#use_splits_not_buffers     = "left"
+    let g:jedi#show_call_signatures  = 0
+    let g:jedi#show_call_signatures = 1
+    if &rtp =~ '\<jedi\>'
+        augroup JediSetup
+            au!
+            au FileType python call jedi#configure_call_signatures()
+        augroup END
+    endif
+endif
 
-"let g:jedi#auto_vim_configuration = 1
-"let g:jedi#completions_enabled    = 1
-"let g:jedi#popup_select_first     = 0
-
-let g:jedi#auto_vim_configuration = 0
-let g:jedi#completions_enabled    = 1
-
-let g:jedi#goto_assignments_command   = '<leader>lpa'
-let g:jedi#goto_definitions_command   = '<leader>lpg'
-let g:jedi#documentation_command      = '<leader<lpd>'
-let g:jedi#usages_command             = '<leader>lpu'
-let g:jedi#rename_command             = '<leader>lpr'
-let g:jedi#use_splits_not_buffers     = "left"
-let g:jedi#show_call_signatures  = 0
-let g:jedi#show_call_signatures = 1
-if &rtp =~ '\<jedi\>'
-    augroup JediSetup
-        au!
-        au FileType python call jedi#configure_call_signatures()
-    augroup END
+if isdirectory(expand('~/.vim/plugged/deoplete-jedi'))
+    let g:deoplete#sources#jedi#show_docstring = 1
+    let g:deoplete#sources#jedi#python_path = '/usr/local/bin/python3'
 endif
 
 " if ropevim is enabled and used for python code assist

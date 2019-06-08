@@ -75,7 +75,7 @@ endif
 " ------------------------------------------------------------------------------------
 if !empty(glob('~/.vim/plugged/bullets.vim'))
     " disable default mappings (CR)
-    let g:bullets_set_mappings = 0
+    let g:bullets_set_mappings = 1
     let g:bullets_enabled_file_types = [
                 \ 'markdown',
                 \ 'text',

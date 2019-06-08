@@ -3,6 +3,7 @@
 " https://vimgifs.com/
 " https://github.com/mhinz/vim-galore
 " https://sanctum.geek.nz/arabesque/category/vim/
+" https://vim.fandom.com/wiki/Making_a_list_of_numbers
 " == == == == == == == == == == == == == == == == == == == == == == == == == ==
 
 
@@ -135,7 +136,7 @@
 
    =============================================================================
 15. ViM Text justification (brew install par)
-   
+
    :!par 40j			" this would justify at 40th column
    or
    :set formatprg=par\ -w80	" run gq to justify
@@ -152,8 +153,12 @@
    (a) Testing python jedi completions in shell
       python3 -c "import jedi; print(jedi.Script('import cv2; cv2.').completions())"
       python3 -c "import jedi; print(jedi.Script('import sys; sys.').completions())"
+   (c) python3 interpreter
+      import jedi
+      jedi.set_debug_function()
+      jedi.Script('import cv2;cv2.', environment=jedi.get_system_environment('3.7')).completions()
    (b) generate a base64 encoded string aka jwt?
    echo -n fantasticjwtTokenValue | base64 | tr "+/" "-_" | tr -d "="
    =============================================================================
-19. 
+19.
    =============================================================================

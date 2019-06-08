@@ -4,12 +4,12 @@
 " vim: set sw=4 ts=4 sts=4 et tw=78 foldmarker={,} foldlevel=0 foldmethod=marker spell:
 
 " below 2 options to be loaded first
-if has('vim_starting')
-    if &compatible
-        set nocompatible
-    endif
-endif
-filetype off
+"if has('vim_starting')
+"    if &compatible
+"        set nocompatible
+"    endif
+"endif
+"filetype off
 
 " ************************************************************************************
 " vim  Leader key mapping with g:vimosx_leader_key
@@ -28,9 +28,7 @@ else
    let g:maplocalleader=g:vimosx_localleader_key
 endif
 
-augroup vimrc
-  autocmd!
-augroup END
+augroup vimrc | autocmd! | augroup end
 
 " set file encodings
 if &encoding !=? 'utf-8'
@@ -42,9 +40,6 @@ endif
 " note: set encoding BEFORE script encoding
 scriptencoding utf-8
 
-"set fileencoding=utf-8                          " file utf-8 encode
-"set fileencodings=utf-8                         " file utf-8 encode
-
 " allow plugins by file type (required for plugins!)
 filetype plugin indent on
 filetype indent on
@@ -54,17 +49,10 @@ filetype indent on
 "   let g:vimosx_no_autochdir = 1
 if !exists('g:vimosx_no_autochdir')
    " to always switch to the current file directory
-    augroup vimrc
-        autocmd!
-        autocmd BufEnter * if bufname("") !~ "^\[A-Za-z0-9\]*://" | lcd %:p:h | endif
-    augroup end
+   autocmd vimrc BufEnter * if bufname("") !~ "^\[A-Za-z0-9\]*://" | lcd %:p:h | endif
 endif
 
 " syntax highlighting
-"
-"if has('syntax')
-"   syntax enable
-"endif
 if &t_Co > 2 || has('gui_running')
     syntax on
     if &term =~# '^rxvt-unicode\|256color'
@@ -126,11 +114,8 @@ set foldlevelstart=99
 set foldcolumn=0
 
 " fold vimrc itself by categories
-augroup vimrcFold
-    autocmd!
-    autocmd FileType vim set foldmethod=marker
-    autocmd FileType vim set foldlevel=0
-augroup END
+autocmd vimrc FileType vim set foldmethod=marker
+autocmd vimrc FileType vim set foldlevel=0
 
 set wildignorecase                       " ignore case while completing file names
 
@@ -210,7 +195,6 @@ set smartindent
 set cindent
 set cinoptions=(0,u0,U0
 
-
 " Text auto formatting options
 set formatprg=par               " external program used to format with gq operator
 set formatoptions=c,q,r,t
@@ -221,7 +205,6 @@ set formatoptions=c,q,r,t
 "                 | +----------- Allow formatting of comments with 'gq'.
 "                 +------------- Auto-wrap comments using textwidth, inserting
 "                                the current comment leader automatically.
-
 
 
 " ------------------------------------------------------------------------------------
@@ -263,8 +246,6 @@ endif
 
 " highlighting, search and matching options
 set showmatch                               " highlight matching brackets
-set hlsearch                                " highlight searches
-set incsearch                               " incremental search highlights as you type
 set ignorecase                              " case insensitive search
 set smartcase                               " unless search contains uppercase letter
 set infercase                               " case based completion
@@ -273,6 +254,10 @@ set noerrorbells                            " disable beep on errors
 
 set sidescroll=10                           " minimum number of columns to scroll
 set sidescrolloff=20                        " always keep 10 columns of horizontal context
+
+set hlsearch                                " highlight searches
+set incsearch                               " incremental search highlights as you type
+hi Search ctermfg=White ctermbg=33 guibg=DeepPink4 guifg=White
 
 " To clear the search highlighting, set the below option
 if exists('g:vim_clear_search_highlight')
@@ -397,12 +382,13 @@ call EnsureDirExists(&backupdir)
 call EnsureDirExists(&directory)
 
 " set current directory of file in current window
-if has('autocmd')
-    augroup vimrc
-        autocmd!
-        autocmd BufEnter * :lchdir %:p:h
-    augroup end
-endif
+autocmd vimrc BufEnter * :lchdir %:p:h
+" if has('autocmd')
+"     augroup vimrc
+"         autocmd!
+"         autocmd vimrc BufEnter * :lchdir %:p:h
+"     augroup end
+" endif
 
 " keymapping to move between splits
 noremap <C-h> <C-w>h
@@ -425,12 +411,10 @@ set ttimeoutlen=50
 "  while editing a file, always jump to the last known cursor position. Don't
 "  do that when the position is invalid or when inside an event handler.
 " ------------------------------------------------------------------------------------
-if has('autocmd')
-    autocmd BufReadPost *
-                \ if line("'\"") > 0 && line("'\"") <= line("$") |
-                \   exe "normal! g`\"" |
-                \ endif
-endif
+autocmd vimrc BufReadPost *
+            \ if line("'\"") > 0 && line("'\"") <= line("$") |
+            \   exe "normal! g`\"" |
+            \ endif
 
 
 " ------------------------------------------------------------------------------------
@@ -451,11 +435,8 @@ if has('spell') " if vim support spell checking
     set spellfile=~/.vim/spell/en.utf-8.add
 
     " spell checking for text, HTML, LaTeX, markdown and literate Haskell
-    augroup spell_check_group
-        autocmd!
-        autocmd BufEnter *.txt,*.tex,*.html,*.md,*.ymd,*.lhs setlocal spell
-        autocmd BufEnter *.txt,*.tex,*.html,*.md,*.ymd,*.lhs setlocal spelllang=en_us
-    augroup END
+    autocmd vimrc BufEnter *.txt,*.tex,*.html,*.md,*.ymd,*.lhs setlocal spell
+    autocmd vimrc BufEnter *.txt,*.tex,*.html,*.md,*.ymd,*.lhs setlocal spelllang=en_us
 
     " better error highlighting with solarized
     if exists('g:colors_name') && (g:colors_name ==# 'solarized' || g:colors_name ==# 'solarized8')
@@ -505,7 +486,7 @@ endif
 let s:default_path = escape(&path, '\ ') " store default value of 'path'
 " always add the current file's directory to the path and tags list if not
 " already there. Add it to the beginning to speed up searches.
-autocmd BufRead *
+autocmd vimrc BufRead *
 	    \ let s:tempPath=escape(escape(expand("%:p:h"), ' '), '\ ') |
 	    \ exec "set path-=".s:tempPath |
 	    \ exec "set path-=".s:default_path |

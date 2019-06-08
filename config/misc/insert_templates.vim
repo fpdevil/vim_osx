@@ -54,6 +54,7 @@ function! s:ErlHeader()
 endfunction
 
 augroup ErlHeader
+    autocmd!
     autocmd BufNewFile *.erl call s:ErlHeader()
 augroup END
 "}}}
@@ -113,6 +114,7 @@ function! s:HsHeader()
 endfunction
 
 augroup HsHeader
+    autocmd!
     autocmd BufNewFile *.hs call s:HsHeader()
 augroup END
 "}}}
@@ -259,6 +261,7 @@ endfunc
 "autocmd BufNewFile *.[ch],*.sh,*.java,*.tex,*.py,*.html exec ":call SetTitle()"
 
 augroup SetTitle
+    autocmd!
     autocmd BufNewFile *.[ch],*.sh,*.java,*.tex,*.py,*.html exec ":call SetTitle()"
 augroup END
 

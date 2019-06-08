@@ -1,7 +1,7 @@
 scriptencoding utf-8
 " configuration settings for VimFiler
 " which is a File Explorer for vim
-if exists(':VimFiler')
+if exists(':VimFiler') && exists('VimFilerBufferDir')
     let g:vimfiler_as_default_explorer    = 1
     let g:vimfiler_restore_alternate_file = 1
     let g:vimfiler_tree_indentation       = 1
@@ -36,7 +36,7 @@ if exists(':VimFiler')
                 \ 'winminwidth' : 30,
                 \ 'toggle'      : 1,
                 \ 'auto_expand' : 1,
-                \ 'direction'   : g   : vimfiler_direction,
+                \ 'direction'   : g:vimfiler_direction,
                 \ 'parent'      : 0,
                 \ 'status'      : 1,
                 \ 'safe'        : 0,

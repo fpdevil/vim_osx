@@ -10,8 +10,8 @@ if !empty(glob('~/.vim/plugged/syntastic'))
     cabbrev stm SyntasticToggleMode<CR>
     let g:syntastic_mode_map                 = {
                 \ 'mode'                : 'active',
-                \ 'active_filetypes'    : ["haskell", "python", "cpp", "c", "javascript"],
-                \ 'passive_filetypes'   : ["go", "html", "erlang"]
+                \ 'active_filetypes'    : ['haskell', 'python', 'cpp', 'c', 'javascript'],
+                \ 'passive_filetypes'   : ['go', 'html', 'erlang']
                 \ }
     let g:syntastic_always_populate_loc_list = 1
     let g:syntastic_auto_loc_list            = 1
@@ -35,13 +35,13 @@ if !empty(glob('~/.vim/plugged/syntastic'))
     function! SetSyntasticJsLinter()
         let l:available_linters = ListJsLinterConfig()
         " now look through the linter config in current dir
-        let l:jslinter = CheckJsLintConfig(expand('%:p', l:available_linters)
-        if l:jslinter[0] == ''
+        let l:jslinter = CheckJsLintConfig(expand('%:p', l:available_linters))
+        if l:jslinter[0] ==# ''
             let l:jslinter = CheckJsLintConfig($HOME, l:available_linters)
         endif
 
         " now configure the linter
-        if l:jslinter[0] != ''
+        if l:jslinter[0] !=? ''
             let g:syntastic_javascript_checkers = [l:jslinter[0]]
             if l:jslinter[0] != l:jslinter[1]
                 exec 'let g:syntastic_javascript_' . l:jslinter[0] . '_exec = "' . l:jslinter[1] . '"'
@@ -59,7 +59,7 @@ if !empty(glob('~/.vim/plugged/syntastic'))
     " getbg function
     " gets the background of a highlighting group with fallback to SignColumn group
     function! s:getbg(group)
-        if has("gui_running")
+        if has('gui_running')
             let l:mode       = 'gui'
             let l:validation = '\w\+\|#\x\+'
         else
@@ -73,7 +73,7 @@ if !empty(glob('~/.vim/plugged/syntastic'))
             let l:bg = synIDattr(synIDtrans(hlID(a:group)), 'bg', l:mode)
         endif
     
-        if l:bg == '-1' || l:bg !~ l:validation
+        if l:bg ==# '-1' || l:bg !~ l:validation
             if synIDattr(synIDtrans(hlID('SignColumn')), 'reverse', l:mode)
                 let l:bg = synIDattr(synIDtrans(hlID('SignColumn')), 'fg', l:mode)
             else
@@ -81,7 +81,7 @@ if !empty(glob('~/.vim/plugged/syntastic'))
             endif
         endif
     
-        if l:bg == '-1' || l:bg !~ l:validation
+        if l:bg ==# '-1' || l:bg !~ l:validation
             return ''
         endif
     
@@ -95,7 +95,7 @@ if !empty(glob('~/.vim/plugged/syntastic'))
     let g:syntastic_style_error_symbol   = '⁉️'
     let g:syntastic_warning_symbol       = '⚠️'
     let g:syntastic_style_warning_symbol = '💩'
-    let g:sytastic_stl_format            = "[ln:%F (%t)]"
+    let g:sytastic_stl_format            = '[ln:%F (%t)]'
     
     "let g:syntastic_error_symbol = '✖'
     "let g:syntastic_warning_symbol = '➤'
@@ -116,6 +116,11 @@ if !empty(glob('~/.vim/plugged/syntastic'))
     
     "}}}
 
+    "{{{ airline settings
+    if has_key(g:plugs,'vim-airline')
+        let g:airline#extensions#syntastic#enabled = 1
+    endif
+    "}}}
 
     "{{{ status line settings for syntastic
     "set statusline+=%#warningmsg#

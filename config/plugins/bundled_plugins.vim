@@ -105,17 +105,23 @@ endif
 " neocompletion with cache (need lua support)
 if exists('g:vim_auto_complete_engine') && g:vim_auto_complete_engine ==# 'neocomplete'
     Plug 'Shougo/neocomplete.vim'
+    Plug 'davidhalter/jedi-vim'              " python jedi auto-completion (the best)
 endif
 " deoplete will replace neocomplete some time
 if exists('g:vim_auto_complete_engine') && g:vim_auto_complete_engine ==# 'deoplete'
-    Plug 'Shougo/deoplete.nvim'                         " dark powered neo-completion
-    Plug 'roxma/nvim-yarp'                              " Yet Another Remote Plugin Framework
-    Plug 'roxma/vim-hug-neovim-rpc'                     " neovim rpc client fpr vim8
-    Plug 'zchee/deoplete-jedi'                          " deoplete source for python
+    if (has('python3') == 0)
+        echoerr 'Deoplete needs NeoVim with +Python3 support!'
+    endif
+    Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' } " dark powered neo-completion
+    Plug 'roxma/nvim-yarp'                                        " Yet Another Remote Plugin Framework
+    Plug 'roxma/vim-hug-neovim-rpc'                               " neovim rpc client fpr vim8
+    Plug 'zchee/deoplete-jedi'                                    " deoplete source for python
+    Plug 'carlitux/deoplete-ternjs'
 endif
 Plug 'Shougo/neoinclude.vim'                            " include completion framework for neocomplete
 Plug 'Chiel92/vim-autoformat'                           " easy code formatting in vim
-Plug 'scrooloose/nerdcommenter'                         " intensely orgasmic commenting
+Plug 'tpope/vim-commentary'                             " comment stuff
+"Plug 'scrooloose/nerdcommenter'                         " intensely orgasmic commenting
 
 
 " ==== plugins supporting various utilities ====
@@ -132,12 +138,13 @@ Plug 'shougo/echodoc', { 'on': ['EchoDocEnable', 'EchoDocDisable'] }   " print d
 Plug 'Shougo/context_filetype.vim'                                     " context ft library for vim
 Plug 'schickling/vim-bufonly', { 'on': ['BufOnly', 'Bonly'] }          " delete all buffers except current
 Plug 'rhysd/vim-healthcheck'                                           " polyfill of nvim's healthcheck
-
+Plug 'dhruvasagar/vim-table-mode'                                      " draw tables
 
 
 " ==== Fuzzy Finder, grep and other finding tools for vim ====
 Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] }
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } | Plug 'junegunn/fzf.vim'
+Plug 'tweekmonster/fzf-filemru', { 'on': ['FilesMru'] }         " File MRU with fzf.vim
 
 
 " ==== shell/terminal utilities for vim ====
@@ -177,8 +184,10 @@ Plug 'shougo/neosnippet.vim'                                 " neo snippet plugi
 Plug 'letientai299/vim-react-snippets', { 'branch': 'es6' }  " react js snippets
 
 
+" ==== plugins for denite family and related extensions ====
+"Plug 'Shougo/denite.nvim'
+
 " ==== plugins for unite family and related extensions ====
-Plug 'Shougo/denite.nvim'
 Plug 'Shougo/unite.vim'                    " unite color changer helper
 Plug 'Shougo/unite-outline'                " outline source for unite
 Plug 'ujihisa/unite-colorscheme'           " Unite color scheme browser
@@ -195,7 +204,8 @@ Plug 'zhaocai/unite-scriptnames'           " extension for runtime scriptnames
 
 
 " ==== plugins for File Exploring ====
-Plug 'shougo/vimfiler.vim'                                                 " file explorer
+Plug 'shougo/vimfiler.vim', { 'on': 
+            \ ['VimFiler', 'VimFilerBufferDir'] }                          " file explorer
 Plug 'xuyuanp/nerdtree-git-plugin'                                         " NERDTree git status display
 Plug 'jistr/vim-nerdtree-tabs'                                             " NERDTree and tabs together
 Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }                         " undo history visualizer
@@ -505,6 +515,7 @@ Plug 'gorkunov/smartpairs.vim'           " fantastic selection for vim
 
 
 " ==== plugins for various Miscellaneous & general utilities ====
+Plug 'tweekmonster/startuptime.vim'      " ViM startup time
 Plug 'andymass/vim-matchup'              " matchup matching
 Plug 'ujihisa/repl.vim'                  " repl for langs
 Plug 'matze/vim-move'                    " move lines and selections
@@ -524,7 +535,8 @@ Plug 'kana/vim-textobj-user'             " for text object creation (vim-preciou
 Plug 'thinca/vim-quickrun'               " run commands quickly (vim-precious)
 Plug 'osyo-manga/vim-hopping'            " incrementall buffer line filtering
 Plug 'beloglazov/vim-online-thesaurus', {
-            \ 'on': 'OnlineThesaurusCurrentWord' }  " word lookup in online thesaurus (-K)
+            \ 'on': [ 'OnlineThesaurusCurrentWord', 'Thesaurus' ] }  
+                                           " word lookup in online thesaurus (-K)
 "Plug 'fmv1992/vim_dictionary'             " dictionary for ViM
 
 " ****     vim-fireplace dependencies     ****
@@ -581,12 +593,15 @@ Plug 'tyru/open-browser.vim'                       " open uri with browser
 
 " ==== Plugins for python/python3 language auto-completion
 "      syntax checking, highlighting and more
-Plug 'davidhalter/jedi-vim'              " python jedi auto-completion (the best)
 Plug 'Vimjas/vim-python-pep8-indent'     " python indentation style for vim
 Plug 'tell-k/vim-autopep8'               " autopep8 plugin for python
 Plug 'tweekmonster/impsort.vim'          " sort and highlight py imports
-Plug 'plytophogy/vim-virtualenv'         " for working with virtualenvs
 Plug 'vim-python/python-syntax'          " syntax highlighting
+Plug 'plytophogy/vim-virtualenv', { 'on': [
+            \ 'VirtualEnvList', 
+            \ 'VirtualEnvActivate', 
+            \ 'VirtualEnvDeactivate'
+            \ ] }                        " for working with virtualenvs
 
 "Plug 'vim-scripts/python.vim--Vasiliev'  " enhanced python syntax highlighting
 "Plug 'ehamberg/vim-cute-python'         " conceal for python
@@ -602,8 +617,8 @@ Plug 'vim-python/python-syntax'          " syntax highlighting
 
 " ==== Plugin for YouCompleteMe ====
 "      being used only in gui mode for MacVim
-if has('gui_macvim')
-"if exists('g:vim_auto_complete_engine') && g:vim_auto_complete_engine ==# 'youcompleteme'
+"if has('gui_macvim')
+if exists('g:vim_auto_complete_engine') && g:vim_auto_complete_engine ==# 'youcompleteme'
     Plug 'valloric/youcompleteme',
                 \ {
                 \ 'do': function('YCMBuilder'),

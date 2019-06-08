@@ -92,8 +92,8 @@ if has_key(g:plugs,'clang_complete')
 
     " set the location of the pre-built llvm-clang for osx
     "let s:xcode_usr_path  = '/Library/Developer/CommandLineTools/usr'
-    "let s:xcode_usr_path  = '/opt/software/clang+llvm-7.0.0-x86_64-apple-darwin/'
-    let s:xcode_usr_path  = '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/'
+    let s:xcode_usr_path  = '/opt/software/clang+llvm-7.0.0-x86_64-apple-darwin/'
+    "let s:xcode_usr_path  = '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/'
 
     if isdirectory(s:xcode_usr_path)
         let g:clang_exec         = s:xcode_usr_path . 'bin/clang'

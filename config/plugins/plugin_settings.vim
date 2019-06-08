@@ -24,18 +24,18 @@ call s:LoadConfig('airline_config.vim')            " Airline statusline configur
 call s:LoadConfig('vimindent_config.vim')          " vim-indent-guides settings
 call s:LoadConfig('vimshell_config.vim')           " settings for vim-shell
 call s:LoadConfig('vimmotion_config.vim')          " vim motion controls
-call s:LoadConfig('nerdcommentor_config.vim')      " nerd commentor settings
+call s:LoadConfig('commentor_config.vim')          " nerd/vim-commentary commentor settings
 call s:LoadConfig('supertab_config.vim')           " supertab configuration
 call s:LoadConfig('tabalign_config.vim')           " text/tab alignment
 call s:LoadConfig('easy_align_config.vim')         " easy text alignment configuration
-call s:LoadConfig('autocomplete_config.vim')       " neocomplete configuration for code completion
-call s:LoadConfig('neocomplete_config.vim')        " neocomplete nextgen autocomplete configuration
+call s:LoadConfig('ale_config.vim')                " syntax configuration for ALE if available
 call s:LoadConfig('deoplete_config.vim')           " asynchronous code completion with deoplete
+call s:LoadConfig('neocomplete_config.vim')        " neocomplete nextgen autocomplete configuration
+call s:LoadConfig('autocomplete_config.vim')       " neocomplete configuration for code completion
 call s:LoadConfig('completion_sources.vim')        " syntax and completion sources
 call s:LoadConfig('vimplugins_config.vim')         " vim-plugins assortment of c-support,vim,py etc
 call s:LoadConfig('snippets_config.vim')           " snippet plugin related configuration
 call s:LoadConfig('syntax_config.vim')             " syntastic plugin related configuration
-call s:LoadConfig('ale_config.vim')                " syntax configuration for ALE if available
 call s:LoadConfig('python_config.vim')             " python language configuration
 call s:LoadConfig('haskell_config.vim')            " Haskell language configuration
 call s:LoadConfig('vim_complete_config.vim')       " vim source completion configuration

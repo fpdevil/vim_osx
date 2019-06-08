@@ -1,7 +1,7 @@
 " ------------------------------------------------------------------------------
 " -------    JAVASCRIPT | JSON Syntax and Completions Configuration       ------
 " ------------------------------------------------------------------------------
-
+augroup vim_js | autocmd! | augroup end
 
 " ------------------------------------------------------------------------------------
 "  initialize the leader key map for misc section
@@ -12,13 +12,10 @@ let g:lmap.l.j = {
             \ }
 
 " for proper javascript indentation
-augroup vim_js
-    autocmd!
-    " autocmd FileType javascript setl tabstop=4|setl shiftwidth=4|setl softtabstop=4|setl expandtab|setl autoindent
-    autocmd FileType javascript setlocal shiftwidth=4 tabstop=4 softtabstop=4
-    au BufEnter *.js setl ai sw=4 ts=4 sts=4
-    "autocmd BufWritePost *.js AsyncRun -post=checktime eslint --fix %
-augroup end
+" autocmd FileType javascript setl tabstop=4|setl shiftwidth=4|setl softtabstop=4|setl expandtab|setl autoindent
+autocmd vim_js FileType javascript setlocal shiftwidth=4 tabstop=4 softtabstop=4
+au BufEnter *.js setl ai sw=4 ts=4 sts=4
+"autocmd BufWritePost *.js AsyncRun -post=checktime eslint --fix %
 
 " handling jsx files
 "augroup FiletypeGroup
@@ -27,14 +24,16 @@ augroup end
 "augroup END
 
 " {{{ for tern completions with omnifunc
-if !exists('g:neocomplete#sources#omni#functions')
-    let g:neocomplete#sources#omni#functions = {}
+if isdirectory(expand('~/.vim/plugged/neocomplete.vim'))
+   if !exists('g:neocomplete#sources#omni#functions')
+       let g:neocomplete#sources#omni#functions = {}
+   endif
+   
+   let g:neocomplete#sources#omni#functions.javascript = [
+               \ 'tern#Complete',
+               \ 'jspc#omni'
+               \ ]
 endif
-
-let g:neocomplete#sources#omni#functions.javascript = [
-            \ 'tern#Complete',
-            \ 'jspc#omni'
-            \ ]
 
 if exists('g:plugs["tern_for_vim"]')
     let g:tern#command                        = ['/usr/local/bin/tern']
@@ -47,7 +46,7 @@ if exists('g:plugs["tern_for_vim"]')
     " set autocompletion
     autocmd FileType javascript setlocal omnifunc=tern#Complete
 
-    let g:tern#command   = ['tern']
+    let g:tern#command   = ['/usr/local/bin/tern']
     let g:tern#arguments = ['--persistent']
 
     function! s:gotodef() abort
@@ -60,7 +59,7 @@ endif
 
 "{{{ nodejs omnifunc for vim
 "    refer https://github.com/myhere/vim-nodejs-complete
-if has_key(g:plugs, 'vim-nodejs-complete')
+if isdirectory(expand('~/.vim/plugged/vim-nodejs-complete'))
     " automatically open and close the popup menu / preview window
     au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
     "autocmd FileType javascript setlocal omnifunc=nodejscomplete#CompleteJS
@@ -85,9 +84,7 @@ endfunction
 "}}}
 
 " ternjs with deoplete
-"if isdirectory(expand('~/.vim/plugged/deoplete.nvim'))
-if has_key(g:plugs,'deoplete.vim')
-    " Set bin if you have many instalations
+if isdirectory(expand('~/.vim/plugged/deoplete-ternjs'))
     let g:deoplete#sources#ternjs#tern_bin = '/usr/local/bin/tern'
     let g:deoplete#sources#ternjs#timeout  = 1
     " Whether to include the types of the completions in the result data. Default: 0
@@ -109,7 +106,7 @@ if has_key(g:plugs,'deoplete.vim')
     " When completing a property and no completions are found, Tern will use some
     " heuristics to try and return some properties anyway. Set this to 0 to
     " turn that off. Default: 1
-    let g:deoplete#sources#ternjs#guess = 0
+    let g:deoplete#sources#ternjs#guess = 1
     " Determines whether the result set will be sorted. Default: 1
     let g:deoplete#sources#ternjs#sort = 0
     " When disabled, only the text before the given position is considered part of
@@ -123,7 +120,7 @@ if has_key(g:plugs,'deoplete.vim')
     " a property. Default: 0
     let g:deoplete#sources#ternjs#include_keywords = 1
     " If completions should be returned when inside a literal. Default: 1
-    let g:deoplete#sources#ternjs#in_literal = 0
+    let g:deoplete#sources#ternjs#in_literal = 1
     "Add extra filetypes
     let g:deoplete#sources#ternjs#filetypes = [
                     \ 'jsx',
@@ -149,7 +146,7 @@ set conceallevel=1
 
 " for jsdoc stntax highlight and character concealing
 " https://github.com/pangloss/vim-javascript
-if has_key(g:plugs,'vim-javascript')
+if isdirectory(expand('~/vim/plugged/vim-javascript'))
     let g:javascript_conceal_function       = 'ƒ'
     let g:javascript_conceal_null           = 'ø'
     let g:javascript_conceal_this           = '@'
@@ -168,16 +165,16 @@ endif
 
 " map <leader>jcl :exec &conceallevel ? "set conceallevel=0" : "set conceallevel=1"<CR>
 
-if (has_key(g:plugs, 'vim-jsx-pretty'))
+if isdirectory(expand('~/vim/plugged/vim-jsx-pretty'))
     let g:vim_jsx_pretty_colorful_config = 1
 endif
 
 " javascript-libraries-syntax customization
-if isdirectory(expand('~/.vim/plugged/javascript-libraries-syntax.vim'))
+if isdirectory(expand('~/vim/plugged/javascript-libraries-syntax.vim'))
     let g:used_javascript_libs = 'underscore,angularjs,angularui,angularuirouter,react,jquery,chai,d3'
 endif
 
-if isdirectory(expand('~/.vim/plugged/vim-better-javascript-completion'))
+if isdirectory(expand('~/vim/plugged/vim-better-javascript-completion'))
     let g:vimjs#casesensistive = 1
     " Enabled by default. flip the value to make completion matches case insensitive
 
@@ -210,7 +207,7 @@ endif
 
 
 "{{{ for vim-jsx settings
-if has_key(g:plugs, 'vim-jsx')
+if isdirectory(expand('~/vim/plugged/vim-jsx'))
     " if 1 (default) expects jsx files to have .jsx extension
     " if 0 .js files will also be opened as filetype javascript.jsx
     let g:jsx_ext_required    = 1
@@ -221,7 +218,7 @@ endif
 " ------------------------------------------------------------------------------------
 " -------                settings for the jshint2 js linting                   -------
 " ------------------------------------------------------------------------------------
-if has_key(g:plugs, 'jshint2.vim')
+if isdirectory(expand('~/vim/plugged/jshint2.vim'))
     let g:jshint2_read  = 1   " lint files after reading it
     let g:jshint2_save  = 1   " lint files after saving it
     let g:jshint2_close = 0   " do not automatically close orphaned error lists
@@ -247,7 +244,7 @@ au FileType javascript hi link javaScriptStringT		String
 " ------------------------------------------------------------------------------------
 " -----                 settings for galooshi/vim-import-js                      -----
 " ------------------------------------------------------------------------------------
-if (has_key(g:plugs,'vim-import-js'))
+if isdirectory(expand('~/vim/plugged/vim-import-js'))
     "nnoremap <silent><buffer> <F4> :ImportJSWord<CR>
     nnoremap <silent><buffer> <Leader>ljii :ImportJSWord<CR>
     nnoremap <silent><buffer> <Leader>ljif :ImportJSFix<CR>
@@ -269,7 +266,7 @@ endif
 " ------------------------------------------------------------------------------------
 " -----                  settings for heavenshell/vim-jsdoc                      -----
 " ------------------------------------------------------------------------------------
-if has_key(g:plugs, 'vim-jsdoc')
+if isdirectory(expand('~/vim/plugged/vim-jsdoc'))
     let g:jsdoc_allow_input_prompt = 1 " allow prompt for interactive input
     let g:jsdoc_input_description  = 1 " prompt for the function description
     let g:jsdoc_enable_es6         = 1 " enable the usage of ECMAScript6's shorthand function notations
@@ -296,9 +293,14 @@ let g:lmap.l.j.s = {
 
 " json format options
 " JSON Formatter Plugin for VIM
-if !empty(glob('~/.vim/plugged/json-formatter.vim'))
+if isdirectory(expand('~/vim/plugged/json-formatter.vim'))
     let g:lmap.l.j.g = {
                 \ 'name': 'JSON Stuff',
                 \ 'f': [':JSONFormatter', 'Format JSON'],
                 \ }
+endif
+
+"if !empty(glob('~/.vim/plugged/deoplete.nvim'))
+if isdirectory(expand('~/vim/plugged/deoplete.nvim'))
+   autocmd vim_js InsertEnter * call deoplete#enable()
 endif

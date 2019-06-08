@@ -1,3 +1,8 @@
+" File              : vimrc
+" Author            : Sampath Singamsetty <Singamsetty.Sampat@gmail.com>
+" Date              : 18.05.2019
+" Last Modified Date: 18.05.2019
+" Last Modified By  : Sampath Singamsetty <Singamsetty.Sampat@gmail.com>
 " vim: set et sw=4 foldmethod=marker foldlevel=0 nomodeline:
 "
 "
@@ -41,8 +46,8 @@ if !v:vim_did_enter && has('reltime')
     let g:startup_time = reltime()
     augroup vimrc_startup_time
         autocmd! VimEnter * let g:startup_time = reltime(g:startup_time)
-                    \     | redraw
-                    \     | echomsg 'startup_time: ' . reltimestr(g:startup_time)
+                    \ | redraw
+                    \ | echomsg 'startup_time: ' . reltimestr(g:startup_time)
     augroup END
 endif
 
@@ -145,10 +150,12 @@ call plug#end()
 
 " install any missing plugins on startup
 augroup missing_plugins
+    autocmd!
     autocmd VimEnter *
                 \  if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
                 \|     PlugInstall --sync | q
                 \| endif
+augroup END
 
 
 " ########################################################################
@@ -176,7 +183,7 @@ call s:LoadVimConfigs('custom', 'custom_settings.vim')
 call s:LoadVimConfigs('plugins', 'plugin_settings.vim')
 
 " load the template definitions
-call s:LoadVimConfigs('misc', 'insert_templates.vim')
+"call s:LoadVimConfigs('misc', 'insert_templates.vim')
 
 
 "   ╔══════════════════════════════════════════════════════════════════════╗

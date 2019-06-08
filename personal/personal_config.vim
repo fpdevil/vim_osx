@@ -4,8 +4,9 @@ scriptencoding utf-8
 " if commented, default is solarized
 "let g:vim_color_scheme = 'quantum'
 "let g:vim_color_scheme = 'OceanicNext'
-"let g:vim_color_scheme = 'hydrangea'
-let g:vim_color_scheme = 'ayu'
+let g:vim_color_scheme = 'hydrangea'
+"let g:vim_color_scheme = 'PaperColor'
+"let g:vim_color_scheme = 'mango'
 
 " color scheme in gui mode
 let g:vim_gui_color_scheme = 'solarized8_light'

@@ -10,5 +10,5 @@ set nocompatible              " be iMproved, required
 
 call plug#begin('~/.vim/plugged')
     Plug 'tpope/vim-sensible'
-    Plug 'ajh17/VimCompletesMe'
+    Plug 'sheerun/vim-polyglot'
 call plug#end()
